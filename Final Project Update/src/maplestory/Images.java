@@ -43,6 +43,10 @@ public class Images {
 	protected ImageIcon Inventory_Close_Pressed = new ImageIcon(getClass().getClassLoader().getResource("BtClose.pressed.0.png"));
 	protected ImageIcon Inventory_Close_Rollover = new ImageIcon(getClass().getClassLoader().getResource("BtClose.mouseOver.0.png"));
 	protected ImageIcon Inventory_Close_Disabled = new ImageIcon(getClass().getClassLoader().getResource("BtClose.disabled.0.png"));
+	protected ImageIcon Inventory_Coin = new ImageIcon(getClass().getClassLoader().getResource("BtCoin.normal.0.png"));
+	protected ImageIcon Inventory_Coin_Pressed = new ImageIcon(getClass().getClassLoader().getResource("BtCoin.pressed.0.png"));
+	protected ImageIcon[] Inventory_Coin_Rollover = new ImageIcon[4];
+	protected ImageIcon Inventory_Coin_Disabled = new ImageIcon(getClass().getClassLoader().getResource("BtCoin.disabled.0.png"));
 	
 	protected ImageIcon Inventory_Equip_String = new ImageIcon(getClass().getClassLoader().getResource("Item.Tab.enabled.0.png"));
 	protected ImageIcon Inventory_Consume_String = new ImageIcon(getClass().getClassLoader().getResource("Item.Tab.enabled.1.png"));
@@ -67,10 +71,10 @@ public class Images {
 	
 	//Quick Slot
 	protected ImageIcon QuickSlotImg = new ImageIcon(getClass().getClassLoader().getResource("QuickSlot.png"));
-	protected ImageIcon[] Quick_Slot_Numbers = new ImageIcon[8];
 	
 	//MiniMap
 	protected ImageIcon minimap_user = new ImageIcon(getClass().getClassLoader().getResource("minimap.user.png"));
+	protected ImageIcon minimap_shop = new ImageIcon(getClass().getClassLoader().getResource("minimap.shop.png"));
 	protected ImageIcon minimap_portal = new ImageIcon(getClass().getClassLoader().getResource("minimap.portal.png"));
 	
 	//Shop
@@ -78,6 +82,80 @@ public class Images {
 	protected ImageIcon Shop_BackGround2 = new ImageIcon(getClass().getClassLoader().getResource("Shop.backgrnd2.png"));
 	protected ImageIcon Shop_BackGround3 = new ImageIcon(getClass().getClassLoader().getResource("Shop.backgrnd3.png"));
 	protected ImageIcon Shop_Select = new ImageIcon(getClass().getClassLoader().getResource("Shop.select.png"));
+	
+	protected ImageIcon Shop_Exit = new ImageIcon(getClass().getClassLoader().getResource("Shop.BtExit.normal.0.png"));
+	protected ImageIcon Shop_Exit_Pressed = new ImageIcon(getClass().getClassLoader().getResource("Shop.BtExit.pressed.0.png"));
+	protected ImageIcon Shop_Exit_Rollover = new ImageIcon(getClass().getClassLoader().getResource("Shop.BtExit.mouseOver.0.png"));
+	protected ImageIcon Shop_Exit_Disabled = new ImageIcon(getClass().getClassLoader().getResource("Shop.BtExit.disabled.0.png"));
+	protected ImageIcon Shop_Buy = new ImageIcon(getClass().getClassLoader().getResource("Shop.BtBuy.normal.0.png"));
+	protected ImageIcon Shop_Buy_Pressed = new ImageIcon(getClass().getClassLoader().getResource("Shop.BtBuy.pressed.0.png"));
+	protected ImageIcon Shop_Buy_Rollover = new ImageIcon(getClass().getClassLoader().getResource("Shop.BtBuy.mouseOver.0.png"));
+	protected ImageIcon Shop_Buy_Disabled = new ImageIcon(getClass().getClassLoader().getResource("Shop.BtBuy.disabled.0.png"));
+	protected ImageIcon Shop_Sell = new ImageIcon(getClass().getClassLoader().getResource("Shop.BtSell.normal.0.png"));
+	protected ImageIcon Shop_Sell_Pressed = new ImageIcon(getClass().getClassLoader().getResource("Shop.BtSell.pressed.0.png"));
+	protected ImageIcon Shop_Sell_Rollover = new ImageIcon(getClass().getClassLoader().getResource("Shop.BtSell.mouseOver.0.png"));
+	protected ImageIcon Shop_Sell_Disabled = new ImageIcon(getClass().getClassLoader().getResource("Shop.BtSell.disabled.0.png"));
+	
+	//Notice
+	protected ImageIcon Notice_Top = new ImageIcon(getClass().getClassLoader().getResource("Notice6.t.png"));
+	protected ImageIcon Notice_Center = new ImageIcon(getClass().getClassLoader().getResource("Notice6.c.png"));
+	protected ImageIcon Notice_Center_Box = new ImageIcon(getClass().getClassLoader().getResource("Notice6.c_box.png"));
+	protected ImageIcon Notice_Box = new ImageIcon(getClass().getClassLoader().getResource("Notice6.box.png"));
+	protected ImageIcon Notice_Box2 = new ImageIcon(getClass().getClassLoader().getResource("Notice6.box2.png"));
+	protected ImageIcon Notice_Bottom = new ImageIcon(getClass().getClassLoader().getResource("Notice6.s.png"));
+	protected ImageIcon Notice_Bottom_Box = new ImageIcon(getClass().getClassLoader().getResource("Notice6.s_box.png"));
+	
+	protected ImageIcon Notice_Die_Notice = new ImageIcon(getClass().getClassLoader().getResource("Notice.0.png"));
+	
+	protected ImageIcon Notice_OK = new ImageIcon(getClass().getClassLoader().getResource("BtOK4.normal.0.png"));
+	protected ImageIcon Notice_OK_Pressed = new ImageIcon(getClass().getClassLoader().getResource("BtOK4.pressed.0.png"));
+	protected ImageIcon Notice_OK_Rollover = new ImageIcon(getClass().getClassLoader().getResource("BtOK4.mouseOver.0.png"));
+	protected ImageIcon Notice_OK_Disabled = new ImageIcon(getClass().getClassLoader().getResource("BtOK4.disabled.0.png"));
+	
+	protected ImageIcon Notice_Cancel = new ImageIcon(getClass().getClassLoader().getResource("BtCancel4.normal.0.png"));
+	protected ImageIcon Notice_Cancel_Pressed = new ImageIcon(getClass().getClassLoader().getResource("BtCancel4.pressed.0.png"));
+	protected ImageIcon Notice_Cancel_Rollover = new ImageIcon(getClass().getClassLoader().getResource("BtCancel4.mouseOver.0.png"));
+	protected ImageIcon Notice_Cancel_Disabled = new ImageIcon(getClass().getClassLoader().getResource("BtCancel4.disabled.0.png"));
+	
+	//KeySetting
+	protected ImageIcon KeySetting_BackGround1 = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.backgrnd.png"));
+	protected ImageIcon KeySetting_BackGround2 = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.backgrnd2.png"));
+	protected ImageIcon KeySetting_BackGround3 = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.backgrnd3.png"));
+	protected ImageIcon KeySetting_QuickSlotConfig_BackGround = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.quickslotConfig.backgrnd.png"));
+	
+	protected ImageIcon KeySetting_QuickSlotConfig_KeyFocused = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.quickslotConfig.BtQuickSetting.keyFocused.0.png"));
+	
+	protected ImageIcon KeySetting_Attack = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.icon.attack.png"));
+	protected ImageIcon KeySetting_Inventory = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.icon.inventory.png"));
+	protected ImageIcon KeySetting_Jump = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.icon.jump.png"));
+	protected ImageIcon KeySetting_KeyConfig = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.icon.keyconfig.png"));
+	protected ImageIcon KeySetting_Minimap = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.icon.minimap.png"));
+	protected ImageIcon KeySetting_NPC = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.icon.npc.png"));
+	protected ImageIcon KeySetting_PickUp = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.icon.pickup.png"));
+	protected ImageIcon KeySetting_Skill = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.icon.skill.png"));
+	
+	protected ImageIcon KeySetting_Default = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.BtDefault.normal.0.png"));
+	protected ImageIcon KeySetting_Default_Pressed = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.BtDefault.pressed.0.png"));
+	protected ImageIcon KeySetting_Default_Rollover = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.BtDefault.mouseOver.0.png"));
+	protected ImageIcon KeySetting_Default_Disabled = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.BtDefault.disabled.0.png"));
+	protected ImageIcon KeySetting_Delete = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.BtDelete.normal.0.png"));
+	protected ImageIcon KeySetting_Delete_Pressed = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.BtDelete.pressed.0.png"));
+	protected ImageIcon KeySetting_Delete_Rollover = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.BtDelete.mouseOver.0.png"));
+	protected ImageIcon KeySetting_Delete_Disabled = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.BtDelete.disabled.0.png"));
+	protected ImageIcon KeySetting_QuickSlot = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.BtQuickSlot.normal.0.png"));
+	protected ImageIcon KeySetting_QuickSlot_Pressed = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.BtQuickSlot.pressed.0.png"));
+	protected ImageIcon KeySetting_QuickSlot_Rollover = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.BtQuickSlot.mouseOver.0.png"));
+	protected ImageIcon KeySetting_QuickSlot_Disabled = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.BtQuickSlot.disabled.0.png"));
+	protected ImageIcon KeySetting_OK = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.BtOK.normal.0.png"));
+	protected ImageIcon KeySetting_OK_Pressed = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.BtOK.pressed.0.png"));
+	protected ImageIcon KeySetting_OK_Rollover = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.BtOK.mouseOver.0.png"));
+	protected ImageIcon KeySetting_OK_Disabled = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.BtOK.disabled.0.png"));
+	protected ImageIcon KeySetting_Cancel = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.BtCancel.normal.0.png"));
+	protected ImageIcon KeySetting_Cancel_Pressed = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.BtCancel.pressed.0.png"));
+	protected ImageIcon KeySetting_Cancel_Rollover = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.BtCancel.mouseOver.0.png"));
+	protected ImageIcon KeySetting_Cancel_Disabled = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.BtCancel.disabled.0.png"));
+	
+	protected ImageIcon KeySetting_quickslotAlt = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.quickslotConfig.key.Alt.png"));
 	
 	//Map Objects
 	//Footholds
@@ -159,9 +237,37 @@ public class Images {
 	protected ImageIcon White_Potion_Icon = new ImageIcon(getClass().getClassLoader().getResource("White_Potion.png"));
 	protected ImageIcon White_Potion_Raw_Icon = new ImageIcon(getClass().getClassLoader().getResource("White_Potion_Raw.png"));
 	protected ImageIcon White_Potion_Info = new ImageIcon(getClass().getClassLoader().getResource("White_Potion_Info.png"));
+	protected ImageIcon Apple_Icon = new ImageIcon(getClass().getClassLoader().getResource("Apple.png"));
+	protected ImageIcon Apple_Raw_Icon = new ImageIcon(getClass().getClassLoader().getResource("Apple_Raw.png"));
+	protected ImageIcon Apple_Info = new ImageIcon(getClass().getClassLoader().getResource("Apple_Info.png"));
 	protected ImageIcon Green_Apple_Icon = new ImageIcon(getClass().getClassLoader().getResource("Green_Apple.png"));
 	protected ImageIcon Green_Apple_Raw_Icon = new ImageIcon(getClass().getClassLoader().getResource("Green_Apple_Raw.png"));
 	protected ImageIcon Green_Apple_Info = new ImageIcon(getClass().getClassLoader().getResource("Green_Apple_Info.png"));
+	protected ImageIcon Egg_Icon = new ImageIcon(getClass().getClassLoader().getResource("Egg.png"));
+	protected ImageIcon Egg_Raw_Icon = new ImageIcon(getClass().getClassLoader().getResource("Egg_Raw.png"));
+	protected ImageIcon Egg_Info = new ImageIcon(getClass().getClassLoader().getResource("Egg_Info.png"));
+	protected ImageIcon Meat_Icon = new ImageIcon(getClass().getClassLoader().getResource("Meat.png"));
+	protected ImageIcon Meat_Raw_Icon = new ImageIcon(getClass().getClassLoader().getResource("Meat_Raw.png"));
+	protected ImageIcon Meat_Info = new ImageIcon(getClass().getClassLoader().getResource("Meat_Info.png"));
+	protected ImageIcon Orange_Icon = new ImageIcon(getClass().getClassLoader().getResource("Orange.png"));
+	protected ImageIcon Orange_Raw_Icon = new ImageIcon(getClass().getClassLoader().getResource("Orange_Raw.png"));
+	protected ImageIcon Orange_Info = new ImageIcon(getClass().getClassLoader().getResource("Orange_Info.png"));
+	protected ImageIcon Lemon_Icon = new ImageIcon(getClass().getClassLoader().getResource("Lemon.png"));
+	protected ImageIcon Lemon_Raw_Icon = new ImageIcon(getClass().getClassLoader().getResource("Lemon_Raw.png"));
+	protected ImageIcon Lemon_Info = new ImageIcon(getClass().getClassLoader().getResource("Lemon_Info.png"));
+	protected ImageIcon Chocolate_Icon = new ImageIcon(getClass().getClassLoader().getResource("Chocolate.png"));
+	protected ImageIcon Chocolate_Raw_Icon = new ImageIcon(getClass().getClassLoader().getResource("Chocolate_Raw.png"));
+	protected ImageIcon Chocolate_Info = new ImageIcon(getClass().getClassLoader().getResource("Chocolate_Info.png"));
+	protected ImageIcon Mana_Elixir_Icon = new ImageIcon(getClass().getClassLoader().getResource("Mana_Elixir.png"));
+	protected ImageIcon Mana_Elixir_Raw_Icon = new ImageIcon(getClass().getClassLoader().getResource("Mana_Elixir_Raw.png"));
+	protected ImageIcon Mana_Elixir_Info = new ImageIcon(getClass().getClassLoader().getResource("Mana_Elixir_Info.png"));
+	
+	protected ImageIcon ReturnScroll_Town_Icon = new ImageIcon(getClass().getClassLoader().getResource("RS_Town.png"));
+	protected ImageIcon ReturnScroll_Town_Raw_Icon = new ImageIcon(getClass().getClassLoader().getResource("RS_Town_Raw.png"));
+	protected ImageIcon ReturnScroll_Town_Info = new ImageIcon(getClass().getClassLoader().getResource("RS_Town_Info.png"));
+	protected ImageIcon ReturnScroll_Henesys_Icon = new ImageIcon(getClass().getClassLoader().getResource("RS_Henesys.png"));
+	protected ImageIcon ReturnScroll_Henesys_Raw_Icon = new ImageIcon(getClass().getClassLoader().getResource("RS_Henesys_Raw.png"));
+	protected ImageIcon ReturnScroll_Henesys_Info = new ImageIcon(getClass().getClassLoader().getResource("RS_Henesys_Info.png"));
 	
 	
 	//etc
@@ -328,14 +434,10 @@ public class Images {
 	protected ImageIcon BubblingDieLeft3 = new ImageIcon(getClass().getClassLoader().getResource("Bubbling_Left_Die_3.png"));
 	
 	public Images() {
-		Quick_Slot_Numbers[0] = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.quickslotConfig.key.2.png"));
-		Quick_Slot_Numbers[1] = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.quickslotConfig.key.3.png"));
-		Quick_Slot_Numbers[2] = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.quickslotConfig.key.4.png"));
-		Quick_Slot_Numbers[3] = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.quickslotConfig.key.5.png"));
-		Quick_Slot_Numbers[4] = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.quickslotConfig.key.6.png"));
-		Quick_Slot_Numbers[5] = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.quickslotConfig.key.7.png"));
-		Quick_Slot_Numbers[6] = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.quickslotConfig.key.8.png"));
-		Quick_Slot_Numbers[7] = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.quickslotConfig.key.9.png"));
+		Inventory_Coin_Rollover[0] = new ImageIcon(getClass().getClassLoader().getResource("BtCoin.mouseOver.0.png"));
+		Inventory_Coin_Rollover[1] = new ImageIcon(getClass().getClassLoader().getResource("BtCoin.mouseOver.1.png"));
+		Inventory_Coin_Rollover[2] = new ImageIcon(getClass().getClassLoader().getResource("BtCoin.mouseOver.2.png"));
+		Inventory_Coin_Rollover[3] = new ImageIcon(getClass().getClassLoader().getResource("BtCoin.mouseOver.3.png"));
 		
 		LevelUp_Effect[0] = new ImageIcon(getClass().getClassLoader().getResource("LevelUp2.0.png"));
 		LevelUp_Effect[1] = new ImageIcon(getClass().getClassLoader().getResource("LevelUp2.1.png"));

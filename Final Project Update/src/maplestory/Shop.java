@@ -1,5 +1,6 @@
 package maplestory;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -22,7 +23,7 @@ public abstract class Shop extends JLabel {
 	protected static ArrayList<ItemForSale> currentSellList;
 	protected static ArrayList<Item> currentNullRemovedList = Maplestory.player.inventory.NullRemovedConsumeList;
 
-	protected int current_type; //0: Equip, 1: Consume, 2: Etc, 3: Install, 4: Cash
+	protected static int current_type; //0: Equip, 1: Consume, 2: Etc, 3: Install, 4: Cash
 	protected int current_shop_slot_index = 0;
 	
 	protected int current_user_slot_index = 0;
@@ -44,15 +45,20 @@ public abstract class Shop extends JLabel {
 	private int shop_scrollbar_xpos = 212, user_scrollbar_xpos = 443;
 		
 	//Buttons
-	private JLabel bt_close, bt_equip, bt_consume, bt_etc, bt_install, bt_cash;
+	private JLabel bt_exit, bt_buy, bt_sell;
+	private JLabel bt_equip, bt_consume, bt_etc, bt_install, bt_cash;
 	
 	//Control Variables
 	private boolean prev_entered = false, prev_pressed = false;
 	private boolean next_entered = false, next_pressed = false;
 	private boolean thumb_entered = false, thumb_pressed = false;
-	private boolean close_entered = false, close_pressed = false;
+	private boolean exit_entered = false, exit_pressed = false;
+	private boolean buy_entered = false, buy_pressed = false;
+	private boolean sell_entered = false, sell_pressed = false;
 	protected static boolean isOpen = false;
 	private int mouseX, mouseY;
+	
+	protected String decimal = "";
 	
 	public Shop() {
 		setBounds(167, 101, 465, 328);
@@ -66,47 +72,47 @@ public abstract class Shop extends JLabel {
 	
 	@Override
 	protected void paintComponent(Graphics g) {
-		g.drawImage(Maplestory.images.Shop_BackGround1.getImage(), 0, 0, Maplestory.current_stage);
-		g.drawImage(Maplestory.images.Shop_BackGround2.getImage(), 6, 5, Maplestory.current_stage);
-		g.drawImage(Maplestory.images.Shop_BackGround3.getImage(), 7, 64, Maplestory.current_stage);
+		g.drawImage(Maplestory.images.Shop_BackGround1.getImage(), 0, 0, this);
+		g.drawImage(Maplestory.images.Shop_BackGround2.getImage(), 6, 5, this);
+		g.drawImage(Maplestory.images.Shop_BackGround3.getImage(), 7, 64, this);
 		
 		if(isVisible()) {
 			g.drawImage(NPCImage.getImage(), 60 - NPCImage.getIconWidth() / 2, 45 - NPCImage.getIconHeight() / 2
 					, 60 + NPCImage.getIconWidth() / 2, 45 + NPCImage.getIconHeight() / 2
-					, NPCImage.getIconWidth(), 0, 0, NPCImage.getIconHeight(), Maplestory.current_stage);
+					, NPCImage.getIconWidth(), 0, 0, NPCImage.getIconHeight(), this);
 		}
 		g.drawImage(Maplestory.player.characterLeftImg.getImage()
-				, 297 - Character.CharacterWidth / 2, 45 - Character.CharacterHeight / 2, Maplestory.current_stage);
+				, 297 - Character.CharacterWidth / 2, 45 - Character.CharacterHeight / 2, this);
 		
 		if(current_type == 0) {
-			g.drawImage(Maplestory.images.Inventory_Equip_Tab_Disabled.getImage(), 240, 90, Maplestory.current_stage);
+			g.drawImage(Maplestory.images.Inventory_Equip_Tab_Disabled.getImage(), 240, 90, this);
 		}
 		else {
-			g.drawImage(Maplestory.images.Inventory_Equip_Tab.getImage(), 240, 91, Maplestory.current_stage);
+			g.drawImage(Maplestory.images.Inventory_Equip_Tab.getImage(), 240, 91, this);
 		}
 		if(current_type == 1) {
-			g.drawImage(Maplestory.images.Inventory_Equip_Tab_Disabled.getImage(), 274, 90, Maplestory.current_stage);
+			g.drawImage(Maplestory.images.Inventory_Equip_Tab_Disabled.getImage(), 274, 90, this);
 		}
 		else {
-			g.drawImage(Maplestory.images.Inventory_Equip_Tab.getImage(), 274, 91, Maplestory.current_stage);
+			g.drawImage(Maplestory.images.Inventory_Equip_Tab.getImage(), 274, 91, this);
 		}
 		if(current_type == 2) {
-			g.drawImage(Maplestory.images.Inventory_Equip_Tab_Disabled.getImage(), 308, 90, Maplestory.current_stage);
+			g.drawImage(Maplestory.images.Inventory_Equip_Tab_Disabled.getImage(), 308, 90, this);
 		}
 		else {
-			g.drawImage(Maplestory.images.Inventory_Equip_Tab.getImage(), 308, 91, Maplestory.current_stage);
+			g.drawImage(Maplestory.images.Inventory_Equip_Tab.getImage(), 308, 91, this);
 		}
 		if(current_type == 3) {
-			g.drawImage(Maplestory.images.Inventory_Equip_Tab_Disabled.getImage(), 342, 90, Maplestory.current_stage);
+			g.drawImage(Maplestory.images.Inventory_Equip_Tab_Disabled.getImage(), 342, 90, this);
 		}
 		else {
-			g.drawImage(Maplestory.images.Inventory_Equip_Tab.getImage(), 342, 91, Maplestory.current_stage);
+			g.drawImage(Maplestory.images.Inventory_Equip_Tab.getImage(), 342, 91, this);
 		}
 		if(current_type == 4) {
-			g.drawImage(Maplestory.images.Inventory_Equip_Tab_Disabled.getImage(), 376, 90, Maplestory.current_stage);
+			g.drawImage(Maplestory.images.Inventory_Equip_Tab_Disabled.getImage(), 376, 90, this);
 		}
 		else {
-			g.drawImage(Maplestory.images.Inventory_Equip_Tab.getImage(), 376, 91, Maplestory.current_stage);
+			g.drawImage(Maplestory.images.Inventory_Equip_Tab.getImage(), 376, 91, this);
 		}
 		
 		for (int i = 0; i < sell_list.size(); i++) {
@@ -131,6 +137,11 @@ public abstract class Shop extends JLabel {
 			}
 		}
 		
+		g.setFont(Stage.font_meso);
+		g.setColor(Color.BLACK);
+		decimal = Item_Meso.dec_format.format(Maplestory.player.inventory.Meso);
+		g.drawString(decimal, 7 + 446 - 3 - Maplestory.current_stage.getFontMetrics_meso().stringWidth(decimal), 64 + 15 - 2);
+		
 		paintComponents(g);
 	}
 	
@@ -141,14 +152,14 @@ public abstract class Shop extends JLabel {
 			shop_slot[i].addMouseListener(new MouseAdapter() {
 				@Override
 				public void mousePressed(MouseEvent e) {
-					if(SwingUtilities.isLeftMouseButton(e)) {
+					if(SwingUtilities.isLeftMouseButton(e) && !UI_Notice.isOpen) {
 						settoTop();
 					}
 				}
 				
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					if(SwingUtilities.isLeftMouseButton(e)) {
+					if(SwingUtilities.isLeftMouseButton(e) && !UI_Notice.isOpen) {
 						Shop_Shop_Slot source = (Shop_Shop_Slot)e.getSource();
 						int index = source.index;
 						if(e.getClickCount() == 1) {
@@ -162,13 +173,15 @@ public abstract class Shop extends JLabel {
 				
 				@Override
 				public void mouseEntered(MouseEvent e) {
-					Shop_Shop_Slot source = (Shop_Shop_Slot)e.getSource();
-					int index = source.index;
-					Item data = currentSellList.get(index).item;
-					if(data != null) {
-						Stage.info = data.getInfo();
-						Stage.info_x = getMousePosition().x + getLocation().x;
-						Stage.info_y = getMousePosition().y + getLocation().y;
+					if(!UI_Notice.isOpen) {
+						Shop_Shop_Slot source = (Shop_Shop_Slot)e.getSource();
+						int index = source.index;
+						Item data = currentSellList.get(index).item;
+						if(data != null) {
+							Stage.info = data.getInfo();
+							Stage.info_x = getMousePosition().x + getLocation().x;
+							Stage.info_y = getMousePosition().y + getLocation().y;
+						}
 					}
 				}
 				
@@ -186,14 +199,14 @@ public abstract class Shop extends JLabel {
 			user_slot[i].addMouseListener(new MouseAdapter() {
 				@Override
 				public void mousePressed(MouseEvent e) {
-					if(SwingUtilities.isLeftMouseButton(e)) {
+					if(SwingUtilities.isLeftMouseButton(e) && !UI_Notice.isOpen) {
 						settoTop();
 					}
 				}
 				
 				@Override
 				public void mouseClicked(MouseEvent e) {
-					if(SwingUtilities.isLeftMouseButton(e)) {
+					if(SwingUtilities.isLeftMouseButton(e) && !UI_Notice.isOpen) {
 						Shop_User_Slot source = (Shop_User_Slot)e.getSource();
 						int index = source.index;
 						if(e.getClickCount() == 1) {
@@ -207,13 +220,15 @@ public abstract class Shop extends JLabel {
 				
 				@Override
 				public void mouseEntered(MouseEvent e) {
-					Shop_User_Slot source = (Shop_User_Slot)e.getSource();
-					int index = source.index;
-					Item data = currentNullRemovedList.get(index);
-					if(data != null) {
-						Stage.info = data.getInfo();
-						Stage.info_x = getMousePosition().x + getLocation().x;
-						Stage.info_y = getMousePosition().y + getLocation().y;
+					if(!UI_Notice.isOpen) {
+						Shop_User_Slot source = (Shop_User_Slot)e.getSource();
+						int index = source.index;
+						Item data = currentNullRemovedList.get(index);
+						if(data != null) {
+							Stage.info = data.getInfo();
+							Stage.info_x = getMousePosition().x + getLocation().x;
+							Stage.info_y = getMousePosition().y + getLocation().y;
+						}
 					}
 				}
 				
@@ -226,42 +241,140 @@ public abstract class Shop extends JLabel {
 		}
 	}
 	public void makeButtons() {
-		bt_close = new JLabel("");
-		bt_close.setBounds(155, 6, 12, 12);
-		bt_close.setIcon(Maplestory.images.Inventory_Close);
-		bt_close.setDisabledIcon(Maplestory.images.Inventory_Close_Disabled);
-		bt_close.addMouseListener(new MouseAdapter() {
+		bt_exit = new JLabel("");
+		bt_exit.setBounds(160, 44, 64, 16);
+		bt_exit.setIcon(Maplestory.images.Shop_Exit);
+		bt_exit.setDisabledIcon(Maplestory.images.Shop_Exit_Disabled);
+		bt_exit.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				close_entered = true;
-				if(!close_pressed) {
-					bt_close.setIcon(Maplestory.images.Inventory_Close_Rollover);
+				if(!UI_Notice.isOpen) {
+					exit_entered = true;
+					if(!exit_pressed) {
+						bt_exit.setIcon(Maplestory.images.Shop_Exit_Rollover);
+					}
 				}
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				close_entered = false;
-				if(!close_pressed) {
-					bt_close.setIcon(Maplestory.images.Inventory_Close);
+				if(!UI_Notice.isOpen) {
+					exit_entered = false;
+					if(!exit_pressed) {
+						bt_exit.setIcon(Maplestory.images.Shop_Exit);
+					}
 				}
 			}
 			@Override
 			public void mousePressed(MouseEvent e) {
-				if(SwingUtilities.isLeftMouseButton(e)) {
-					close_pressed = true;
-					bt_close.setIcon(Maplestory.images.Inventory_Close_Pressed);
+				if(SwingUtilities.isLeftMouseButton(e) && !UI_Notice.isOpen) {
+					exit_pressed = true;
+					bt_exit.setIcon(Maplestory.images.Shop_Exit_Pressed);
 				}
 			}
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				if(SwingUtilities.isLeftMouseButton(e)) {
-					close_pressed = false;
-					if(close_entered) {
-						bt_close.setIcon(Maplestory.images.Inventory_Close_Rollover);
+				if(SwingUtilities.isLeftMouseButton(e) && !UI_Notice.isOpen) {
+					exit_pressed = false;
+					if(exit_entered) {
+						bt_exit.setIcon(Maplestory.images.Shop_Exit_Rollover);
 						close();
 					}
 					else {
-						bt_close.setIcon(Maplestory.images.Inventory_Close);
+						bt_exit.setIcon(Maplestory.images.Shop_Exit);
+					}
+				}
+			}
+		});
+
+		bt_buy = new JLabel("");
+		bt_buy.setBounds(160, 63, 64, 16);
+		bt_buy.setIcon(Maplestory.images.Shop_Buy);
+		bt_buy.setDisabledIcon(Maplestory.images.Shop_Buy_Disabled);
+		bt_buy.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				if(!UI_Notice.isOpen) {
+					buy_entered = true;
+					if(!buy_pressed) {
+						bt_buy.setIcon(Maplestory.images.Shop_Buy_Rollover);
+					}
+				}
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				if(!UI_Notice.isOpen) {
+					buy_entered = false;
+					if(!buy_pressed) {
+						bt_buy.setIcon(Maplestory.images.Shop_Buy);
+					}
+				}
+			}
+			@Override
+			public void mousePressed(MouseEvent e) {
+				if(SwingUtilities.isLeftMouseButton(e) && !UI_Notice.isOpen) {
+					buy_pressed = true;
+					bt_buy.setIcon(Maplestory.images.Shop_Buy_Pressed);
+				}
+			}
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if(SwingUtilities.isLeftMouseButton(e) && !UI_Notice.isOpen) {
+					buy_pressed = false;
+					if(buy_entered) {
+						bt_buy.setIcon(Maplestory.images.Shop_Buy_Rollover);
+						if(selectedShopSlotIndex >= 0) {
+							sellItem(currentSellList.get(selectedShopSlotIndex));
+						}
+					}
+					else {
+						bt_buy.setIcon(Maplestory.images.Shop_Buy);
+					}
+				}
+			}
+		});
+
+		bt_sell = new JLabel("");
+		bt_sell.setBounds(391, 45, 64, 16);
+		bt_sell.setIcon(Maplestory.images.Shop_Sell);
+		bt_sell.setDisabledIcon(Maplestory.images.Shop_Sell_Disabled);
+		bt_sell.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseEntered(MouseEvent e) {
+				if(!UI_Notice.isOpen) {
+					sell_entered = true;
+					if(!sell_pressed) {
+						bt_sell.setIcon(Maplestory.images.Shop_Sell_Rollover);
+					}
+				}
+			}
+			@Override
+			public void mouseExited(MouseEvent e) {
+				if(!UI_Notice.isOpen) {
+					sell_entered = false;
+					if(!sell_pressed) {
+						bt_sell.setIcon(Maplestory.images.Shop_Sell);
+					}
+				}
+			}
+			@Override
+			public void mousePressed(MouseEvent e) {
+				if(SwingUtilities.isLeftMouseButton(e) && !UI_Notice.isOpen) {
+					sell_pressed = true;
+					bt_sell.setIcon(Maplestory.images.Shop_Sell_Pressed);
+				}
+			}
+			@Override
+			public void mouseReleased(MouseEvent e) {
+				if(SwingUtilities.isLeftMouseButton(e) && !UI_Notice.isOpen) {
+					sell_pressed = false;
+					if(sell_entered) {
+						bt_sell.setIcon(Maplestory.images.Shop_Sell_Rollover);
+						if(selectedUserSlotIndex >= 0) {
+							buyItem(currentNullRemovedList.get(selectedUserSlotIndex));
+						}
+					}
+					else {
+						bt_sell.setIcon(Maplestory.images.Shop_Sell);
 					}
 				}
 			}
@@ -274,7 +387,7 @@ public abstract class Shop extends JLabel {
 		bt_equip.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				if(SwingUtilities.isLeftMouseButton(e)) {
+				if(SwingUtilities.isLeftMouseButton(e) && !UI_Notice.isOpen) {
 					settoTop();
 					if(bt_equip.isEnabled()) {
 						Music Tab_Music = new Music("Tab.wav", 1);
@@ -292,7 +405,7 @@ public abstract class Shop extends JLabel {
 		bt_consume.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				if(SwingUtilities.isLeftMouseButton(e)) {
+				if(SwingUtilities.isLeftMouseButton(e) && !UI_Notice.isOpen) {
 					settoTop();
 					if(bt_consume.isEnabled()) {
 						Music Tab_Music = new Music("Tab.wav", 1);
@@ -310,7 +423,7 @@ public abstract class Shop extends JLabel {
 		bt_etc.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				if(SwingUtilities.isLeftMouseButton(e)) {
+				if(SwingUtilities.isLeftMouseButton(e) && !UI_Notice.isOpen) {
 					settoTop();
 					if(bt_etc.isEnabled()) {
 						Music Tab_Music = new Music("Tab.wav", 1);
@@ -328,7 +441,7 @@ public abstract class Shop extends JLabel {
 		bt_install.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				if(SwingUtilities.isLeftMouseButton(e)) {
+				if(SwingUtilities.isLeftMouseButton(e) && !UI_Notice.isOpen) {
 					settoTop();
 					if(bt_install.isEnabled()) {
 						Music Tab_Music = new Music("Tab.wav", 1);
@@ -346,7 +459,7 @@ public abstract class Shop extends JLabel {
 		bt_cash.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				if(SwingUtilities.isLeftMouseButton(e)) {
+				if(SwingUtilities.isLeftMouseButton(e) && !UI_Notice.isOpen) {
 					settoTop();
 					if(bt_cash.isEnabled()) {
 						Music Tab_Music = new Music("Tab.wav", 1);
@@ -357,7 +470,9 @@ public abstract class Shop extends JLabel {
 			}
 		});
 		
-		add(bt_close);
+		add(bt_exit);
+		add(bt_buy);
+		add(bt_sell);
 		add(bt_equip);
 		add(bt_consume);
 		add(bt_etc);
@@ -372,21 +487,25 @@ public abstract class Shop extends JLabel {
 		shop_prev.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				prev_entered = true;
-				if(!prev_pressed) {
-					shop_prev.setIcon(Maplestory.images.Inventory_Prev_Rollover);
+				if(!UI_Notice.isOpen) {
+					prev_entered = true;
+					if(!prev_pressed) {
+						shop_prev.setIcon(Maplestory.images.Inventory_Prev_Rollover);
+					}
 				}
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				prev_entered = false;
-				if(!prev_pressed) {
-					shop_prev.setIcon(Maplestory.images.Inventory_Prev);
+				if(!UI_Notice.isOpen) {
+					prev_entered = false;
+					if(!prev_pressed) {
+						shop_prev.setIcon(Maplestory.images.Inventory_Prev);
+					}
 				}
 			}
 			@Override
 			public void mousePressed(MouseEvent e) {
-				if(SwingUtilities.isLeftMouseButton(e)) {
+				if(SwingUtilities.isLeftMouseButton(e) && !UI_Notice.isOpen) {
 					settoTop();
 					prev_pressed = true;
 					shop_prev.setIcon(Maplestory.images.Inventory_Prev_Pressed);
@@ -394,7 +513,7 @@ public abstract class Shop extends JLabel {
 			}
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				if(SwingUtilities.isLeftMouseButton(e)) {
+				if(SwingUtilities.isLeftMouseButton(e) && !UI_Notice.isOpen) {
 					prev_pressed = false;
 					if(prev_entered) {
 						shop_prev.setIcon(Maplestory.images.Inventory_Prev_Rollover);
@@ -417,21 +536,25 @@ public abstract class Shop extends JLabel {
 		shop_next.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				next_entered = true;
-				if(!next_pressed) {
-					shop_next.setIcon(Maplestory.images.Inventory_Next_Rollover);
+				if(!UI_Notice.isOpen) {
+					next_entered = true;
+					if(!next_pressed) {
+						shop_next.setIcon(Maplestory.images.Inventory_Next_Rollover);
+					}
 				}
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				next_entered = false;
-				if(!next_pressed) {
-					shop_next.setIcon(Maplestory.images.Inventory_Next);
+				if(!UI_Notice.isOpen) {
+					next_entered = false;
+					if(!next_pressed) {
+						shop_next.setIcon(Maplestory.images.Inventory_Next);
+					}
 				}
 			}
 			@Override
 			public void mousePressed(MouseEvent e) {
-				if(SwingUtilities.isLeftMouseButton(e)) {
+				if(SwingUtilities.isLeftMouseButton(e) && !UI_Notice.isOpen) {
 					settoTop();
 					next_pressed = true;
 					shop_next.setIcon(Maplestory.images.Inventory_Next_Pressed);
@@ -439,7 +562,7 @@ public abstract class Shop extends JLabel {
 			}
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				if(SwingUtilities.isLeftMouseButton(e)) {
+				if(SwingUtilities.isLeftMouseButton(e) && !UI_Notice.isOpen) {
 					next_pressed = false;
 					if(next_entered) {
 						shop_next.setIcon(Maplestory.images.Inventory_Next_Rollover);
@@ -461,21 +584,25 @@ public abstract class Shop extends JLabel {
 		shop_thumb.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				thumb_entered = true;
-				if(!thumb_pressed) {
-					shop_thumb.setIcon(Maplestory.images.Inventory_Thumb_Rollover);
+				if(!UI_Notice.isOpen) {
+					thumb_entered = true;
+					if(!thumb_pressed) {
+						shop_thumb.setIcon(Maplestory.images.Inventory_Thumb_Rollover);
+					}
 				}
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				thumb_entered = false;
-				if(!thumb_pressed) {
-					shop_thumb.setIcon(Maplestory.images.Inventory_Thumb);
+				if(!UI_Notice.isOpen) {
+					thumb_entered = false;
+					if(!thumb_pressed) {
+						shop_thumb.setIcon(Maplestory.images.Inventory_Thumb);
+					}
 				}
 			}
 			@Override
 			public void mousePressed(MouseEvent e) {
-				if(SwingUtilities.isLeftMouseButton(e)) {
+				if(SwingUtilities.isLeftMouseButton(e) && !UI_Notice.isOpen) {
 					settoTop();
 					thumb_pressed = true;
 					shop_thumb.setIcon(Maplestory.images.Inventory_Thumb_Pressed);
@@ -483,7 +610,7 @@ public abstract class Shop extends JLabel {
 			}
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				if(SwingUtilities.isLeftMouseButton(e)) {
+				if(SwingUtilities.isLeftMouseButton(e) && !UI_Notice.isOpen) {
 					thumb_pressed = false;
 					if(thumb_entered) {
 						shop_thumb.setIcon(Maplestory.images.Inventory_Thumb_Rollover);
@@ -497,12 +624,14 @@ public abstract class Shop extends JLabel {
 		shop_thumb.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				int Y = e.getY()+shop_thumb.getY();
-				if(shop_thumb.isEnabled()) {
-					for(int i=0;i<=(currentSellList.size()-5);i++) {
-						if(Y >= 128+151*i/(currentSellList.size()-5) && Y <= 128+151*(i+1)/(currentSellList.size()-5)) {
-							current_shop_slot_index = i;
-							setShopThumbLocation();
+				if(!UI_Notice.isOpen) {
+					int Y = e.getY()+shop_thumb.getY();
+					if(shop_thumb.isEnabled()) {
+						for(int i=0;i<=(currentSellList.size()-5);i++) {
+							if(Y >= 128+151*i/(currentSellList.size()-5) && Y <= 128+151*(i+1)/(currentSellList.size()-5)) {
+								current_shop_slot_index = i;
+								setShopThumbLocation();
+							}
 						}
 					}
 				}
@@ -516,21 +645,25 @@ public abstract class Shop extends JLabel {
 		user_prev.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				prev_entered = true;
-				if(!prev_pressed) {
-					user_prev.setIcon(Maplestory.images.Inventory_Prev_Rollover);
+				if(!UI_Notice.isOpen) {
+					prev_entered = true;
+					if(!prev_pressed) {
+						user_prev.setIcon(Maplestory.images.Inventory_Prev_Rollover);
+					}
 				}
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				prev_entered = false;
-				if(!prev_pressed) {
-					user_prev.setIcon(Maplestory.images.Inventory_Prev);
+				if(!UI_Notice.isOpen) {
+					prev_entered = false;
+					if(!prev_pressed) {
+						user_prev.setIcon(Maplestory.images.Inventory_Prev);
+					}
 				}
 			}
 			@Override
 			public void mousePressed(MouseEvent e) {
-				if(SwingUtilities.isLeftMouseButton(e)) {
+				if(SwingUtilities.isLeftMouseButton(e) && !UI_Notice.isOpen) {
 					settoTop();
 					prev_pressed = true;
 					user_prev.setIcon(Maplestory.images.Inventory_Prev_Pressed);
@@ -538,7 +671,7 @@ public abstract class Shop extends JLabel {
 			}
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				if(SwingUtilities.isLeftMouseButton(e)) {
+				if(SwingUtilities.isLeftMouseButton(e) && !UI_Notice.isOpen) {
 					prev_pressed = false;
 					if(prev_entered) {
 						user_prev.setIcon(Maplestory.images.Inventory_Prev_Rollover);
@@ -561,21 +694,25 @@ public abstract class Shop extends JLabel {
 		user_next.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				next_entered = true;
-				if(!next_pressed) {
-					user_next.setIcon(Maplestory.images.Inventory_Next_Rollover);
+				if(!UI_Notice.isOpen) {
+					next_entered = true;
+					if(!next_pressed) {
+						user_next.setIcon(Maplestory.images.Inventory_Next_Rollover);
+					}
 				}
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				next_entered = false;
-				if(!next_pressed) {
-					user_next.setIcon(Maplestory.images.Inventory_Next);
+				if(!UI_Notice.isOpen) {
+					next_entered = false;
+					if(!next_pressed) {
+						user_next.setIcon(Maplestory.images.Inventory_Next);
+					}
 				}
 			}
 			@Override
 			public void mousePressed(MouseEvent e) {
-				if(SwingUtilities.isLeftMouseButton(e)) {
+				if(SwingUtilities.isLeftMouseButton(e) && !UI_Notice.isOpen) {
 					settoTop();
 					next_pressed = true;
 					user_next.setIcon(Maplestory.images.Inventory_Next_Pressed);
@@ -583,7 +720,7 @@ public abstract class Shop extends JLabel {
 			}
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				if(SwingUtilities.isLeftMouseButton(e)) {
+				if(SwingUtilities.isLeftMouseButton(e) && !UI_Notice.isOpen) {
 					next_pressed = false;
 					if(next_entered) {
 						user_next.setIcon(Maplestory.images.Inventory_Next_Rollover);
@@ -605,21 +742,25 @@ public abstract class Shop extends JLabel {
 		user_thumb.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseEntered(MouseEvent e) {
-				thumb_entered = true;
-				if(!thumb_pressed) {
-					user_thumb.setIcon(Maplestory.images.Inventory_Thumb_Rollover);
+				if(!UI_Notice.isOpen) {
+					thumb_entered = true;
+					if(!thumb_pressed) {
+						user_thumb.setIcon(Maplestory.images.Inventory_Thumb_Rollover);
+					}
 				}
 			}
 			@Override
 			public void mouseExited(MouseEvent e) {
-				thumb_entered = false;
-				if(!thumb_pressed) {
-					user_thumb.setIcon(Maplestory.images.Inventory_Thumb);
+				if(!UI_Notice.isOpen) {
+					thumb_entered = false;
+					if(!thumb_pressed) {
+						user_thumb.setIcon(Maplestory.images.Inventory_Thumb);
+					}
 				}
 			}
 			@Override
 			public void mousePressed(MouseEvent e) {
-				if(SwingUtilities.isLeftMouseButton(e)) {
+				if(SwingUtilities.isLeftMouseButton(e) && !UI_Notice.isOpen) {
 					settoTop();
 					thumb_pressed = true;
 					user_thumb.setIcon(Maplestory.images.Inventory_Thumb_Pressed);
@@ -627,7 +768,7 @@ public abstract class Shop extends JLabel {
 			}
 			@Override
 			public void mouseReleased(MouseEvent e) {
-				if(SwingUtilities.isLeftMouseButton(e)) {
+				if(SwingUtilities.isLeftMouseButton(e) && !UI_Notice.isOpen) {
 					thumb_pressed = false;
 					if(thumb_entered) {
 						user_thumb.setIcon(Maplestory.images.Inventory_Thumb_Rollover);
@@ -641,12 +782,14 @@ public abstract class Shop extends JLabel {
 		user_thumb.addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				int Y = e.getY()+user_thumb.getY();
-				if(user_thumb.isEnabled()) {
-					for(int i=0;i<=currentNullRemovedList.size()-5;i++) {
-						if(Y >= 128+151*i/(currentNullRemovedList.size()-5) && Y <= 128+151*(i+1)/(currentNullRemovedList.size()-5)) {
-							current_user_slot_index = i;
-							setUserThumbLocation();
+				if(!UI_Notice.isOpen) {
+					int Y = e.getY()+user_thumb.getY();
+					if(user_thumb.isEnabled()) {
+						for(int i=0;i<=currentNullRemovedList.size()-5;i++) {
+							if(Y >= 128+151*i/(currentNullRemovedList.size()-5) && Y <= 128+151*(i+1)/(currentNullRemovedList.size()-5)) {
+								current_user_slot_index = i;
+								setUserThumbLocation();
+							}
 						}
 					}
 				}
@@ -664,26 +807,22 @@ public abstract class Shop extends JLabel {
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mousePressed(MouseEvent e) {
-				if(SwingUtilities.isLeftMouseButton(e)) {
+				if(SwingUtilities.isLeftMouseButton(e) && !UI_Notice.isOpen) {
 					mouseX = e.getX();
 					mouseY = e.getY();
 					settoTop();
 				}
 			}
-			
-			@Override
-			public void mouseClicked(MouseEvent e) {
-			}
 		});
 		addMouseMotionListener(new MouseMotionAdapter() {
 			@Override
 			public void mouseDragged(MouseEvent e) {
-				if(SwingUtilities.isLeftMouseButton(e)) {
+				if(SwingUtilities.isLeftMouseButton(e) && !UI_Notice.isOpen) {
 					int X = e.getX();
 					int Y = e.getY();
 					int Screen_X = getX();
 					int Screen_Y = getY();
-					if(mouseX >= 4 && mouseX <= 450 && mouseY >= 4 && mouseY <= 15) {
+					if(mouseX >= 4 && mouseX <= 450 && mouseY >= 0 && mouseY <= 12) {
 						if(Screen_X >= -100 && Screen_X <= 450 && Screen_Y >= 0 && Screen_Y <= 550) {
 							int Screen_New_X = X + Screen_X - mouseX;
 							int Screen_New_Y = Y + Screen_Y - mouseY;
@@ -699,38 +838,40 @@ public abstract class Shop extends JLabel {
 			
 			@Override
 			public void mouseWheelMoved(MouseWheelEvent e) {
-				int direction = e.getWheelRotation();
-				mouseX = e.getX();
-				mouseY = e.getY();
-				if(shop_thumb.isEnabled()) {
-					if(mouseX >= 7 && mouseX <= 226 && mouseY >= 114 && mouseY <= 317) {
-						if(direction > 0) {
-							if(current_shop_slot_index < (currentSellList.size() - 5)) {
-								current_shop_slot_index++;
+				if(!UI_Notice.isOpen) {
+					int direction = e.getWheelRotation();
+					mouseX = e.getX();
+					mouseY = e.getY();
+					if(shop_thumb.isEnabled()) {
+						if(mouseX >= 7 && mouseX <= 226 && mouseY >= 114 && mouseY <= 317) {
+							if(direction > 0) {
+								if(current_shop_slot_index < (currentSellList.size() - 5)) {
+									current_shop_slot_index++;
+								}
 							}
-						}
-						else if(direction < 0) {
-							if(current_shop_slot_index > 0) {
-								current_shop_slot_index--;
+							else if(direction < 0) {
+								if(current_shop_slot_index > 0) {
+									current_shop_slot_index--;
+								}
 							}
+							setShopThumbLocation();
 						}
-						setShopThumbLocation();
 					}
-				}
-
-				if(user_thumb.isEnabled()) {
-					if(mouseX >= 237 && mouseX <= 456 && mouseY >= 114 && mouseY <= 317) {
-						if(direction > 0) {
-							if(current_user_slot_index < (currentNullRemovedList.size() - 5)) {
-								current_user_slot_index++;
+	
+					if(user_thumb.isEnabled()) {
+						if(mouseX >= 237 && mouseX <= 456 && mouseY >= 114 && mouseY <= 317) {
+							if(direction > 0) {
+								if(current_user_slot_index < (currentNullRemovedList.size() - 5)) {
+									current_user_slot_index++;
+								}
 							}
-						}
-						else if(direction < 0) {
-							if(current_user_slot_index > 0) {
-								current_user_slot_index--;
+							else if(direction < 0) {
+								if(current_user_slot_index > 0) {
+									current_user_slot_index--;
+								}
 							}
+							setUserThumbLocation();
 						}
-						setUserThumbLocation();
 					}
 				}
 			}
@@ -741,14 +882,78 @@ public abstract class Shop extends JLabel {
 	public abstract void setSellList();
 	
 	public void sellItem(ItemForSale itemForSale) {
-		Maplestory.player.Character_Buy_Item(itemForSale.item.getNew(1), itemForSale.price);
-		if(!itemForSale.item.infiniteQuantity) {
-			itemForSale.item.Quantity--;
-		}
+		Runnable runnable = new Runnable() {
+
+			@Override
+			public void run() {
+				int num = 0;
+				if(Maplestory.ui_notice.open(UI_Notice.WITH_TEXTFIELD | UI_Notice.WITH_OK | UI_Notice.WITH_CANCEL, "몇 개를 구입하시겠습니까?")) {
+					while(UI_Notice.isOpen) {
+						try {
+							Thread.sleep(10);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+					
+					if(UI_Notice.status == UI_Notice.OK) {
+						num = UI_Notice.value;
+						if(num <= 0) {
+							Maplestory.ui_notice.open(UI_Notice.WITH_OK, "1 이상의 숫자만 가능합니다.");
+						}
+						else if(Maplestory.player.inventory.Meso >= itemForSale.price * num) {
+							if(!itemForSale.item.infiniteQuantity) {
+								if(itemForSale.item.Quantity >= num) {
+									Maplestory.player.Character_Buy_Item(itemForSale.item.getNew(num), itemForSale.price);
+									itemForSale.item.Quantity -= num;
+								}
+								else {
+									Maplestory.ui_notice.open(UI_Notice.WITH_OK, "물품이 부족합니다.");
+								}
+							}
+							else {
+								Maplestory.player.Character_Buy_Item(itemForSale.item.getNew(num), itemForSale.price);
+							}
+						}
+						else {
+							Maplestory.ui_notice.open(UI_Notice.WITH_OK, "메소가 부족합니다.");
+						}
+					}
+				}	
+			}
+		};
+		Maplestory.thread_pool.submit(runnable);
+		
 	}
 	
 	public void buyItem(Item item) {
-		Maplestory.player.Character_Sell_Item(item);
+		Runnable runnable = new Runnable() {
+
+			@Override
+			public void run() {
+				int num = 0;
+				if(Maplestory.ui_notice.open(UI_Notice.WITH_TEXTFIELD | UI_Notice.WITH_OK | UI_Notice.WITH_CANCEL, "몇 개를 판매하시겠습니까?")) {
+					while(UI_Notice.isOpen) {
+						try {
+							Thread.sleep(10);
+						} catch (InterruptedException e) {
+							e.printStackTrace();
+						}
+					}
+					num = UI_Notice.value;
+
+					if(UI_Notice.status == UI_Notice.OK) {
+						if(item.Quantity >= num) {
+							Maplestory.player.Character_Sell_Item(item, num);
+						}
+						else {
+							Maplestory.ui_notice.open(UI_Notice.WITH_OK, "개수가 부족합니다.");
+						}
+					}
+				}
+			}
+		};
+		Maplestory.thread_pool.submit(runnable);
 	}
 	
 	public void Show_User_Equip() {
@@ -757,6 +962,7 @@ public abstract class Shop extends JLabel {
 		bt_etc.setEnabled(true);
 		bt_install.setEnabled(true);
 		bt_cash.setEnabled(true);
+		selectedUserSlotIndex = -1;
 		currentNullRemovedList = Maplestory.player.inventory.NullRemovedEquipList;
 		current_type = 0;
 		current_user_slot_index = Equip_user_line_index;
@@ -771,6 +977,7 @@ public abstract class Shop extends JLabel {
 		bt_etc.setEnabled(true);
 		bt_install.setEnabled(true);
 		bt_cash.setEnabled(true);
+		selectedUserSlotIndex = -1;
 		currentNullRemovedList = Maplestory.player.inventory.NullRemovedConsumeList;
 		current_type = 1;
 		current_user_slot_index = Consume_user_line_index;
@@ -785,6 +992,7 @@ public abstract class Shop extends JLabel {
 		bt_etc.setEnabled(false);
 		bt_install.setEnabled(true);
 		bt_cash.setEnabled(true);
+		selectedUserSlotIndex = -1;
 		currentNullRemovedList = Maplestory.player.inventory.NullRemovedEtcList;
 		current_type = 2;
 		current_user_slot_index = Etc_user_line_index;
@@ -799,6 +1007,7 @@ public abstract class Shop extends JLabel {
 		bt_etc.setEnabled(true);
 		bt_install.setEnabled(false);
 		bt_cash.setEnabled(true);
+		selectedUserSlotIndex = -1;
 		currentNullRemovedList = Maplestory.player.inventory.NullRemovedInstallList;
 		current_type = 3;
 		current_user_slot_index = Install_user_line_index;
@@ -813,6 +1022,7 @@ public abstract class Shop extends JLabel {
 		bt_etc.setEnabled(true);
 		bt_install.setEnabled(true);
 		bt_cash.setEnabled(false);
+		selectedUserSlotIndex = -1;
 		currentNullRemovedList = Maplestory.player.inventory.NullRemovedCashList;
 		current_type = 4;
 		current_user_slot_index = Cash_user_line_index;
@@ -884,6 +1094,7 @@ public abstract class Shop extends JLabel {
 		NPCImage = _NPCImage;
 		
 		currentSellList = sell_list;
+		setLocation(167, 101);
 		setVisible(true);
 		settoTop();
 		
@@ -903,14 +1114,19 @@ public abstract class Shop extends JLabel {
 		isOpen = true;
 	}
 	
+	public void settoTop() {
+		Maplestory.current_stage.setComponentZOrder(this, 1);
+	}
+	
 	public void close() {
 		Stage.current_shop = null;
 		
 		isOpen = false;
+		settoBottom();
 		setVisible(false);
 	}
 	
-	public void settoTop() {
-		Maplestory.current_stage.setComponentZOrder(this, 0);
+	public void settoBottom() {
+		Maplestory.current_stage.setComponentZOrder(this, 4);
 	}
 }

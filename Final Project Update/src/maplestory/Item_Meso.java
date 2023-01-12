@@ -1,5 +1,7 @@
 package maplestory;
 
+import java.text.DecimalFormat;
+
 import javax.swing.ImageIcon;
 
 public class Item_Meso extends Item{
@@ -7,6 +9,8 @@ public class Item_Meso extends Item{
 	protected static String type = "Meso";
 	protected static String name = "메소";
 	protected static String tooltip = "메소";
+
+	protected static DecimalFormat dec_format = new DecimalFormat("###,###,###,###");
 	
 	protected static ImageIcon Meso_Bronze_0 = Maplestory.images.Meso_Bronze_0;
 	protected static ImageIcon Meso_Bronze_1 = Maplestory.images.Meso_Bronze_1;

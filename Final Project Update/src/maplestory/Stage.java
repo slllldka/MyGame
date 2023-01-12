@@ -34,6 +34,12 @@ public class Stage extends JPanel {
 
 	protected JFrame frame; // JFrame on Maplestory Class
 	
+	protected boolean isTown;
+	protected Stage nearestTown;
+	
+	//Mouse Position
+	protected int MouseX = 0, MouseY = 0;
+	
 	//Music
 	protected Music Stage_Music;
 	
@@ -152,10 +158,9 @@ public class Stage extends JPanel {
 	protected static boolean attacked = false;
 	protected static boolean Attacking = false;
 	protected static boolean Hittable = true;
-	
-	protected static boolean mouseclicked = false;
 
-	public Stage(int CD, String BGName, String GName, String FH1Name, String FH2Name, JFrame _frame, JButton _back) {
+	public Stage(int CD, String BGName, String GName, String FH1Name, String FH2Name, JFrame _frame, JButton _back
+			, boolean _isTown, Stage _nearestTown) {
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -163,13 +168,36 @@ public class Stage extends JPanel {
 					if(move != null) {
 						if(Maplestory.player.inventory.move_index != -1) {
 							move = null;
-							Maplestory.player.Character_Item_Drop();
+							Maplestory.player.Character_Drop_Item();
 						}
-						else if(Maplestory.quick_slot.move_index != -1){
+						else if(Maplestory.ui_keySetting.move_index != -1) {
 							Music DragEnd_Music = new Music("DragEnd.wav", 1);
 							DragEnd_Music.play();
+							UI_KeyConfig_Slot slot = Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index];
 							move = null;
-							Maplestory.quick_slot.Icon[Maplestory.quick_slot.move_index].set_Item(null);
+							if(slot.actionMapKey.equals("ItemUse")) {
+								slot.item = null;
+								slot.actionMapKey = "";
+								slot.actionImage = null;
+							}
+							else if(slot.actionMapKey.equals("Skill")) {
+								
+							}
+							else {
+								Maplestory.ui_keySetting.moveSlotToBottom(slot);
+								slot.item = null;
+								slot.actionMapKey = "";
+								slot.actionImage = null;
+							}
+							Maplestory.ui_quick_slot.move_index = -1;
+							Maplestory.ui_keySetting.move_index = -1;
+							
+							if(Maplestory.ui_keySetting.isOpen) {
+								Maplestory.ui_keySetting.isChanged = true;
+							}
+							else {
+								Maplestory.ui_keySetting.save();
+							}
 						}
 					}
 				}
@@ -180,6 +208,9 @@ public class Stage extends JPanel {
 		BackButton = _back;
 
 		CharFirstDirection = CD;
+		
+		isTown = _isTown;
+		nearestTown = _nearestTown;
 
 		// set contentpane
 		setPreferredSize(new Dimension(800, 600));
@@ -311,7 +342,7 @@ public class Stage extends JPanel {
 			public void run() {
 				while(Available) {
 					int CX = Maplestory.player.CharacterX;
-					int CY = Maplestory.player.CharacterY;
+					int CY = Maplestory.player.CharacterY - Character.CharacterHeight;
 					if ((CameraX >= 0) && (CameraX <= X_Size-800)) {
 						if (CX < CameraX + 300) {
 							if ((CX - 300 >= 0) && (CX - 300 <= X_Size - 800)) {
@@ -338,7 +369,6 @@ public class Stage extends JPanel {
 					try {
 						Thread.sleep(1);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -494,32 +524,37 @@ public class Stage extends JPanel {
 				}
 				
 				//Mob HP Bar and Name
-				if (mob.alive && (System.currentTimeMillis() >= mob.hit_time)
-						&& (System.currentTimeMillis() <= mob.hit_time + 5000)) {
-					mob_rate = (int) ((float)mob.HP / mob.getMaxHP() * 100);
-					mob_xcenter = mob.X + mob.getWidth() / 2;
-					g2.drawImage(Mob_HP_BarImg.getImage(), mob_xcenter - 28 - CameraX, mob.Y - mob_icon_height - CameraY - 11, 56, 9, this);
-					g2.setPaint(Color.GREEN);
-					g2.fillRect(mob_xcenter - 25 - CameraX, mob.Y - mob_icon_height - CameraY - 8,
-							50 * mob_rate / 100, 3);
-					
-					len = metrics.stringWidth(mob.getName());
-					g2.setColor(Color.BLACK);
-					g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
-					g2.fillRect(mob_xcenter - len / 2 - CameraX, mob.Y - CameraY, len, 15);
-					g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
-					g2.setFont(font);
-					
-					if(mob.getLevel() > Maplestory.player.Level + 20) {
-						g2.setColor(Color.RED);
+				if(!mob.isBoss) {
+					if (mob.alive && (System.currentTimeMillis() >= mob.hit_time)
+							&& (System.currentTimeMillis() <= mob.hit_time + 5000)) {
+						mob_rate = (int) ((float)mob.HP / mob.getMaxHP() * 100);
+						mob_xcenter = mob.X + mob.getWidth() / 2;
+						g2.drawImage(Mob_HP_BarImg.getImage(), mob_xcenter - 28 - CameraX, mob.Y - mob_icon_height - CameraY - 11, 56, 9, this);
+						g2.setPaint(Color.GREEN);
+						g2.fillRect(mob_xcenter - 25 - CameraX, mob.Y - mob_icon_height - CameraY - 8,
+								50 * mob_rate / 100, 3);
+						
+						len = metrics.stringWidth(mob.getName());
+						g2.setColor(Color.BLACK);
+						g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
+						g2.fillRect(mob_xcenter - len / 2 - CameraX, mob.Y - CameraY, len, 15);
+						g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+						g2.setFont(font);
+						
+						if(mob.getLevel() > Maplestory.player.Level + 20) {
+							g2.setColor(Color.RED);
+						}
+						else if(mob.getLevel() < Maplestory.player.Level - 20) {
+							g2.setColor(Color.YELLOW);
+						}
+						else {
+							g2.setColor(Color.WHITE);
+						}
+						g2.drawString(mob.getName(), mob_xcenter - len / 2 - CameraX, mob.Y + 12 - CameraY);
+						
 					}
-					else if(mob.getLevel() < Maplestory.player.Level - 20) {
-						g2.setColor(Color.YELLOW);
-					}
-					else {
-						g2.setColor(Color.WHITE);
-					}
-					g2.drawString(mob.getName(), mob_xcenter - len / 2 - CameraX, mob.Y + 12 - CameraY);
+				}
+				else {
 					
 				}
 				
@@ -539,10 +574,10 @@ public class Stage extends JPanel {
 			g2.drawImage(
 					Maplestory.player.current_Img.getImage(), Maplestory.player.CharacterX - CameraX
 							- Maplestory.player.current_Img.getIconWidth() + Character.CharacterWidth,
-					Maplestory.player.CharacterY - CameraY, this);
+					Maplestory.player.CharacterY - Character.CharacterHeight - CameraY, this);
 		} else if (Maplestory.player.CharDirection == 1) {
 			g2.drawImage(Maplestory.player.current_Img.getImage(), Maplestory.player.CharacterX - CameraX,
-					Maplestory.player.CharacterY - CameraY, this);
+					Maplestory.player.CharacterY - Character.CharacterHeight - CameraY, this);
 		}
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
 		
@@ -560,8 +595,8 @@ public class Stage extends JPanel {
 				else {
 					lvup_img = data.current_Img;
 					g2.drawImage(lvup_img.getImage(), Maplestory.player.CharacterX + Character.CharacterWidth/2 
-							- Maplestory.images.LevelUp_Effect[0].getIconWidth() / 2
-							+ data.current_x_offset - CameraX, Maplestory.player.CharacterY + data.current_y_offset - CameraY, this);
+							- Maplestory.images.LevelUp_Effect[0].getIconWidth() / 2 + data.current_x_offset - CameraX
+							, Maplestory.player.CharacterY - Character.CharacterHeight + data.current_y_offset - CameraY, this);
 				}
 			}
 		}
@@ -713,9 +748,13 @@ public class Stage extends JPanel {
 		
 		//cursor's moving item
 		if(move != null) {
+			if(getMousePosition() != null) {
+				MouseX = getMousePosition().x;
+				MouseY = getMousePosition().y;
+			}
+			
 			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
-			g2.drawImage(move.getImage(), getMousePosition().x - 15,
-					getMousePosition().y - 15, this);
+			g2.drawImage(move.getImage(), MouseX - 15, MouseY - 15, this);
 			g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
 		}
 		
@@ -780,7 +819,6 @@ public class Stage extends JPanel {
 					try {
 						Thread.sleep(120);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -817,7 +855,6 @@ public class Stage extends JPanel {
 					try {
 						Thread.sleep(sleep);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					if(StageNum == 2) {
@@ -843,7 +880,8 @@ public class Stage extends JPanel {
 					//character can't be attacked twice or more, which means character can be attacked again after landing to the ground
 					if(!Stage.attacked && Stage.Hittable) {
 						//character is attacked
-						if((Maplestory.player.CharacterY >= ypos-60) && (Maplestory.player.CharacterY <= ypos+meteor.getHeight()-10)) {
+						if((Maplestory.player.CharacterY - Character.CharacterHeight >= ypos-60)
+								&& (Maplestory.player.CharacterY - Character.CharacterHeight <= ypos+meteor.getHeight()-10)) {
 							if((Maplestory.player.CharacterX >= xpos-40) && (Maplestory.player.CharacterX <= xpos+meteor.getWidth()-10)){
 								Maplestory.player.HP_Damage(1);
 								if(StageNum == 2) {
@@ -878,13 +916,15 @@ public class Stage extends JPanel {
 	
 	// setup means add to JFrame, JPanel
 	public void setup() {
-		add(Maplestory.player.inventory, 0);
-		add(Maplestory.generalStore, 1);
-		add(Maplestory.minimap, 2);
-		add(Maplestory.status_bar, 3);
-		add(Maplestory.quick_slot, 4);
+		add(Maplestory.ui_notice, 0);
+		add(Maplestory.player.inventory, 1);
+		add(Maplestory.generalStore, 2);
+		add(Maplestory.ui_keySetting, 3);
+		add(Maplestory.ui_minimap, 4);
+		add(Maplestory.ui_status_bar, 5);
+		add(Maplestory.ui_quick_slot, 6);
 		for(int i=0;i<NPC_List.size();i++) {
-			add(NPC_List.get(i), 5 + i);
+			add(NPC_List.get(i), 7 + i);
 		}
 		BackButton.setEnabled(false);
 		frame.add(this);
@@ -892,6 +932,10 @@ public class Stage extends JPanel {
 
 	// open
 	public void open(Portal portal) {
+		if(Maplestory.current_stage == this && Maplestory.StageNow == StageNum) {
+			reopen();
+			return;
+		}
 		Maplestory.StageNow = StageNum;
 		Maplestory.current_stage = this;
 		setup();
@@ -903,14 +947,14 @@ public class Stage extends JPanel {
 		
 		frame.pack();
 		
-		Maplestory.keysetting.Keyboard_Set();
-		Maplestory.keysetting.Keyboard_Set(this);
+		Maplestory.keyConfig.setKeyBoard();
+		Maplestory.keyConfig.setKeyBoard(this);
 		
 		if(MiniMap_Available) {
-			Maplestory.minimap.Open();
+			Maplestory.ui_minimap.open();
 		}
 		else {
-			Maplestory.minimap.Close();
+			Maplestory.ui_minimap.close();
 		}
 		
 		Runnable runnable = new Runnable() {
@@ -946,7 +990,7 @@ public class Stage extends JPanel {
 				}
 				else {
 					Maplestory.player.CharacterX = portal.xcenter - Character.CharacterWidth / 2;
-					Maplestory.player.CharacterY = portal.y - Character.CharacterHeight - 10;
+					Maplestory.player.CharacterY = portal.y - 10;
 				}
 				Maplestory.player.IsLandable();
 				
@@ -994,15 +1038,95 @@ public class Stage extends JPanel {
 					try {
 						Thread.sleep(1);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
-				
 				BlackOut_Alpha = 0f;
 				
 				BackButton.setEnabled(true);
 				Stage_Music.play();
+				
+				setFocusable(true);
+				grabFocus();
+				Available = true;
+				Change_PortalImg();
+				MoveCamera();
+			}
+			
+		};
+		Maplestory.thread_pool.submit(runnable);
+	}
+	
+	public void reopen() {
+		Runnable runnable = new Runnable() {
+
+			@Override
+			public void run() {
+				setFocusable(false);
+				BackButton.setEnabled(false);
+				
+				Available = false;
+				LeftKey = false;
+				RightKey = false;
+				UpKey = false;
+				DownKey = false;
+				Left = false;
+				Right = false;
+				Jump = false;
+				Ladder = false;
+				Up = false;
+				Down = false;
+				attacked = false;
+				Attacking = false;
+				Hittable = false;
+				
+				for(float i=0f;i<1f;i+=0.002f) {
+					BlackOut_Alpha = i;
+					try {
+						Thread.sleep(1);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				BlackOut_Alpha = 1f;
+
+				Tomb_Alpha = 0f;
+				Tomb_Y = 0;
+
+				Maplestory.player.CharDirection = CharFirstDirection;
+				Maplestory.player.CharacterX = CharacterFirstX;
+				Maplestory.player.CharacterY = CharacterFirstY;
+				
+				Maplestory.player.IsLandable();
+				Maplestory.player.current_Img = CharacterFirstImg;
+				Maplestory.player.alpha = 1f;
+				
+				CameraX = CameraFirstX;
+				CameraY = CameraFirstY;
+				
+				Hittable = true;
+				
+				if(!Maplestory.player.alive) {
+					Maplestory.player.HP_Heal(50);
+					Maplestory.player.alive = true;
+				}
+				
+		/*				if(Maplestory.StageNow < 10) {
+					Maplestory.player.HP = Maplestory.player.MaxHP;
+				}
+		*/				
+				
+				for(float i=1f;i>0f;i-=0.01f) {
+					BlackOut_Alpha = i;
+					try {
+						Thread.sleep(1);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				BlackOut_Alpha = 0f;
+				
+				BackButton.setEnabled(true);
 				
 				setFocusable(true);
 				grabFocus();
@@ -1035,16 +1159,6 @@ public class Stage extends JPanel {
 		Attacking = false;
 		Hittable = false;
 		
-		for(float i=0f;i<1f;i+=0.002f) {
-			BlackOut_Alpha = i;
-			try {
-				Thread.sleep(1);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-		}
-		
 		for (int i = 0; i < Mob_List.size(); i++) {
 			Mob_List.get(i).available = false;
 		}
@@ -1056,7 +1170,16 @@ public class Stage extends JPanel {
 			timer.stop();
 		}
 		
+		for(float i=0f;i<1f;i+=0.002f) {
+			BlackOut_Alpha = i;
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
 		BlackOut_Alpha = 1f;
+		
 		Stage_Music.stop();
 		frame.remove(this);
 		

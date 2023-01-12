@@ -6,14 +6,13 @@ import java.awt.Robot;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
-import java.util.Iterator;
 
 import javax.swing.AbstractAction;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.KeyStroke;
 
-public class Keyboard_Setting {
+public class KeyBoardConfig {
 	private JFrame frame;
 	private JPanel panel;
 	private DisplayMode displaymode;
@@ -24,7 +23,9 @@ public class Keyboard_Setting {
 	
 	protected static Robot robot;
 	
-	private FullScreen fullScreen = new FullScreen();
+	protected String[] actionMapKeyArray = new String[223];
+	
+	protected FullScreen fullScreen = new FullScreen();
 	private Jump jump = new Jump();
 	private LeftPress leftPress = new LeftPress();
 	private LeftRelease leftRelease = new LeftRelease();
@@ -36,17 +37,20 @@ public class Keyboard_Setting {
 	private DownRelease downRelease = new DownRelease();
 	private AltRelease altRelease = new AltRelease();
 	private AltSpacePress altspacePress = new AltSpacePress();
-	private BadKeyPress badkeyPress = new BadKeyPress();
+	private NullAction nullAction = new NullAction();
 	private CtrlPress ctrlPress = new CtrlPress();
 	private ShiftPress shiftPress = new ShiftPress();
-	private IPress iPress = new IPress();
-	private MPress mPress = new MPress();
-	private ZPress zPress = new ZPress();
+	private InventoryAction inventoryAction = new InventoryAction();
+	private MinimapAction minimapAction = new MinimapAction();
+	private PickUpAction pickupAction = new PickUpAction();
 	private EscPress escPress = new EscPress();
 	private TabPress tabPress = new TabPress();
-	protected ItemUse[] itemUse = new ItemUse[8];
+	private EnterPress enterPress = new EnterPress();
+	private NPCAction npcAction = new NPCAction();
+	private KeyConfigAction keyconfigAction = new KeyConfigAction();
+	protected ItemUse[] itemUse = new ItemUse[223];
 
-	public Keyboard_Setting(JFrame _frame) {
+	public KeyBoardConfig(JFrame _frame) {
 		frame = _frame;
 		
 		try {
@@ -55,17 +59,95 @@ public class Keyboard_Setting {
 			e.printStackTrace();
 		}
 		
-		itemUse[0] = new ItemUse();
-		itemUse[1] = new ItemUse();
-		itemUse[2] = new ItemUse();
-		itemUse[3] = new ItemUse();
-		itemUse[4] = new ItemUse();
-		itemUse[5] = new ItemUse();
-		itemUse[6] = new ItemUse();
-		itemUse[7] = new ItemUse();
+		for(int i=0;i<223;i++) {
+			itemUse[i] = new ItemUse();
+		}
+
+		setDefault();
+	}
+	
+	public void setDefault() {
+		actionMapKeyArray[KeyEvent.VK_ESCAPE] = "EscPress";
+		actionMapKeyArray[KeyEvent.VK_F1] = "";
+		actionMapKeyArray[KeyEvent.VK_F2] = "";
+		actionMapKeyArray[KeyEvent.VK_F3] = "";
+		actionMapKeyArray[KeyEvent.VK_F4] = "";
+		actionMapKeyArray[KeyEvent.VK_F5] = "";
+		actionMapKeyArray[KeyEvent.VK_F6] = "";
+		actionMapKeyArray[KeyEvent.VK_F7] = "";
+		actionMapKeyArray[KeyEvent.VK_F8] = "";
+		actionMapKeyArray[KeyEvent.VK_F9] = "";
+		actionMapKeyArray[KeyEvent.VK_F10] = "";
+		actionMapKeyArray[KeyEvent.VK_F11] = "";
+		actionMapKeyArray[KeyEvent.VK_F12] = "";
+		
+		actionMapKeyArray[KeyEvent.VK_INSERT] = "";
+		actionMapKeyArray[KeyEvent.VK_DELETE] = "";
+		actionMapKeyArray[KeyEvent.VK_HOME] = "";
+		actionMapKeyArray[KeyEvent.VK_END] = "";
+		actionMapKeyArray[KeyEvent.VK_PAGE_UP] = "";
+		actionMapKeyArray[KeyEvent.VK_PAGE_DOWN] = "";
+
+		actionMapKeyArray[KeyEvent.VK_BACK_QUOTE] = "";
+		actionMapKeyArray[KeyEvent.VK_1] = "";
+		actionMapKeyArray[KeyEvent.VK_2] = "";
+		actionMapKeyArray[KeyEvent.VK_3] = "";
+		actionMapKeyArray[KeyEvent.VK_4] = "";
+		actionMapKeyArray[KeyEvent.VK_5] = "";
+		actionMapKeyArray[KeyEvent.VK_6] = "";
+		actionMapKeyArray[KeyEvent.VK_7] = "";
+		actionMapKeyArray[KeyEvent.VK_8] = "";
+		actionMapKeyArray[KeyEvent.VK_9] = "";
+		actionMapKeyArray[KeyEvent.VK_0] = "";
+		actionMapKeyArray[KeyEvent.VK_MINUS] = "";
+		actionMapKeyArray[KeyEvent.VK_EQUALS] = "";
+		actionMapKeyArray[KeyEvent.VK_BACK_SPACE] = "";
+
+		actionMapKeyArray[KeyEvent.VK_TAB] = "TabPress";
+		actionMapKeyArray[KeyEvent.VK_Q] = "";
+		actionMapKeyArray[KeyEvent.VK_W] = "";
+		actionMapKeyArray[KeyEvent.VK_E] = "";
+		actionMapKeyArray[KeyEvent.VK_R] = "";
+		actionMapKeyArray[KeyEvent.VK_T] = "";
+		actionMapKeyArray[KeyEvent.VK_Y] = "";
+		actionMapKeyArray[KeyEvent.VK_U] = "";
+		actionMapKeyArray[KeyEvent.VK_I] = "Inventory";
+		actionMapKeyArray[KeyEvent.VK_O] = "";
+		actionMapKeyArray[KeyEvent.VK_P] = "";
+		actionMapKeyArray[KeyEvent.VK_OPEN_BRACKET] = "";
+		actionMapKeyArray[KeyEvent.VK_CLOSE_BRACKET] = "";
+		actionMapKeyArray[KeyEvent.VK_BACK_SLASH] = "KeyConfigAction";
+		
+		actionMapKeyArray[KeyEvent.VK_A] = "";
+		actionMapKeyArray[KeyEvent.VK_S] = "";
+		actionMapKeyArray[KeyEvent.VK_D] = "";
+		actionMapKeyArray[KeyEvent.VK_F] = "";
+		actionMapKeyArray[KeyEvent.VK_G] = "";
+		actionMapKeyArray[KeyEvent.VK_H] = "";
+		actionMapKeyArray[KeyEvent.VK_J] = "";
+		actionMapKeyArray[KeyEvent.VK_K] = "";
+		actionMapKeyArray[KeyEvent.VK_L] = "";
+		actionMapKeyArray[KeyEvent.VK_SEMICOLON] = "";
+		actionMapKeyArray[KeyEvent.VK_QUOTE] = "";
+		actionMapKeyArray[KeyEvent.VK_ENTER] = "EnterPress";
+
+		actionMapKeyArray[KeyEvent.VK_SHIFT] = "ShiftPress";
+		actionMapKeyArray[KeyEvent.VK_Z] = "PickUp";
+		actionMapKeyArray[KeyEvent.VK_X] = "";
+		actionMapKeyArray[KeyEvent.VK_C] = "";
+		actionMapKeyArray[KeyEvent.VK_V] = "";
+		actionMapKeyArray[KeyEvent.VK_B] = "";
+		actionMapKeyArray[KeyEvent.VK_N] = "";
+		actionMapKeyArray[KeyEvent.VK_M] = "Minimap";
+		actionMapKeyArray[KeyEvent.VK_COMMA] = "";
+		actionMapKeyArray[KeyEvent.VK_PERIOD] = "";
+		actionMapKeyArray[KeyEvent.VK_SLASH] = "";
+
+		actionMapKeyArray[KeyEvent.VK_CONTROL] = "CtrlPress";
+		actionMapKeyArray[KeyEvent.VK_SPACE] = "NPC";
 	}
 
-	public void Add_To_Keyboard(int keyCode, String str_press) {
+	public void setSpecificKey(int keyCode, String str_press) {
 		//press
 		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(keyCode, 0), str_press);
 		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(keyCode, InputEvent.ALT_DOWN_MASK), str_press);
@@ -77,7 +159,7 @@ public class Keyboard_Setting {
 		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(keyCode, InputEvent.ALT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK), str_press);
 	}
 	
-	public void Add_To_Keyboard(int keyCode, String str_press, String str_release) {
+	public void setSpecificKey(int keyCode, String str_press, String str_release) {
 		//press
 		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(keyCode, 0, false), str_press);
 		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(keyCode, InputEvent.ALT_DOWN_MASK, false), str_press);
@@ -99,7 +181,7 @@ public class Keyboard_Setting {
 		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(keyCode, InputEvent.ALT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK, true), str_release);
 	}
 	
-	public void Keyboard_Set() {
+	public void setKeyBoard() {
 		// Keyboard Event setting
 		Maplestory.current_stage.setFocusTraversalKeysEnabled(false);
 		Maplestory.current_stage.getActionMap().put("Jump", jump);
@@ -113,62 +195,121 @@ public class Keyboard_Setting {
 		Maplestory.current_stage.getActionMap().put("DownRelease", downRelease);
 		Maplestory.current_stage.getActionMap().put("AltRelease", altRelease);
 		Maplestory.current_stage.getActionMap().put("AltSpacePress", altspacePress);
-		Maplestory.current_stage.getActionMap().put("BadKeyPress", badkeyPress);
+		Maplestory.current_stage.getActionMap().put("", nullAction);
 		Maplestory.current_stage.getActionMap().put("CtrlPress", ctrlPress);
 		Maplestory.current_stage.getActionMap().put("ShiftPress", shiftPress);
-		Maplestory.current_stage.getActionMap().put("IPress", iPress);
-		Maplestory.current_stage.getActionMap().put("MPress", mPress);
-		Maplestory.current_stage.getActionMap().put("ZPress", zPress);
+		Maplestory.current_stage.getActionMap().put("Inventory", inventoryAction);
+		Maplestory.current_stage.getActionMap().put("Minimap", minimapAction);
+		Maplestory.current_stage.getActionMap().put("PickUp", pickupAction);
 		Maplestory.current_stage.getActionMap().put("EscPress", escPress);
 		Maplestory.current_stage.getActionMap().put("TabPress", tabPress);
-		Maplestory.current_stage.getActionMap().put("ItemUse0", itemUse[0]);
-		Maplestory.current_stage.getActionMap().put("ItemUse1", itemUse[1]);
-		Maplestory.current_stage.getActionMap().put("ItemUse2", itemUse[2]);
-		Maplestory.current_stage.getActionMap().put("ItemUse3", itemUse[3]);
-		Maplestory.current_stage.getActionMap().put("ItemUse4", itemUse[4]);
-		Maplestory.current_stage.getActionMap().put("ItemUse5", itemUse[5]);
-		Maplestory.current_stage.getActionMap().put("ItemUse6", itemUse[6]);
-		Maplestory.current_stage.getActionMap().put("ItemUse7", itemUse[7]);
+		Maplestory.current_stage.getActionMap().put("EnterPress", enterPress);
+		Maplestory.current_stage.getActionMap().put("NPC", npcAction);
+		Maplestory.current_stage.getActionMap().put("KeyConfigAction", keyconfigAction);
+		for(int i=0;i<223;i++) {
+			Maplestory.current_stage.getActionMap().put("ItemUse" + i, itemUse[i]);
+		}
 		
 		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, InputEvent.ALT_DOWN_MASK, false), "AltSpacePress");
 		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK, false), "AltSpacePress");
-		Add_To_Keyboard(KeyEvent.VK_LEFT, "LeftPress", "LeftRelease");
-		Add_To_Keyboard(KeyEvent.VK_RIGHT, "RightPress", "RightRelease");
-		Add_To_Keyboard(KeyEvent.VK_UP, "UpPress", "UpRelease");
-		Add_To_Keyboard(KeyEvent.VK_DOWN, "DownPress", "DownRelease");
+		setSpecificKey(KeyEvent.VK_LEFT, "LeftPress", "LeftRelease");
+		setSpecificKey(KeyEvent.VK_RIGHT, "RightPress", "RightRelease");
+		setSpecificKey(KeyEvent.VK_UP, "UpPress", "UpRelease");
+		setSpecificKey(KeyEvent.VK_DOWN, "DownPress", "DownRelease");
 		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ALT, InputEvent.ALT_DOWN_MASK, false), "Jump");
 		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ALT, 0, true), "AltRelease");
-		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_WINDOWS, 0, false), "BadKeyPress");
-		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0, false), "BadKeyPress");
-		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_CONTROL, InputEvent.ALT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK, false), "CtrlPress");
-		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_CONTROL, InputEvent.CTRL_DOWN_MASK, false), "CtrlPress");
-		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_SHIFT, InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK, false), "ShiftPress");
-		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_SHIFT, InputEvent.SHIFT_DOWN_MASK, false), "ShiftPress");
-		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_I, 0, false), "IPress");
-		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_M, 0, false), "MPress");
-		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, 0, false), "ZPress");
-		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, false), "EscPress");
-		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0, false), "TabPress");
-		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_1, 0, false), "ItemUse0");
-		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_2, 0, false), "ItemUse1");
-		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_3, 0, false), "ItemUse2");
-		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_4, 0, false), "ItemUse3");
-		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_5, 0, false), "ItemUse4");
-		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_6, 0, false), "ItemUse5");
-		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_7, 0, false), "ItemUse6");
-		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_8, 0, false), "ItemUse7");
+
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ESCAPE, 0, false), actionMapKeyArray[KeyEvent.VK_ESCAPE]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_F1, 0, false), actionMapKeyArray[KeyEvent.VK_F1]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_F2, 0, false), actionMapKeyArray[KeyEvent.VK_F2]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_F3, 0, false), actionMapKeyArray[KeyEvent.VK_F3]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_F4, 0, false), actionMapKeyArray[KeyEvent.VK_F4]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_F5, 0, false), actionMapKeyArray[KeyEvent.VK_F5]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_F6, 0, false), actionMapKeyArray[KeyEvent.VK_F6]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_F7, 0, false), actionMapKeyArray[KeyEvent.VK_F7]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_F8, 0, false), actionMapKeyArray[KeyEvent.VK_F8]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_F9, 0, false), actionMapKeyArray[KeyEvent.VK_F9]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_F10, 0, false), actionMapKeyArray[KeyEvent.VK_F10]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_F11, 0, false), actionMapKeyArray[KeyEvent.VK_F11]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_F12, 0, false), actionMapKeyArray[KeyEvent.VK_F12]);
+		
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_INSERT, 0, false), actionMapKeyArray[KeyEvent.VK_INSERT]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0, false), actionMapKeyArray[KeyEvent.VK_DELETE]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_HOME, 0, false), actionMapKeyArray[KeyEvent.VK_HOME]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_END, 0, false), actionMapKeyArray[KeyEvent.VK_END]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0, false), actionMapKeyArray[KeyEvent.VK_PAGE_UP]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0, false), actionMapKeyArray[KeyEvent.VK_PAGE_DOWN]);
+		
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_QUOTE, 0, false), actionMapKeyArray[KeyEvent.VK_BACK_QUOTE]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_1, 0, false), actionMapKeyArray[KeyEvent.VK_1]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_2, 0, false), actionMapKeyArray[KeyEvent.VK_2]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_3, 0, false), actionMapKeyArray[KeyEvent.VK_3]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_4, 0, false), actionMapKeyArray[KeyEvent.VK_4]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_5, 0, false), actionMapKeyArray[KeyEvent.VK_5]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_6, 0, false), actionMapKeyArray[KeyEvent.VK_6]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_7, 0, false), actionMapKeyArray[KeyEvent.VK_7]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_8, 0, false), actionMapKeyArray[KeyEvent.VK_8]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_9, 0, false), actionMapKeyArray[KeyEvent.VK_9]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_0, 0, false), actionMapKeyArray[KeyEvent.VK_0]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, 0, false), actionMapKeyArray[KeyEvent.VK_MINUS]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_EQUALS, 0, false), actionMapKeyArray[KeyEvent.VK_EQUALS]);
+		
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_TAB, 0, false), actionMapKeyArray[KeyEvent.VK_TAB]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Q, 0, false), actionMapKeyArray[KeyEvent.VK_Q]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_W, 0, false), actionMapKeyArray[KeyEvent.VK_W]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_E, 0, false), actionMapKeyArray[KeyEvent.VK_E]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_R, 0, false), actionMapKeyArray[KeyEvent.VK_R]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_T, 0, false), actionMapKeyArray[KeyEvent.VK_T]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Y, 0, false), actionMapKeyArray[KeyEvent.VK_Y]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_U, 0, false), actionMapKeyArray[KeyEvent.VK_U]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_I, 0, false), actionMapKeyArray[KeyEvent.VK_I]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_O, 0, false), actionMapKeyArray[KeyEvent.VK_O]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_P, 0, false), actionMapKeyArray[KeyEvent.VK_P]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_OPEN_BRACKET, 0, false), actionMapKeyArray[KeyEvent.VK_OPEN_BRACKET]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_CLOSE_BRACKET, 0, false), actionMapKeyArray[KeyEvent.VK_CLOSE_BRACKET]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_BACK_SLASH, 0, false), actionMapKeyArray[KeyEvent.VK_BACK_SLASH]);
+		
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_CAPS_LOCK, 0, false), actionMapKeyArray[KeyEvent.VK_CAPS_LOCK]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_A, 0, false), actionMapKeyArray[KeyEvent.VK_A]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_S, 0, false), actionMapKeyArray[KeyEvent.VK_S]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_D, 0, false), actionMapKeyArray[KeyEvent.VK_D]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_F, 0, false), actionMapKeyArray[KeyEvent.VK_F]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_G, 0, false), actionMapKeyArray[KeyEvent.VK_G]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_H, 0, false), actionMapKeyArray[KeyEvent.VK_H]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_J, 0, false), actionMapKeyArray[KeyEvent.VK_J]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_K, 0, false), actionMapKeyArray[KeyEvent.VK_K]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_L, 0, false), actionMapKeyArray[KeyEvent.VK_L]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_SEMICOLON, 0, false), actionMapKeyArray[KeyEvent.VK_SEMICOLON]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_QUOTE, 0, false), actionMapKeyArray[KeyEvent.VK_QUOTE]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0, false), actionMapKeyArray[KeyEvent.VK_ENTER]);
+
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_SHIFT, InputEvent.ALT_DOWN_MASK | InputEvent.SHIFT_DOWN_MASK, false), actionMapKeyArray[KeyEvent.VK_SHIFT]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_SHIFT, InputEvent.SHIFT_DOWN_MASK, false), actionMapKeyArray[KeyEvent.VK_SHIFT]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_Z, 0, false), actionMapKeyArray[KeyEvent.VK_Z]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_X, 0, false), actionMapKeyArray[KeyEvent.VK_X]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_C, 0, false), actionMapKeyArray[KeyEvent.VK_C]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_V, 0, false), actionMapKeyArray[KeyEvent.VK_V]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_B, 0, false), actionMapKeyArray[KeyEvent.VK_B]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_N, 0, false), actionMapKeyArray[KeyEvent.VK_N]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_M, 0, false), actionMapKeyArray[KeyEvent.VK_M]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_COMMA, 0, false), actionMapKeyArray[KeyEvent.VK_COMMA]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_PERIOD, 0, false), actionMapKeyArray[KeyEvent.VK_PERIOD]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_SLASH, 0, false), actionMapKeyArray[KeyEvent.VK_SLASH]);
+
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_CONTROL, InputEvent.ALT_DOWN_MASK | InputEvent.CTRL_DOWN_MASK, false), actionMapKeyArray[KeyEvent.VK_CONTROL]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_CONTROL, InputEvent.CTRL_DOWN_MASK, false), actionMapKeyArray[KeyEvent.VK_CONTROL]);
+		Maplestory.current_stage.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_SPACE, 0, false), actionMapKeyArray[KeyEvent.VK_SPACE]);
+		
+		
 	}
 	
-	public void Keyboard_Set(JPanel _panel) {
+	public void setKeyBoard(JPanel _panel) {
 		panel = _panel;
 		displaymode = new DisplayMode(panel.getWidth(), panel.getHeight(), 32, 60);
 		panel.getActionMap().put("FullScreen", fullScreen);
 		panel.getInputMap().put(KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, InputEvent.ALT_DOWN_MASK, false), "FullScreen");
 	}
 
-	// below: Keyboard Event Classes
-	
-	//Alt+Enter (Full Screen)
 	public class FullScreen extends AbstractAction{
 
 		/**
@@ -218,7 +359,6 @@ public class Keyboard_Setting {
 		
 	}
 	
-	// Jump Key
 	public class Jump extends AbstractAction {
 		/**
 		 * 
@@ -237,7 +377,7 @@ public class Keyboard_Setting {
 					@Override
 					public void run() {
 						while(true) {
-							if(Maplestory.player.alive && Stage.Ladder && !Shop.isOpen) {
+							if(Maplestory.player.alive && Stage.Ladder && !Shop.isOpen && !UI_Notice.isOpen) {
 								if(Stage.AltKey && !Stage.DownKey && !Stage.Jump && !Stage.Attacking && !Stage.attacked) {
 									if(Stage.LeftKey) {
 										Maplestory.player.current_Img = Maplestory.player.characterJumpLeftImg;
@@ -271,7 +411,7 @@ public class Keyboard_Setting {
 				Maplestory.thread_pool.submit(runnable);
 			}
 			
-			if(Maplestory.player.alive && !Shop.isOpen) {
+			if(Maplestory.player.alive && !Shop.isOpen && !UI_Notice.isOpen) {
 				if (Maplestory.player.IsLandable() && !Stage.Attacking && !Stage.attacked) {
 					if (Stage.DownKey) {
 						if (!Maplestory.player.cur_foothold.isBottom) {
@@ -304,7 +444,6 @@ public class Keyboard_Setting {
 		}
 	}
 
-	// Left Key Press
 	public class LeftPress extends AbstractAction {
 
 		/**
@@ -315,7 +454,7 @@ public class Keyboard_Setting {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			Stage.LeftKey = true;
-			if(Maplestory.player.alive && !Shop.isOpen) {
+			if(Maplestory.player.alive && !Shop.isOpen && !UI_Notice.isOpen) {
 				if (Stage.Attacking == false) {
 					Maplestory.player.CharDirection = -1;
 					if (Stage.Jump == true) {
@@ -332,7 +471,6 @@ public class Keyboard_Setting {
 		}
 	}
 
-	// Left Key Release
 	public class LeftRelease extends AbstractAction {
 
 		/**
@@ -353,7 +491,6 @@ public class Keyboard_Setting {
 
 	}
 
-	// Right Key Press
 	public class RightPress extends AbstractAction {
 
 		/**
@@ -364,7 +501,7 @@ public class Keyboard_Setting {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			Stage.RightKey = true;
-			if(Maplestory.player.alive && !Shop.isOpen) {
+			if(Maplestory.player.alive && !Shop.isOpen && !UI_Notice.isOpen) {
 				if (Stage.Attacking == false) {
 					Maplestory.player.CharDirection = 1;
 					if (Stage.Jump == true) {
@@ -381,7 +518,6 @@ public class Keyboard_Setting {
 		}
 	}
 
-	// Right Key Release
 	public class RightRelease extends AbstractAction {
 
 		/**
@@ -401,7 +537,6 @@ public class Keyboard_Setting {
 		}
 	}
 
-	// Up Key Press
 	public class UpPress extends AbstractAction {
 
 		/**
@@ -420,7 +555,7 @@ public class Keyboard_Setting {
 					public void run() {
 						int LadderIdx;
 						while(true) {
-							if(Maplestory.player.alive && !Shop.isOpen
+							if(Maplestory.player.alive && !Shop.isOpen && !UI_Notice.isOpen
 									&& Stage.UpKey && !Stage.Up && !Stage.Down && !Stage.Attacking && !Stage.attacked && !Stage.Ladder_Jump) {
 								if ((LadderIdx = Maplestory.player.IsLadderAvailable(1)) >= 0) {
 									Maplestory.player.Character_LadderUp(LadderIdx);
@@ -442,17 +577,19 @@ public class Keyboard_Setting {
 				};
 				Maplestory.thread_pool.submit(runnable);
 			}
-			if(Maplestory.player.alive && !Shop.isOpen) {
+			if(Maplestory.player.alive && !Shop.isOpen && !UI_Notice.isOpen) {
 				if (!Stage.Attacking) {
 					for(Portal portal : Maplestory.current_stage.Portal_List) {
 						if ((Maplestory.player.CharacterX + 25 >= portal.xstart)
 								&& (Maplestory.player.CharacterX + 25 <= portal.xend)
-								&& (portal.y >= Maplestory.player.CharacterY + 20)
-								&& (portal.y <= Maplestory.player.CharacterY + 120)) {
+								&& (portal.y >= Maplestory.player.CharacterY - Character.CharacterHeight + 20)
+								&& (portal.y <= Maplestory.player.CharacterY - Character.CharacterHeight + 120)) {
 							Runnable runnable = new Runnable() {
 		
 								@Override
 								public void run() {
+									Portal.isAvailable = false;
+									
 									Music Portal_Music = new Music("Portal.wav", 1);
 									Portal_Music.play();
 									
@@ -531,10 +668,19 @@ public class Keyboard_Setting {
 									} else if (Maplestory.StageNow == 4) {
 										Maplestory.stage4.close(portal);
 									}
+									
+									try {
+										Thread.sleep(1000);
+									} catch (InterruptedException e) {
+										e.printStackTrace();
+									}
+									Portal.isAvailable = true;
 								}
 		
 							};
-							Maplestory.thread_pool.submit(runnable);
+							if(Portal.isAvailable) {
+								Maplestory.thread_pool.submit(runnable);
+							}
 						}
 					}
 				}
@@ -542,7 +688,6 @@ public class Keyboard_Setting {
 		}
 	}
 
-	// Up Key Release
 	public class UpRelease extends AbstractAction {
 
 		/**
@@ -557,7 +702,6 @@ public class Keyboard_Setting {
 
 	}
 
-	// Down Key Press
 	public class DownPress extends AbstractAction {
 
 		/**
@@ -568,7 +712,7 @@ public class Keyboard_Setting {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			Stage.DownKey = true;
-			if(Maplestory.player.alive && !Shop.isOpen) {
+			if(Maplestory.player.alive && !Shop.isOpen && !UI_Notice.isOpen) {
 				if (!Stage.Up && !Stage.Down && !Stage.Attacking && !Stage.Jump) {
 					int LadderIdx;
 					if ((LadderIdx = Maplestory.player.IsLadderAvailable(-1)) >= 0) {
@@ -588,7 +732,6 @@ public class Keyboard_Setting {
 
 	}
 
-	// Down Key Release
 	public class DownRelease extends AbstractAction {
 
 		/**
@@ -599,7 +742,7 @@ public class Keyboard_Setting {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			Stage.DownKey = false;
-			if(Maplestory.player.alive && !Shop.isOpen) {
+			if(Maplestory.player.alive && !Shop.isOpen && !UI_Notice.isOpen) {
 				if (Stage.Ladder == false && Stage.Attacking == false) {
 					if (Stage.LeftKey == false && Stage.RightKey == false && Stage.Jump == false) {
 						if (Maplestory.player.CharDirection == -1) {
@@ -615,7 +758,6 @@ public class Keyboard_Setting {
 
 	}
 	
-	//Alt Release
 	public class AltRelease extends AbstractAction{
 
 		/**
@@ -630,7 +772,6 @@ public class Keyboard_Setting {
 		
 	}
 
-	// Alt Space Press
 	public class AltSpacePress extends AbstractAction {
 
 		/**
@@ -642,12 +783,12 @@ public class Keyboard_Setting {
 		public void actionPerformed(ActionEvent e) {
 			robot.keyPress(KeyEvent.VK_ALT);
 			Maplestory.player.LevelUp();
+			//aplestory.current_stage.reopen();
 		}
 		
 	}
 	
-	// Bad Key Press(Bad Keys: WINDOWS, F10)
-	public class BadKeyPress extends AbstractAction {
+	public class NullAction extends AbstractAction {
 
 		/**
 		 * 
@@ -661,7 +802,6 @@ public class Keyboard_Setting {
 
 	}
 
-	// Ctrl Key Press
 	public class CtrlPress extends AbstractAction {
 
 		/**
@@ -671,7 +811,7 @@ public class Keyboard_Setting {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(Maplestory.player.alive && !Shop.isOpen) {
+			if(Maplestory.player.alive && !Shop.isOpen && !UI_Notice.isOpen) {
 				if (!Stage.Attacking && !Stage.Ladder) {
 					Maplestory.player.Character_Attack(1, 70, Character.CharacterWidth / 2, Character.CharacterHeight / 2,
 							Character.CharacterHeight / 2, 1, 100);
@@ -682,7 +822,6 @@ public class Keyboard_Setting {
 
 	}
 
-	// Shift Key Press
 	public class ShiftPress extends AbstractAction {
 
 		/**
@@ -692,7 +831,7 @@ public class Keyboard_Setting {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(Maplestory.player.alive && !Shop.isOpen) {
+			if(Maplestory.player.alive && !Shop.isOpen && !UI_Notice.isOpen) {
 				if (!Stage.Attacking && !Stage.Ladder) {
 					int cost = 10;
 					if (Maplestory.player.MP >= cost) {
@@ -710,8 +849,7 @@ public class Keyboard_Setting {
 
 	}
 
-	// I Key Press
-	public class IPress extends AbstractAction {
+	public class InventoryAction extends AbstractAction {
 
 		/**
 		 * 
@@ -720,17 +858,18 @@ public class Keyboard_Setting {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (!Maplestory.player.inventory.getOpen()) {
-				Maplestory.player.inventory.Open();
-			} else {
-				Maplestory.player.inventory.Close();
+			if(!UI_Notice.isOpen) {
+				if (!Maplestory.player.inventory.getOpen()) {
+					Maplestory.player.inventory.open();
+				} else {
+					Maplestory.player.inventory.close();
+				}
 			}
 		}
 
 	}
 
-	// M Key Press
-	public class MPress extends AbstractAction {
+	public class MinimapAction extends AbstractAction {
 
 		/**
 		 * 
@@ -739,19 +878,18 @@ public class Keyboard_Setting {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(Maplestory.current_stage.MiniMap_Available) {
-				if (!Maplestory.minimap.isOpen) {
-					Maplestory.minimap.Open();
+			if(Maplestory.current_stage.MiniMap_Available && !UI_Notice.isOpen) {
+				if (!Maplestory.ui_minimap.isOpen) {
+					Maplestory.ui_minimap.open();
 				} else {
-					Maplestory.minimap.Close();
+					Maplestory.ui_minimap.close();
 				}
 			}
 		}
 		
 	}
 	
-	// Z Key Press
-	public class ZPress extends AbstractAction {
+	public class PickUpAction extends AbstractAction {
 
 		/**
 		 * 
@@ -764,35 +902,19 @@ public class Keyboard_Setting {
 
 				@Override
 				public void run() {
-					int Char_X_Center = Maplestory.player.CharacterX + Character.CharacterWidth / 2;
-					int Char_Y = Maplestory.player.CharacterY + Character.CharacterHeight * 5 / 6;
-					synchronized (Maplestory.current_stage.Item_List) {
-						Iterator<Item> iter1 = Maplestory.current_stage.Item_List.iterator();
-						while (iter1.hasNext()) {
-							Item data = iter1.next();
-							if (Char_X_Center + 15 > data.X_Center - data.getRawIcon().getIconWidth() / 2
-									&& Char_X_Center - 15 < data.X_Center + data.getRawIcon().getIconWidth() / 2
-									&& Char_Y + 10 > data.Y_Center - data.getRawIcon().getIconHeight() / 2
-									&& Char_Y - 10 < data.Y_Center + data.getRawIcon().getIconHeight() / 2) {
-								if (data.pickable) {
-									Maplestory.player.Character_Get_Item(data, true);
-									break;
-								}
-							}
-						}
-					}
+					Maplestory.player.Character_PickUp_Item();
 				}
 
 			};
 
-			if (Maplestory.player.alive && !Shop.isOpen && !Stage.Attacking && !Stage.Ladder && Maplestory.player.pickable) {
+			if (Maplestory.player.alive && !Shop.isOpen && !UI_Notice.isOpen
+					&& !Stage.Attacking && !Stage.Ladder && Maplestory.player.pickable) {
 				Maplestory.thread_pool.submit(runnable);
 			}
 		}
 
 	}
 	
-	// Esc Key Press
 	public class EscPress extends AbstractAction {
 
 		/**
@@ -802,16 +924,28 @@ public class Keyboard_Setting {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (Maplestory.current_stage.getComponent(0) == Maplestory.player.inventory.getScreen()) {
+			if(UI_Notice.isOpen) {
+				Maplestory.ui_notice.cancelAction();
+			}
+			else if (Maplestory.current_stage.getComponent(1) == Maplestory.player.inventory) {
 				if (Maplestory.player.inventory.getOpen()) {
-					Maplestory.player.inventory.Close();
+					Maplestory.player.inventory.close();
+				}
+			}
+			else if (Maplestory.current_stage.getComponent(1) == Maplestory.generalStore) {
+				if (Shop.isOpen) {
+					Maplestory.generalStore.close();
+				}
+			}
+			else if (Maplestory.current_stage.getComponent(1) == Maplestory.ui_keySetting) {
+				if(Maplestory.ui_keySetting.isOpen) {
+					Maplestory.ui_keySetting.close(true);
 				}
 			}
 		}
 
 	}
 
-	// Tab Key Press
 	public class TabPress extends AbstractAction {
 
 		/**
@@ -821,7 +955,7 @@ public class Keyboard_Setting {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (Maplestory.current_stage.getComponent(0) == Maplestory.player.inventory.getScreen()) {
+			if (Maplestory.current_stage.getComponent(1) == Maplestory.player.inventory.getScreen()) {
 				int type = Maplestory.player.inventory.current_type;
 				if(type == 0) {
 					Maplestory.player.inventory.Show_Consume();
@@ -843,7 +977,41 @@ public class Keyboard_Setting {
 		
 	}
 	
-	// Item Use
+	public class EnterPress extends AbstractAction {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(UI_Notice.isOpen) {
+				if(Maplestory.ui_notice.type == UI_Notice.WITH_OK
+						|| Maplestory.ui_notice.type == (UI_Notice.WITH_OK | UI_Notice.WITH_CANCEL)) {
+					Maplestory.ui_notice.okAction();
+				}
+			}
+		}
+
+	}
+	
+	public class NPCAction extends AbstractAction {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(!UI_Notice.isOpen) {
+				Maplestory.player.Character_TalktoNPC();
+			}
+		}
+		
+	}
+
 	public class ItemUse extends AbstractAction {
 
 		/**
@@ -854,7 +1022,7 @@ public class Keyboard_Setting {
 		private int item_code = -1;
 		private String type = "";
 		
-		public void Set(int _item_code, String _type) {
+		public void setValues(int _item_code, String _type) {
 			item_code = _item_code;
 			type = _type;
 		}
@@ -875,4 +1043,25 @@ public class Keyboard_Setting {
 		}
 
 	}
+	
+	public class KeyConfigAction extends AbstractAction {
+
+		/**
+		 * 
+		 */
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(!UI_Notice.isOpen) {
+				if (!Maplestory.ui_keySetting.isOpen) {
+					Maplestory.ui_keySetting.open();
+				} else {
+					Maplestory.ui_keySetting.close(true);
+				}
+			}
+		}
+		
+	}
+	
 }

@@ -2,6 +2,8 @@ package maplestory;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.Iterator;
+
 import javax.swing.ImageIcon;
 
 public class Character {
@@ -152,9 +154,9 @@ public class Character {
 	public boolean IsLandable() {
 		int CX_CENTER = CharacterX+CharacterWidth/2;
 		for (Foothold foothold : Maplestory.current_stage.Foothold_List) {
-			if(foothold.isLandable(CX_CENTER, CharacterY+CharacterHeight)) {
+			if(foothold.isLandable(CX_CENTER, CharacterY)) {
 				cur_foothold = foothold;
-				Update_Position(CharacterX, cur_foothold.getY(CX_CENTER)-CharacterHeight);
+				Update_Position(CharacterX, cur_foothold.getY(CX_CENTER));
 				return true;
 			}
 		}
@@ -174,7 +176,7 @@ public class Character {
 			// Up Direction
 			if (direction == 1) {
 				if ((xpos + 20 >= CharacterX + 25) && (xpos - 20 <= CharacterX + 25)
-						&& (CharacterY + CharacterHeight > ystart) && (CharacterY <= yend)) {
+						&& (CharacterY > ystart) && (CharacterY - CharacterHeight <= yend)) {
 					return i;
 				}
 			}
@@ -182,12 +184,12 @@ public class Character {
 			else if (direction == -1) {
 				if (Stage.Ladder == false) {
 					if ((xpos + 20 >= CharacterX + 25) && (xpos - 20 <= CharacterX + 25)
-							&& (CharacterY + CharacterHeight == ystart)) {
+							&& (CharacterY == ystart)) {
 						return i;
 					}
 				} else {
 					if ((xpos + 20 >= CharacterX + 25) && (xpos - 20 <= CharacterX + 25)
-							&& (CharacterY + CharacterHeight > ystart) && (CharacterY <= yend)) {
+							&& (CharacterY > ystart) && (CharacterY - CharacterHeight <= yend)) {
 						return i;
 					}
 				}
@@ -255,7 +257,7 @@ public class Character {
 					if (wallCheck()) {
 						x += xd;
 					}
-					if (y - 2 >= 0) {
+					if (y - CharacterHeight - 2 >= 0) {
 						y -= 2;
 					}
 
@@ -340,7 +342,6 @@ public class Character {
 				//can switch
 				//Stage.attacked = true;
 				ManageAttacked();
-				
 				ManageHittable();
 				
 				if (xd > 0) {
@@ -365,7 +366,7 @@ public class Character {
 					if (wallCheck()) {
 						x += xd;
 					}
-					if (y - 2 >= 0) {
+					if (y - CharacterHeight - 2 >= 0) {
 						y -= 2;
 					}
 
@@ -480,7 +481,7 @@ public class Character {
 					if (wallCheck()) {
 						x--;
 						if(cur_foothold.getY(x+CharacterWidth/2) != -1) {
-							y = cur_foothold.getY(x+CharacterWidth/2) - CharacterHeight;
+							y = cur_foothold.getY(x+CharacterWidth/2);
 						}
 						Update_Position(x, y);
 					}
@@ -624,7 +625,7 @@ public class Character {
 					if (wallCheck()) {
 						x++;
 						if(cur_foothold.getY(x+CharacterWidth/2) != -1) {
-							y = cur_foothold.getY(x+CharacterWidth/2) - CharacterHeight;
+							y = cur_foothold.getY(x+CharacterWidth/2);
 						}
 						Update_Position(x, y);
 					}
@@ -758,7 +759,7 @@ public class Character {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					if (y - 2 >= 0) {
+					if (y - CharacterHeight - 2 >= 0) {
 						y -= 2;
 						Update_Position(x, y);
 					} else {
@@ -870,7 +871,7 @@ public class Character {
 					if (wallCheck()) {
 						x--;
 					}
-					if (y - 2 >= 0) {
+					if (y - CharacterHeight - 2 >= 0) {
 						y -= 2;
 					} else {
 						break;
@@ -988,7 +989,7 @@ public class Character {
 					if (wallCheck()) {
 						x++;
 					}
-					if (y - 2 >= 0) {
+					if (y - CharacterHeight - 2 >= 0) {
 						y -= 2;
 					} else {
 						break;
@@ -1166,7 +1167,7 @@ public class Character {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					if ((y + CharacterHeight - 2 >= ystart) && (y - 2 <= yend)) {
+					if ((y - 2 >= ystart) && (y - CharacterHeight - 2 <= yend)) {
 						y -= 2;
 						Update_Position(x, y);
 					}
@@ -1175,7 +1176,7 @@ public class Character {
 					} else {
 						setLadderImg++;
 					}
-					if (y + CharacterHeight == ystart) {
+					if (y == ystart) {
 						IsLandable();
 						Stage.Ladder = false;
 						break;
@@ -1243,7 +1244,7 @@ public class Character {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					if ((y + CharacterHeight + 2 >= ystart) && (y + 2 <= yend)) {
+					if ((y + 2 >= ystart) && (y - CharacterHeight + 2 <= yend)) {
 						y += 2;
 						Update_Position(x, y);
 					}
@@ -1252,7 +1253,7 @@ public class Character {
 					} else {
 						setLadderImg++;
 					}
-					if ((ystart < y + CharacterHeight) && ((y == yend) || (islandable = IsLandable()))) {
+					if ((ystart < y) && ((y - CharacterHeight == yend) || (islandable = IsLandable()))) {
 						Stage.Ladder = false;
 						break;
 					}
@@ -1312,7 +1313,7 @@ public class Character {
 				Stage.Attacking = true;
 				
 				int Player_Xcenter = CharacterX + CharacterWidth / 2;
-				int Player_Ycenter = CharacterY + CharacterHeight / 2;
+				int Player_Ycenter = CharacterY - CharacterHeight / 2;
 				int count = 0;
 
 				synchronized(Maplestory.current_stage.Mob_List) {
@@ -1451,7 +1452,7 @@ public class Character {
 	
 	public void HP_Damage(int damage) {
 		synchronized(Maplestory.current_stage.Damage_List) {
-			Maplestory.current_stage.Damage_List.add(new Damage(damage, CharacterX + CharacterWidth / 2, CharacterY, false, false));
+			Maplestory.current_stage.Damage_List.add(new Damage(damage, CharacterX + CharacterWidth / 2, CharacterY - CharacterHeight, false, false));
 		}
 		if(HP <= damage) {
 			HP = 0;
@@ -1460,7 +1461,7 @@ public class Character {
 		else {
 			HP -= damage;
 		}
-		Maplestory.status_bar.Manage_HpBar();
+		Maplestory.ui_status_bar.Manage_HpBar();
 	}
 	public void HP_Heal(int heal) {
 		if(HP + heal > MaxHP) {
@@ -1469,11 +1470,11 @@ public class Character {
 		else {
 			HP += heal;
 		}
-		Maplestory.status_bar.Manage_HpBar();
+		Maplestory.ui_status_bar.Manage_HpBar();
 	}
 	public void MP_Use(int cost) {
 		MP -= cost;
-		Maplestory.status_bar.Manage_MpBar();
+		Maplestory.ui_status_bar.Manage_MpBar();
 	}
 	public void MP_Heal(int heal) {
 		if(MP + heal > MaxMP) {
@@ -1482,7 +1483,7 @@ public class Character {
 		else {
 			MP += heal;
 		}
-		Maplestory.status_bar.Manage_MpBar();
+		Maplestory.ui_status_bar.Manage_MpBar();
 	}
 
 	public void Character_Die() {
@@ -1506,6 +1507,13 @@ public class Character {
 				Stage.Ladder = false;
 				Stage.Up = false;
 				Stage.Down = false;
+				
+				try {
+					Thread.sleep(100);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 
 				while(!IsLandable()) {
 					try {
@@ -1517,7 +1525,7 @@ public class Character {
 					CharacterY+=2;
 				}
 				
-				Show_Tomb(CharacterX+CharacterWidth/2, CharacterY+CharacterHeight);
+				Show_Tomb(CharacterX+CharacterWidth/2, CharacterY);
 				
 				alpha = 0.7f;
 				if(CharDirection == -1) {
@@ -1528,6 +1536,28 @@ public class Character {
 				}
 				
 				Stage.Hittable = false;
+				
+				if(Maplestory.ui_notice.open(UI_Notice.DIE_NOTICE, "")) {
+					while(UI_Notice.isOpen) {
+						try {
+							Thread.sleep(10);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+					}
+					
+					if(UI_Notice.status == UI_Notice.OK) {
+						Stage nearestTown = Maplestory.current_stage.nearestTown;
+						if(nearestTown == Maplestory.current_stage) {
+							Maplestory.current_stage.reopen();
+						}
+						else {
+							Maplestory.current_stage.close(null);
+							nearestTown.open(null);
+						}
+					}
+				}
 			}
 			
 		};
@@ -1627,6 +1657,26 @@ public class Character {
 			
 		};
 		Maplestory.thread_pool.submit(runnable);
+	}
+	
+	public void Character_PickUp_Item() {
+		int Char_X_Center = CharacterX + CharacterWidth / 2;
+		int Char_Y =CharacterY - CharacterHeight * 1 / 6;
+		synchronized (Maplestory.current_stage.Item_List) {
+			Iterator<Item> iter1 = Maplestory.current_stage.Item_List.iterator();
+			while (iter1.hasNext()) {
+				Item data = iter1.next();
+				if (Char_X_Center + 15 > data.X_Center - data.getRawIcon().getIconWidth() / 2
+						&& Char_X_Center - 15 < data.X_Center + data.getRawIcon().getIconWidth() / 2
+						&& Char_Y + 10 > data.Y_Center - data.getRawIcon().getIconHeight() / 2
+						&& Char_Y - 10 < data.Y_Center + data.getRawIcon().getIconHeight() / 2) {
+					if (data.pickable) {
+						Character_Get_Item(data, true);
+						break;
+					}
+				}
+			}
+		}
 	}
 	
 	public void Character_Get_Item(Item item, boolean pickup) {
@@ -1741,26 +1791,114 @@ public class Character {
 		Maplestory.thread_pool.submit(runnable);
 	}
 	
-	public void Character_Item_Drop() {
-		if(alive) {
-			synchronized(inventory.current_inventory_list) {
-				Item data = inventory.current_inventory_list.get(inventory.move_index);
-				Item item_drop = data.getNew(1);
-				inventory.Reduce_Item(inventory.move_index, 1);
-				item_drop.Drop(CharacterX+Character.CharacterWidth/2,
-						CharacterY+Character.CharacterHeight/2);
+	public void Character_Drop_Item() {
+		Runnable runnable = new Runnable() {
+
+			@Override
+			public void run() {
+				if(alive) {
+					int num = 0;
+					if(Maplestory.ui_notice.open(UI_Notice.WITH_TEXTFIELD | UI_Notice.WITH_OK | UI_Notice.WITH_CANCEL
+							, "몇 개나 버리시겠습니까?")) {
+						while(UI_Notice.isOpen) {
+							try {
+								Thread.sleep(10);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+						
+						if(UI_Notice.status == UI_Notice.OK) {
+							num = UI_Notice.value;
+							synchronized(inventory.current_inventory_list) {
+								Item data = inventory.current_inventory_list.get(inventory.move_index);
+								if(num == 0) {
+									Maplestory.ui_notice.open(UI_Notice.WITH_OK, "1 이상의 숫자만 가능합니다.");
+								}
+								else if(data.Quantity >= num) {
+									Item item_drop = data.getNew(num);
+									inventory.Reduce_Item(inventory.move_index, num);
+									item_drop.Drop(CharacterX+Character.CharacterWidth/2,
+											CharacterY-Character.CharacterHeight/2);
+								}
+								else {
+									Maplestory.ui_notice.open(UI_Notice.WITH_OK, data.Quantity + " 이하의 숫자만 가능합니다.");
+								}
+							}
+						}
+					}
+				}
+			}
+			
+		};
+		Maplestory.thread_pool.submit(runnable);
+	}
+	
+	public void Character_Drop_Meso() {
+		Runnable runnable = new Runnable() {
+
+			@Override
+			public void run() {
+				if(alive) {
+					int num = 0;
+					if(Maplestory.ui_notice.open(UI_Notice.WITH_TEXTFIELD | UI_Notice.WITH_OK | UI_Notice.WITH_CANCEL
+							, "얼마를 버리시겠습니까?")) {
+						while(UI_Notice.isOpen) {
+							try {
+								Thread.sleep(10);
+							} catch (InterruptedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+						
+						if(UI_Notice.status == UI_Notice.OK) {
+							num = UI_Notice.value;
+							if(num == 0) {
+								Maplestory.ui_notice.open(UI_Notice.WITH_OK, "1 이상의 숫자만 가능합니다.");
+							}
+							else if(Maplestory.player.inventory.Meso >= num) {
+								Item item_drop = new Item_Meso(num);
+								Maplestory.player.inventory.Meso -= num;
+								item_drop.Drop(CharacterX+Character.CharacterWidth/2,
+										CharacterY-Character.CharacterHeight/2);
+							}
+							else {
+								Maplestory.ui_notice.open(UI_Notice.WITH_OK, Maplestory.player.inventory.Meso + " 이하의 숫자만 가능합니다.");
+							}
+						}
+					}
+				}
+			}
+			
+		};
+		Maplestory.thread_pool.submit(runnable);
+	}
+	
+	public void Character_TalktoNPC() {
+		if(!Shop.isOpen && !UI_Notice.isOpen) {
+			for(NPC npc : Maplestory.current_stage.NPC_List) {
+				if(((Maplestory.player.CharacterX + Character.CharacterWidth / 2) >= npc.xcenter - 100)
+						&& ((Maplestory.player.CharacterX + Character.CharacterWidth / 2) <= npc.xcenter + 100)
+						&& ((Maplestory.player.CharacterY - Character.CharacterHeight / 2) >= npc.ypos - 100)
+						&& ((Maplestory.player.CharacterY - Character.CharacterHeight / 2) <= npc.ybottom + 100)) {
+					if(npc.getType().equals("Shop")) {
+						npc.clickEvent();
+					}
+				}
 			}
 		}
 	}
 	
 	public void Character_Buy_Item(Item item, int price) {
 		Character_Get_Item(item, false);
-		inventory.Meso -= price;
+		inventory.Meso -= price * item.Quantity;
 	}
 	
-	public void Character_Sell_Item(Item item) {
-		inventory.Reduce_Item(item, 1);
-		inventory.Meso += item.getSellPrice();
+	public void Character_Sell_Item(Item item, int num) {
+		inventory.Reduce_Item(item, num);
+		inventory.Meso += item.getSellPrice() * num;
 	}
 	
 	public void LevelUp() {
@@ -1792,7 +1930,7 @@ public class Character {
 		}
 		else {
 			Exp += quantity;
-			Maplestory.status_bar.Manage_ExpBar();
+			Maplestory.ui_status_bar.Manage_ExpBar();
 		}
 	}
 	
@@ -1801,7 +1939,7 @@ public class Character {
 		if(Exp < 0) {
 			Exp = 0;
 		}
-		Maplestory.status_bar.Manage_ExpBar();
+		Maplestory.ui_status_bar.Manage_ExpBar();
 	}
 	
 	public String Make_CombatMsg(Item item) {

@@ -544,20 +544,18 @@ public class Mob_Bubbling extends Mob {
 			@Override
 			public void run() {
 				int mob_height = current_Img.getIconHeight();
-				int xpos = X;
-				int ypos = Y - mob_height;
 
 				// character is attacked
-				if ((Maplestory.player.CharacterY >= ypos - Character.CharacterHeight + 10)
-						&& (Maplestory.player.CharacterY <= ypos + mob_height - 10)) {
-					if ((Maplestory.player.CharacterX >= xpos - Character.CharacterWidth + 10)
-							&& (Maplestory.player.CharacterX <= xpos + width - 10)) {
+				if ((Maplestory.player.CharacterY >= Y - mob_height + 10)
+						&& (Maplestory.player.CharacterY <= Y + Character.CharacterHeight - 10)) {
+					if ((Maplestory.player.CharacterX >= X - Character.CharacterWidth + 10)
+							&& (Maplestory.player.CharacterX <= X + width - 10)) {
 						int damage = Hit_Damage_Calculate(Min_ATK, Max_ATK);
 						Maplestory.player.HP_Damage(damage);
 						int num = random.nextInt(100)+1;
 						if (num >= 1 && num <= 100 - Maplestory.player.Stance) {
 							if(damage > 0) {
-								if (Maplestory.player.CharacterX + Character.CharacterWidth / 2 >= xpos + width / 2) {
+								if (Maplestory.player.CharacterX + Character.CharacterWidth / 2 >= X + width / 2) {
 									Maplestory.player.Character_Attacked2(1);
 								} else {
 									Maplestory.player.Character_Attacked2(-1);

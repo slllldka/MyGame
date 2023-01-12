@@ -35,13 +35,15 @@ public class Maplestory extends JFrame {
 	protected static Images images = new Images();
 
 	//Keyboard Setting
-	protected static Keyboard_Setting keysetting;
+	protected static KeyBoardConfig keyConfig;
 	
 	//UIs
-	protected static UI_Status_Bar status_bar;
-	protected static UI_Quick_Slot quick_slot;
-	protected static UI_MiniMap minimap;
+	protected static UI_Status_Bar ui_status_bar;
+	protected static UI_MiniMap ui_minimap;
 	protected static Shop_GeneralStore generalStore;
+	protected static UI_Notice ui_notice;
+	protected static UI_KeyConfig ui_keySetting;
+	protected static UI_Quick_Slot ui_quick_slot;
 	
 	//Buttons
 	private JButton StartButton, SettingButton, HelpButton, ExitButton, OKButton, BackButton, BackButton_SS;
@@ -103,6 +105,8 @@ public class Maplestory extends JFrame {
 	 * Create the frame.
 	 */
 	public Maplestory() {
+		make_Threads();
+		
 		setTitle("MapleStory");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setIconImage(Icon.getImage());
@@ -112,7 +116,7 @@ public class Maplestory extends JFrame {
 		//setUndecorated(true);
 		//device.setFullScreenWindow(this);
 		
-		keysetting = new Keyboard_Setting(this);
+		keyConfig = new KeyBoardConfig(this);
 		setCursor(Toolkit.getDefaultToolkit().createCustomCursor(images.Default_CursorImg.getImage(), new Point(0, 0), " "));
 		
 /*		if(!Directory.exists()) {
@@ -141,11 +145,13 @@ public class Maplestory extends JFrame {
 		make_Stage4();
 		set_Portals();
 		
-		make_Threads();
-		
-		//stage1.open(null);
-		start_Start();
-		Start_Music.play();
+		stage1.open(null);
+		//start_Start();
+		//Start_Music.play();
+	}
+
+	public void make_Threads() {
+		thread_pool = Executors.newFixedThreadPool(1000);
 	}
 	
 //below: Method Name explains what it does
@@ -353,9 +359,11 @@ public class Maplestory extends JFrame {
 	
 	//Make Screens
 	public void make_UIs() {
-		status_bar = new UI_Status_Bar(BackButton);
-		quick_slot = new UI_Quick_Slot();
-		minimap = new UI_MiniMap();
+		ui_status_bar = new UI_Status_Bar(BackButton);
+		ui_minimap = new UI_MiniMap();
+		ui_keySetting = new UI_KeyConfig();
+		ui_notice = new UI_Notice();
+		ui_quick_slot = new UI_Quick_Slot();
 	}
 	
 	//Make Shops
@@ -380,32 +388,33 @@ public class Maplestory extends JFrame {
 	}
 	//Make Stage1
 	public void make_Stage1() {
-		stage1 = new Stage1(-1, "Henesys.png", "Ground1_Long.png", "Foothold1.png", "Foothold2.png"
-				, this, BackButton);
-		stage1.CharacterFirstImg = player.characterLeftImg;
+		stage1 = new Stage1(1, "Henesys.png", "Ground1_Long.png", "Foothold1.png", "Foothold2.png"
+				, this, BackButton, true, null);
+		stage1.nearestTown = stage1;
+		stage1.CharacterFirstImg = player.characterRightImg;
 	}
 	//Make Stage1-1
 	public void make_Stage1_1() {
 		stage1_1 = new Stage1_1(1, "Henesys.png", "Ground1_Long.png", "Foothold1.png", "Foothold2.png"
-				, this, BackButton);
+				, this, BackButton, false, stage1);
 		stage1_1.CharacterFirstImg = player.characterRightImg;
 	}
 	//Make Stage2
 	public void make_Stage2() {
 		stage2 = new Stage2(1, "Ellinia.png", "Ground2_Long.png", "Foothold3.png", "Foothold4.png"
-				, this, BackButton);
+				, this, BackButton, false, stage1);
 		stage2.CharacterFirstImg = player.characterRightImg;
 	}
 	//Make Stage3
 	public void make_Stage3() {
 		stage3 = new Stage3(-1, "SleepyWood.png", "Ground3_Long.png", "Foothold5.png", "Foothold6.png"
-				, this, BackButton);
+				, this, BackButton, false, stage1);
 		stage3.CharacterFirstImg = player.characterLeftImg;
 	}
 	//Make Stage4
 	public void make_Stage4() {
 		stage4 = new Stage4(1, "Ellinia.png", "Ground2_Long.png", "Foothold3.png", "Foothold4.png"
-				, this, BackButton);
+				, this, BackButton, false, stage1);
 		stage4.CharacterFirstImg = player.characterRightImg;
 	}
 	//Set Link
@@ -429,13 +438,6 @@ public class Maplestory extends JFrame {
 		stage3.Portal_List.get(0).link = stage2.Portal_List.get(1);
 		stage3.Portal_List.get(1).link = stage4.Portal_List.get(0);
 		stage4.Portal_List.get(0).link = stage3.Portal_List.get(1);
-	}
-	
-	
-	//Start Stage
-	
-	public void make_Threads() {
-		thread_pool = Executors.newFixedThreadPool(1000);
 	}
 	
 	//ButtonHandling class

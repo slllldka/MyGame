@@ -18,7 +18,7 @@ public class Wall {
 	public boolean canLeftGo(int CX, int CY, int CW, int CH) {
 		if(left) {
 			if((CX + CW / 2) == x) {
-				if((CY+CH <= ystart && CY <= ystart) || (CY >= yend && CY+CH >= yend)) {
+				if((CY <= ystart && CY <= ystart + CH) || (CY >= yend + CH && CY >= yend)) {
 					return true;
 				}
 				else {
@@ -36,7 +36,7 @@ public class Wall {
 	public boolean canRightGo(int CX, int CY, int CW, int CH) {
 		if(!left) {
 			if((CX + CW / 2) == x) {
-				if((CY+CH <= ystart && CY <= ystart) || (CY >= yend && CY+CH >= yend)) {
+				if((CY <= ystart && CY <= ystart + CH) || (CY >= yend + CH && CY >= yend)) {
 					return true;
 				}
 				else {

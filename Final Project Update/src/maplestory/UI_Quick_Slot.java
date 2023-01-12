@@ -1,9 +1,12 @@
 package maplestory;
 
 import java.awt.Graphics;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.SwingUtilities;
 
@@ -14,89 +17,243 @@ public class UI_Quick_Slot extends JLabel{
 	 */
 	private static final long serialVersionUID = 1L;
 	
-	protected UI_Quick_Slot_Icon[] Icon = new UI_Quick_Slot_Icon[8];
+	protected UI_KeyConfig_Slot[] quickSlot = new UI_KeyConfig_Slot[8];
 	protected int move_index = -1;
+	protected int selectedIndex = -1;
 	
 	public UI_Quick_Slot() {
 		setBounds(648, 455, 151, 80);
 		setIcon(Maplestory.images.QuickSlotImg);
 		for(int i=0;i<8;i++) {
-			Icon[i] = new UI_Quick_Slot_Icon(i);
-			Icon[i].addMouseListener(new MouseAdapter() {
+			quickSlot[i] = new UI_KeyConfig_Slot(i);
+			quickSlot[i].addMouseListener(new MouseAdapter() {
 				@Override
 				public void mouseClicked(MouseEvent e) {
 					if(SwingUtilities.isLeftMouseButton(e)) {
-						UI_Quick_Slot_Icon source = (UI_Quick_Slot_Icon)e.getSource();
-						int index = source.Get_Index();
-						//Not Moving Item
+						UI_KeyConfig_Slot source = (UI_KeyConfig_Slot)e.getSource();
+						int index = source.getIndex();
+						int quickslotindex = source.getQuickSlotIndex();
+						
+						if(getParent() == Maplestory.ui_notice) {
+							selectedIndex = quickslotindex;
+							quickSlot[quickslotindex].requestFocus();
+							return;
+						}
+						
+						//Not Moving Key
 						if(Stage.move == null) {
-							Item item = Icon[index].Get_Item();
+							Item item = Maplestory.ui_keySetting.Slot[index].getItem();
 							if(item != null) {
 								Music DragStart_Music = new Music("DragStart.wav", 1);
 								DragStart_Music.play();
-								Stage.move = Icon[index].Get_Item().getRawIcon();
+								Stage.move = Maplestory.ui_keySetting.Slot[index].item.getRawIcon();
 								Maplestory.player.inventory.move_index = -1;
-								Maplestory.quick_slot.move_index = Icon[index].Get_Index();
+								Maplestory.ui_quick_slot.move_index = quickslotindex;
+								Maplestory.ui_keySetting.move_index = index;
+							}
+							else if(item == null) {
+								String actionMapKey = Maplestory.ui_keySetting.Slot[index].actionMapKey;
+								if(!actionMapKey.equals("")) {
+									Music DragStart_Music = new Music("DragStart.wav", 1);
+									DragStart_Music.play();
+									Stage.move = Maplestory.ui_keySetting.Slot[index].actionImage;
+									Maplestory.player.inventory.move_index = -1;
+									Maplestory.ui_quick_slot.move_index = quickslotindex;
+									Maplestory.ui_keySetting.move_index = index;
+								}
 							}
 						}
-						//Moving Item
+						//Moving Key
 						else {
 							//Moving Item from Inventory
 							if(Maplestory.player.inventory.move_index != -1) {
 								Music DragEnd_Music = new Music("DragEnd.wav", 1);
 								DragEnd_Music.play();
 								Stage.move = null;
-								Item update = Maplestory.player.inventory.current_inventory_list.get(Maplestory.player.inventory.move_index);
-								if(update.getType().equals("Consume")) {
-									//Check if selected item already exists in Quick Slot
-									for(int i=0;i<8;i++) {
-										if(i != index) {
-											Item original = Icon[i].Get_Item();
-											//if exists, set that quick slot empty
-											if(original != null) {
-												if(original.getItemCode() == update.getItemCode()) {
-													Icon[i].set_Item(null);
+								if(index < 67) {
+									Item update = Maplestory.player.inventory.current_inventory_list.get(Maplestory.player.inventory.move_index);
+									if(update.getType().equals("Consume")) {
+										//Check if selected item already exists in KeySetting
+										for(int i=0;i<67;i++) {
+											if(i != index) {
+												Item original = Maplestory.ui_keySetting.Slot[i].getItem();
+												//if exists, set that quick slot empty
+												if(original != null) {
+													if(original.getItemCode() == update.getItemCode()) {
+														Maplestory.ui_keySetting.Slot[i].setItem(null);
+														Maplestory.ui_keySetting.Slot[i].actionMapKey = "";
+													}
 												}
 											}
 										}
+										
+										if(!Maplestory.ui_keySetting.Slot[index].actionMapKey.equals("")) {
+											if(Maplestory.ui_keySetting.Slot[index].actionMapKey.equals("ItemUse")) {
+											}
+											else if(Maplestory.ui_keySetting.Slot[index].actionMapKey.equals("Skill")) {
+											}
+											else {
+												Stage.move = Maplestory.ui_keySetting.Slot[index].actionImage;
+												Maplestory.player.inventory.move_index = -1;
+												Maplestory.ui_quick_slot.move_index = -1;
+												Maplestory.ui_keySetting.move_index = Maplestory.ui_keySetting.moveSlotToBottom(Maplestory.ui_keySetting.Slot[index]);
+											}
+										}
+										Maplestory.ui_keySetting.Slot[index].setItem(update);
+										Maplestory.ui_keySetting.Slot[index].actionMapKey = "ItemUse";
+										Maplestory.ui_keySetting.Slot[index].actionImage = null;
 									}
-									Icon[index].set_Item(update);
+									
+									if(Maplestory.ui_keySetting.isOpen) {
+										Maplestory.ui_keySetting.isChanged = true;
+									}
+									else {
+										Maplestory.ui_keySetting.save();
+									}
 								}
 							}
-							//Moving Item from Quick Slot
-							else if(Maplestory.quick_slot.move_index != -1) {
+							//Moving Key from KeyConfig
+							else if(Maplestory.ui_keySetting.move_index != -1) {
 								Music DragEnd_Music = new Music("DragEnd.wav", 1);
 								DragEnd_Music.play();
+								
 								//Same Slot
-								if(Icon[index].Get_Index() == Maplestory.quick_slot.move_index) {
+								if(index == Maplestory.ui_keySetting.move_index) {
 									Stage.move = null;
+									Maplestory.ui_quick_slot.move_index = -1;
+									Maplestory.ui_keySetting.move_index = -1;
 								}
 								//Different Slot
 								else {
 									Stage.move = null;
-									Item temp = Icon[index].Get_Item();
-									Icon[index].set_Item(Maplestory.quick_slot.Icon[Maplestory.quick_slot.move_index].Get_Item());
-									Maplestory.quick_slot.Icon[Maplestory.quick_slot.move_index].set_Item(temp);
+									Item srcItem = Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index].item;
+									Item dstItem = Maplestory.ui_keySetting.Slot[index].item;
+									String srcKey = Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index].actionMapKey;
+									String dstKey = Maplestory.ui_keySetting.Slot[index].actionMapKey;
+									ImageIcon srcImage = Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index].actionImage;
+									ImageIcon dstImage = Maplestory.ui_keySetting.Slot[index].actionImage;
+									
+									if(srcItem != null && dstItem != null) {
+										Item temp = srcItem;
+										Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index].item = dstItem;
+										Maplestory.ui_keySetting.Slot[index].item = temp;
+										
+										Stage.move = Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index].item.getRawIcon();
+										Maplestory.player.inventory.move_index = -1;
+										Maplestory.ui_quick_slot.move_index = move_index;
+										Maplestory.ui_keySetting.move_index = Maplestory.ui_keySetting.move_index;
+									}
+									else if(srcItem != null && dstItem == null) {
+										Item temp = srcItem;
+										
+										Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index].item = null;
+										Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index].actionMapKey = dstKey;
+										Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index].actionImage = dstImage;
+										
+										Maplestory.ui_keySetting.Slot[index].item = temp;
+										Maplestory.ui_keySetting.Slot[index].actionMapKey = "ItemUse";
+										Maplestory.ui_keySetting.Slot[index].actionImage= null;
+										
+										if(Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index].actionMapKey.equals("")) {
+											Maplestory.ui_quick_slot.move_index = -1;
+											Maplestory.ui_keySetting.move_index = -1;
+										}
+										else {
+											Stage.move = Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index].actionImage;
+											Maplestory.player.inventory.move_index = -1;
+											Maplestory.ui_quick_slot.move_index = move_index;
+											Maplestory.ui_keySetting.move_index = Maplestory.ui_keySetting.move_index; 
+										}
+									}
+									else if(srcItem == null && dstItem != null) {
+										Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index].item = dstItem;
+										Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index].actionMapKey = "ItemUse";
+										Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index].actionImage = null;
+										
+										Maplestory.ui_keySetting.Slot[index].item = null;
+										Maplestory.ui_keySetting.Slot[index].actionMapKey = srcKey;
+										Maplestory.ui_keySetting.Slot[index].actionImage= srcImage;
+										
+										Stage.move = Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index].item.getRawIcon();
+										Maplestory.player.inventory.move_index = -1;
+										Maplestory.ui_quick_slot.move_index = move_index;
+										Maplestory.ui_keySetting.move_index = Maplestory.ui_keySetting.move_index;
+									}
+									else {
+										String tempKey = srcKey;
+										ImageIcon tempImage = srcImage;
+										
+										Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index].item = null;
+										Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index].actionMapKey = dstKey;
+										Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index].actionImage = dstImage;
+										
+										Maplestory.ui_keySetting.Slot[index].item = null;
+										Maplestory.ui_keySetting.Slot[index].actionMapKey = tempKey;
+										Maplestory.ui_keySetting.Slot[index].actionImage = tempImage;
+										
+										if(Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index].actionMapKey.equals("")) {
+											Maplestory.ui_quick_slot.move_index = -1;
+											Maplestory.ui_keySetting.move_index = -1;
+										}
+										else {
+											Stage.move = Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index].actionImage;
+											Maplestory.player.inventory.move_index = -1;
+											Maplestory.ui_quick_slot.move_index = move_index;
+											Maplestory.ui_keySetting.move_index = Maplestory.ui_keySetting.move_index; 
+										}
+									}
+									
+									if(Maplestory.ui_keySetting.isOpen) {
+										Maplestory.ui_keySetting.isChanged = true;
+									}
+									else {
+										Maplestory.ui_keySetting.save();
+									}
 								}
 							}
 						}
 					}
 				}
-			});
-			add(Icon[i]);
-		}
-		addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if(SwingUtilities.isLeftMouseButton(e)) {
-					if(Stage.move != null) {
-						Music DragEnd_Music = new Music("DragEnd.wav", 1);
-						DragEnd_Music.play();
-						Stage.move = null;
+				
+				@Override
+				public void mouseEntered(MouseEvent e) {
+					UI_KeyConfig_Slot source = (UI_KeyConfig_Slot)e.getSource();
+					Item data = source.getItem();
+					if(data != null) {
+						Stage.info = data.getInfo();
+						Stage.info_x = getMousePosition().x + getLocation().x;
+						Stage.info_y = getMousePosition().y + getLocation().y;
 					}
 				}
-			}
-		});
+				
+				@Override
+				public void mouseExited(MouseEvent e) {
+					Stage.info = null;
+				}
+			});
+			quickSlot[i].addKeyListener(new KeyAdapter() {
+				@Override
+				public void keyPressed(KeyEvent e) {
+					if(selectedIndex != -1) {
+						if(Maplestory.ui_keySetting.slotIndex[e.getKeyCode()] != -1) {
+							quickSlot[selectedIndex].setQuickSlotKey(Maplestory.ui_keySetting
+									.Slot[Maplestory.ui_keySetting.slotIndex[e.getKeyCode()]]);
+						}
+					}
+				}
+			});
+			
+			add(quickSlot[i]);
+		}
+		
+		quickSlot[0].setQuickSlotKey(Maplestory.ui_keySetting.Slot[55]);
+		quickSlot[1].setQuickSlotKey(Maplestory.ui_keySetting.Slot[12]);
+		quickSlot[2].setQuickSlotKey(Maplestory.ui_keySetting.Slot[13]);
+		quickSlot[3].setQuickSlotKey(Maplestory.ui_keySetting.Slot[14]);
+		quickSlot[4].setQuickSlotKey(Maplestory.ui_keySetting.Slot[65]);
+		quickSlot[5].setQuickSlotKey(Maplestory.ui_keySetting.Slot[15]);
+		quickSlot[6].setQuickSlotKey(Maplestory.ui_keySetting.Slot[16]);
+		quickSlot[7].setQuickSlotKey(Maplestory.ui_keySetting.Slot[17]);
 	}
 	
 	@Override

@@ -2,24 +2,24 @@ package maplestory;
 
 import javax.swing.ImageIcon;
 
-public class Item_Blue_Potion extends Item{
-	protected static int item_code = 1;
+public class Item_Meat extends Item{
+	protected static int item_code = 8;
 	protected static String type = "Consume";
-	protected static String name = "파란 포션";
-	protected static String tooltip = "푸른 약초로 만든 물약이다.\nMP를 약 100 회복시킨다.";
-	protected static ImageIcon Dropped_Icon = Maplestory.images.Blue_Potion_Raw_Icon;
-	protected static ImageIcon Icon = Maplestory.images.Blue_Potion_Icon;
-	protected static ImageIcon Info = Maplestory.images.Blue_Potion_Info;
-	protected static int sellPrice = 10;	
+	protected static String name = "짐승의 고기";
+	protected static String tooltip = "먹음직한 짐승의 고기이다.\nHP를 약 100 회복시킨다.";
+	protected static ImageIcon Dropped_Icon = Maplestory.images.Meat_Raw_Icon;
+	protected static ImageIcon Icon = Maplestory.images.Meat_Icon;
+	protected static ImageIcon Info = Maplestory.images.Meat_Info;
+	protected static int sellPrice = 5;
 	
-	public Item_Blue_Potion() {
+	public Item_Meat() {
 		Quantity = 1;
 		infiniteQuantity = true;
 		angle = 0;
 		pickable = false;
 	}
 	
-	public Item_Blue_Potion(int _Quantity) {
+	public Item_Meat(int _Quantity) {
 		Quantity = _Quantity;
 		angle = 0;
 		pickable = false;
@@ -54,7 +54,7 @@ public class Item_Blue_Potion extends Item{
 	public ImageIcon getIcon() {
 		return Icon;
 	}
-	
+
 	@Override
 	public ImageIcon getInfo() {
 		return Info;
@@ -69,7 +69,7 @@ public class Item_Blue_Potion extends Item{
 				synchronized(Maplestory.player.inventory.Consume_inventory_list) {
 					Music Potion_Use_Music = new Music("Potion_Use.wav", 1);
 					Potion_Use_Music.play();
-					Maplestory.player.MP_Heal(100);
+					Maplestory.player.HP_Heal(100);
 					Maplestory.player.inventory.Reduce_Item(index, 1);
 					Maplestory.player.Item_usable = false;
 					try {
@@ -96,7 +96,7 @@ public class Item_Blue_Potion extends Item{
 	
 	@Override
 	public Item getNew(int Quantity) {
-		Item result = new Item_Blue_Potion(Quantity);
+		Item result = new Item_Meat(Quantity);
 		return result;
 	}
 }

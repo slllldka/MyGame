@@ -1,7 +1,5 @@
 package maplestory;
 
-import java.awt.event.MouseEvent;
-
 import javax.swing.ImageIcon;
 
 public class NPC_Shop extends NPC {
@@ -10,7 +8,9 @@ public class NPC_Shop extends NPC {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-
+	
+	protected static String type = "Shop";
+	
 	protected Shop shop;
 	
 	public NPC_Shop(String _name, ImageIcon _image, Shop _shop, int _xpos, int _ypos, int _direction) {
@@ -21,8 +21,11 @@ public class NPC_Shop extends NPC {
 	}
 	
 	@Override
-	public void clickEvent(MouseEvent e) {
+	public void clickEvent() {
 		shop.open(image);
 	}
 	
+	public String getType() {
+		return type;
+	}
 }

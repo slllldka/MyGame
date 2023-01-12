@@ -25,7 +25,7 @@ public class Inventory_Slot extends JLabel{
 			Item data = Maplestory.player.inventory.current_inventory_list.get(index);
 			if(data != null) {
 				icon = data.getIcon();
-				g.drawImage(icon.getImage(), 16 - icon.getIconWidth() / 2, 16 - icon.getIconHeight() / 2, Maplestory.current_stage);
+				g.drawImage(icon.getImage(), 16 - icon.getIconWidth() / 2, 16 - icon.getIconHeight() / 2, this);
 				if(Maplestory.player.inventory.current_type != 0) {
 					Show_Number(g, data);
 				}
@@ -36,7 +36,7 @@ public class Inventory_Slot extends JLabel{
 				}
 				else {
 					icon = Maplestory.images.Slot_DisabledImg;
-					g.drawImage(icon.getImage(), 0, 0, Maplestory.current_stage);
+					g.drawImage(icon.getImage(), 0, 0, this);
 				}
 			}
 		}
@@ -87,15 +87,15 @@ public class Inventory_Slot extends JLabel{
 	public void Draw_Number(Graphics g, int Quantity, int X, int Y) {
 		if(Quantity < 10) {
 			ImageIcon num1 = Get_Number_Icon(Quantity);
-			g.drawImage(num1.getImage(), X, Y, Maplestory.current_stage);
+			g.drawImage(num1.getImage(), X, Y, this);
 		}
 		else if(Quantity < 100) {
 			int first = Quantity / 10;
 			int second = Quantity - first*10;
 			ImageIcon num1 = Get_Number_Icon(first);
 			ImageIcon num2 = Get_Number_Icon(second);
-			g.drawImage(num1.getImage(), X, Y, Maplestory.current_stage);
-			g.drawImage(num2.getImage(), X+num1.getIconWidth(), Y, Maplestory.current_stage);
+			g.drawImage(num1.getImage(), X, Y, this);
+			g.drawImage(num2.getImage(), X+num1.getIconWidth(), Y, this);
 		}
 		else if(Quantity < 1000) {
 			int first = Quantity / 100;
@@ -104,9 +104,9 @@ public class Inventory_Slot extends JLabel{
 			ImageIcon num1 = Get_Number_Icon(first);
 			ImageIcon num2 = Get_Number_Icon(second);
 			ImageIcon num3 = Get_Number_Icon(third);
-			g.drawImage(num1.getImage(), X, Y, Maplestory.current_stage);
-			g.drawImage(num2.getImage(), X+num1.getIconWidth(), Y, Maplestory.current_stage);
-			g.drawImage(num3.getImage(), X+num1.getIconWidth()+num2.getIconWidth(), Y, Maplestory.current_stage);
+			g.drawImage(num1.getImage(), X, Y, this);
+			g.drawImage(num2.getImage(), X+num1.getIconWidth(), Y, this);
+			g.drawImage(num3.getImage(), X+num1.getIconWidth()+num2.getIconWidth(), Y, this);
 		}
 	}
 

@@ -10,7 +10,7 @@ public class Item_Orange_Potion extends Item{
 	protected static ImageIcon Dropped_Icon = Maplestory.images.Orange_Potion_Raw_Icon;
 	protected static ImageIcon Icon = Maplestory.images.Orange_Potion_Icon;
 	protected static ImageIcon Info = Maplestory.images.Orange_Potion_Info;
-	protected static int sellPrice = 1;
+	protected static int sellPrice = 24;
 	
 	public Item_Orange_Potion() {
 		Quantity = 1;

@@ -132,7 +132,7 @@ public abstract class Item {
 				for(float i=1f;i>0f;i-=0.003f) {
 					alpha = i;
 					Char_X_Center = Maplestory.player.CharacterX + Character.CharacterWidth/2;
-					Char_Y_Center = Maplestory.player.CharacterY + Character.CharacterHeight/2;
+					Char_Y_Center = Maplestory.player.CharacterY - Character.CharacterHeight/2;
 					Delta_X = Char_X_Center - X_Center;
 					Delta_Y = Char_Y_Center - Y_Center;
 					X_Center_float += (Delta_X / 333);

@@ -2,24 +2,24 @@ package maplestory;
 
 import javax.swing.ImageIcon;
 
-public class Item_Blue_Potion extends Item{
-	protected static int item_code = 1;
+public class Item_Chocolate extends Item{
+	protected static int item_code = 11;
 	protected static String type = "Consume";
-	protected static String name = "파란 포션";
-	protected static String tooltip = "푸른 약초로 만든 물약이다.\nMP를 약 100 회복시킨다.";
-	protected static ImageIcon Dropped_Icon = Maplestory.images.Blue_Potion_Raw_Icon;
-	protected static ImageIcon Icon = Maplestory.images.Blue_Potion_Icon;
-	protected static ImageIcon Info = Maplestory.images.Blue_Potion_Info;
-	protected static int sellPrice = 10;	
+	protected static String name = "초콜릿";
+	protected static String tooltip = "달콤한 향이 진하게 나는 밀크초콜릿이다. 초코스틱의 재료가 되기도 한다는데..\nHP와 MP를 각각 1000씩 회복시켜준다.";
+	protected static ImageIcon Dropped_Icon = Maplestory.images.Chocolate_Raw_Icon;
+	protected static ImageIcon Icon = Maplestory.images.Chocolate_Icon;
+	protected static ImageIcon Info = Maplestory.images.Chocolate_Info;
+	protected static int sellPrice = 1500;
 	
-	public Item_Blue_Potion() {
+	public Item_Chocolate() {
 		Quantity = 1;
 		infiniteQuantity = true;
 		angle = 0;
 		pickable = false;
 	}
 	
-	public Item_Blue_Potion(int _Quantity) {
+	public Item_Chocolate(int _Quantity) {
 		Quantity = _Quantity;
 		angle = 0;
 		pickable = false;
@@ -54,7 +54,7 @@ public class Item_Blue_Potion extends Item{
 	public ImageIcon getIcon() {
 		return Icon;
 	}
-	
+
 	@Override
 	public ImageIcon getInfo() {
 		return Info;
@@ -69,7 +69,8 @@ public class Item_Blue_Potion extends Item{
 				synchronized(Maplestory.player.inventory.Consume_inventory_list) {
 					Music Potion_Use_Music = new Music("Potion_Use.wav", 1);
 					Potion_Use_Music.play();
-					Maplestory.player.MP_Heal(100);
+					Maplestory.player.HP_Heal(1000);
+					Maplestory.player.MP_Heal(1000);
 					Maplestory.player.inventory.Reduce_Item(index, 1);
 					Maplestory.player.Item_usable = false;
 					try {
@@ -96,7 +97,7 @@ public class Item_Blue_Potion extends Item{
 	
 	@Override
 	public Item getNew(int Quantity) {
-		Item result = new Item_Blue_Potion(Quantity);
+		Item result = new Item_Chocolate(Quantity);
 		return result;
 	}
 }

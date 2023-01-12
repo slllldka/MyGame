@@ -2,24 +2,24 @@ package maplestory;
 
 import javax.swing.ImageIcon;
 
-public class Item_Blue_Potion extends Item{
-	protected static int item_code = 1;
+public class Item_Lemon extends Item{
+	protected static int item_code = 10;
 	protected static String type = "Consume";
-	protected static String name = "파란 포션";
-	protected static String tooltip = "푸른 약초로 만든 물약이다.\nMP를 약 100 회복시킨다.";
-	protected static ImageIcon Dropped_Icon = Maplestory.images.Blue_Potion_Raw_Icon;
-	protected static ImageIcon Icon = Maplestory.images.Blue_Potion_Icon;
-	protected static ImageIcon Info = Maplestory.images.Blue_Potion_Info;
-	protected static int sellPrice = 10;	
+	protected static String name = "레몬";
+	protected static String tooltip = "매우 신 과일이다.\nMP를 약 150 회복시킨다.";
+	protected static ImageIcon Dropped_Icon = Maplestory.images.Lemon_Raw_Icon;
+	protected static ImageIcon Icon = Maplestory.images.Lemon_Icon;
+	protected static ImageIcon Info = Maplestory.images.Lemon_Info;
+	protected static int sellPrice = 47;
 	
-	public Item_Blue_Potion() {
+	public Item_Lemon() {
 		Quantity = 1;
 		infiniteQuantity = true;
 		angle = 0;
 		pickable = false;
 	}
 	
-	public Item_Blue_Potion(int _Quantity) {
+	public Item_Lemon(int _Quantity) {
 		Quantity = _Quantity;
 		angle = 0;
 		pickable = false;
@@ -54,7 +54,7 @@ public class Item_Blue_Potion extends Item{
 	public ImageIcon getIcon() {
 		return Icon;
 	}
-	
+
 	@Override
 	public ImageIcon getInfo() {
 		return Info;
@@ -69,7 +69,7 @@ public class Item_Blue_Potion extends Item{
 				synchronized(Maplestory.player.inventory.Consume_inventory_list) {
 					Music Potion_Use_Music = new Music("Potion_Use.wav", 1);
 					Potion_Use_Music.play();
-					Maplestory.player.MP_Heal(100);
+					Maplestory.player.MP_Heal(150);
 					Maplestory.player.inventory.Reduce_Item(index, 1);
 					Maplestory.player.Item_usable = false;
 					try {
@@ -96,7 +96,7 @@ public class Item_Blue_Potion extends Item{
 	
 	@Override
 	public Item getNew(int Quantity) {
-		Item result = new Item_Blue_Potion(Quantity);
+		Item result = new Item_Lemon(Quantity);
 		return result;
 	}
 }

@@ -17,8 +17,9 @@ public class Stage2 extends Stage{
 	protected int MeteorNum; //number of meteors(throwing stars)
 	//CD: CharacterDirection, CX: Character Xpos, CY: Character Ypos, CW: Character Width, CH: Character Heigth
 	//(B)GName: (Back)Ground Image Name, FHName: FootHold Image Name
-	public Stage2(int CD, String BGName, String GName, String FH1Name, String FH2Name, JFrame _frame, JButton _back) {
-		super(CD, BGName, GName, FH1Name, FH2Name, _frame, _back); //constructor of super class(Stage class)
+	public Stage2(int CD, String BGName, String GName, String FH1Name, String FH2Name, JFrame _frame, JButton _back
+			, boolean _isTown, Stage _nearestTown) {
+		super(CD, BGName, GName, FH1Name, FH2Name, _frame, _back, _isTown, _nearestTown);
 		
 		theme = "Ellinia";
 		
@@ -33,7 +34,7 @@ public class Stage2 extends Stage{
 
 		MiniMap_Available = true;
 		
-		super.setCharacter(50, 680);
+		super.setCharacter(50, 750);
 		
 		//add footholds
 		super.setFootholds(new Foothold(new FH_Part(new Point(0, 750), new Point(2300, 750))));

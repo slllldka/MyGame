@@ -19,6 +19,7 @@ public class UI_MiniMap extends JLabel{
 	protected Graphics2D g2 = null;
 	
 	protected ImageIcon icon_user = Maplestory.images.minimap_user;
+	protected ImageIcon icon_shop = Maplestory.images.minimap_shop;
 	protected ImageIcon icon_portal = Maplestory.images.minimap_portal;
 	
 	protected boolean isOpen = false;
@@ -73,22 +74,30 @@ public class UI_MiniMap extends JLabel{
 			g2.drawImage(icon_portal.getImage(), portal.xcenter / offset - icon_portal.getIconWidth() / 2
 					, portal.y / offset - icon_portal.getIconHeight(), this);
 		}
+		
+		// Draw NPCs
+		for(NPC npc : Maplestory.current_stage.NPC_List) {
+			if(npc.getType().equals("Shop")) {
+				g2.drawImage(icon_shop.getImage(), npc.xcenter / offset - icon_shop.getIconWidth() / 2
+						, npc.ybottom / offset - icon_shop.getIconHeight(), this);
+			}
+		}
 
 		// Draw User
 		int player_x = (Maplestory.player.CharacterX + Character.CharacterWidth/2) / offset;
-		int player_y = (Maplestory.player.CharacterY + Character.CharacterHeight/2) / offset;
+		int player_y = (Maplestory.player.CharacterY - Character.CharacterHeight/2) / offset;
 		g2.drawImage(icon_user.getImage(), player_x - icon_user.getIconWidth() / 2, player_y - icon_user.getIconHeight() / 2, this);
 		
 		paintComponents(g);
 	}
 	
-	public void Open() {
+	public void open() {
 		setBounds(0, 0, Maplestory.current_stage.X_Size / offset, Maplestory.current_stage.Y_Size / offset);
 		setVisible(true);
 		isOpen = true;
 	}
 	
-	public void Close() {
+	public void close() {
 		setVisible(false);
 		isOpen = false;
 	}

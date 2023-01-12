@@ -12,12 +12,13 @@ public class Stage1_1 extends Stage {
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public Stage1_1(int CD, String BGName, String GName, String FH1Name, String FH2Name, JFrame _frame, JButton _back) {
-		super(CD, BGName, GName, FH1Name, FH2Name, _frame, _back);
+	public Stage1_1(int CD, String BGName, String GName, String FH1Name, String FH2Name, JFrame _frame, JButton _back
+			, boolean _isTown, Stage _nearestTown) {
+		super(CD, BGName, GName, FH1Name, FH2Name, _frame, _back, _isTown, _nearestTown);
 		
 		theme = "Henesys";
 		
-		Stage_Music = new Music("Henesys_Field3.wav", -1);
+		Stage_Music = new Music("Henesys_Field2.wav", -1);
 		StageNum = 11;
 		
 		X_Size = 1800;
@@ -31,7 +32,7 @@ public class Stage1_1 extends Stage {
 		
 		MiniMap_Available = true;
 		
-		super.setCharacter(50, 1000);
+		super.setCharacter(50, 1070);
 		
 		//add footholds
 		int x = 0, y = 0;

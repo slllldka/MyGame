@@ -14,8 +14,9 @@ public class Stage1 extends Stage{
 	private static final long serialVersionUID = 1L;
 	//CD: CharacterDirection, CX: Character Xpos, CY: Character Ypos, CW: Character Width, CH: Character Heigth
 	//(B)GName: (Back)Ground Image Name, FHName: FootHold Image Name
-	public Stage1(int CD, String BGName, String GName, String FH1Name, String FH2Name, JFrame _frame, JButton _back) {
-		super(CD, BGName, GName, FH1Name, FH2Name, _frame, _back); //constructor of super class(Stage class)
+	public Stage1(int CD, String BGName, String GName, String FH1Name, String FH2Name, JFrame _frame, JButton _back
+			, boolean _isTown, Stage _nearestTown) {
+		super(CD, BGName, GName, FH1Name, FH2Name, _frame, _back, _isTown, _nearestTown);
 		
 		theme = "Henesys";
 		
@@ -30,7 +31,7 @@ public class Stage1 extends Stage{
 		
 		MiniMap_Available = true;
 		
-		super.setCharacter(900, 560);
+		super.setCharacter(900, 630);
 		
 		//add footholds
 		Foothold_List.add(new Foothold(true, new FH_Part(new Point(-60, 570), new Point(30, 570))

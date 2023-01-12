@@ -73,7 +73,7 @@ public class HowToPlay extends JPanel{
 		frame.setContentPane(this);
 		frame.pack();
 		
-		Maplestory.keysetting.Keyboard_Set(this);
+		Maplestory.keyConfig.setKeyBoard(this);
 		grabFocus();
 	}
 	//close

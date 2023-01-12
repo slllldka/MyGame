@@ -80,7 +80,7 @@ public class Start extends JPanel{
 		}
 		frame.pack();
 		
-		Maplestory.keysetting.Keyboard_Set(this);
+		Maplestory.keyConfig.setKeyBoard(this);
 		grabFocus();
 	}
 	//close

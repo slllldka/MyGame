@@ -3,14 +3,14 @@ package maplestory;
 import javax.swing.ImageIcon;
 
 public class Item_Green_Apple extends Item{
-	protected static int item_code = 5;
+	protected static int item_code = 4;
 	protected static String type = "Consume";
 	protected static String name = "초록사과";
 	protected static String tooltip = "새콤하고 아삭한 초록사과이다.\nMP를 약 30 회복시킨다.";
 	protected static ImageIcon Dropped_Icon = Maplestory.images.Green_Apple_Raw_Icon;
 	protected static ImageIcon Icon = Maplestory.images.Green_Apple_Icon;
 	protected static ImageIcon Info = Maplestory.images.Green_Apple_Info;
-	protected static int sellPrice = 1;
+	protected static int sellPrice = 30;
 	
 	public Item_Green_Apple() {
 		Quantity = 1;

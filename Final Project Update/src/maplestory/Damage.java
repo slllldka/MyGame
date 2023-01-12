@@ -54,20 +54,22 @@ public class Damage {
 		Maplestory.thread_pool.submit(runnable);
 	}
 	
-	public void Show_Attack_Damage(Graphics2D g2, ImageObserver ob, int cx, int cy) {
+	public void Show_Attack_Damage(Graphics2D g2, ImageObserver ob, int CameraX, int CameraY) {
 		Damage_Skin skin = Maplestory.player.damage_skin;
 		
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
 		if(damage <= 0) {
-			g2.drawImage(skin.NoCri[10].getImage(), X - skin.NoCri[10].getIconWidth() / 2 - cx, Y - skin.NoCri[10].getIconHeight() - cy, ob);
+			g2.drawImage(skin.NoCri[10].getImage(), X - skin.NoCri[10].getIconWidth() / 2 - CameraX
+					, Y - skin.NoCri[10].getIconHeight() - CameraY, ob);
 		}
 		else {
 			if(damage > 0  && damage < 10) {
 				if(isCrit) {
-					g2.drawImage(skin.Cri[10].getImage(), X - skin.Cri[10].getIconWidth() / 2 - 15 - cx, Y - skin.Cri[10].getIconHeight() - cy, ob);
+					g2.drawImage(skin.Cri[10].getImage(), X - skin.Cri[10].getIconWidth() / 2 - 15 - CameraX
+							, Y - skin.Cri[10].getIconHeight() - CameraY, ob);
 				}
 				ImageIcon num = skin.AttackNumIcon(damage, false, isCrit);
-				g2.drawImage(num.getImage(), X - num.getIconWidth() / 2 - cx, Y - num.getIconHeight() - cy, ob);
+				g2.drawImage(num.getImage(), X - num.getIconWidth() / 2 - CameraX, Y - num.getIconHeight() - CameraY, ob);
 			}
 			else if(damage >= 10 && damage < 100) {
 				int Xstart = X - 30;
@@ -77,13 +79,16 @@ public class Damage {
 				ImageIcon num2 = skin.AttackNumIcon(second, false, isCrit);
 				
 				if(isCrit) {
-					g2.drawImage(skin.Cri[10].getImage(), Xstart - skin.Cri[10].getIconWidth() / 2 - cx, Y - skin.Cri[10].getIconHeight() - cy, ob);
-					g2.drawImage(num1.getImage(), Xstart - cx, Y - num1.getIconHeight() - cy, ob);
-					g2.drawImage(num2.getImage(), Xstart + num1.getIconWidth()*3/4 - cx, Y - num2.getIconHeight() - cy, ob);
+					g2.drawImage(skin.Cri[10].getImage(), Xstart - skin.Cri[10].getIconWidth() / 2 - CameraX
+							, Y - skin.Cri[10].getIconHeight() - CameraY, ob);
+					g2.drawImage(num1.getImage(), Xstart - CameraX, Y - num1.getIconHeight() - CameraY, ob);
+					g2.drawImage(num2.getImage(), Xstart + num1.getIconWidth()*3/4 - CameraX
+							, Y - num2.getIconHeight() - CameraY, ob);
 				}
 				else {
-					g2.drawImage(num1.getImage(), Xstart - cx, Y - num1.getIconHeight() - cy, ob);
-					g2.drawImage(num2.getImage(), Xstart + num1.getIconWidth()*4/5 - cx, Y - num2.getIconHeight() - cy, ob);
+					g2.drawImage(num1.getImage(), Xstart - CameraX, Y - num1.getIconHeight() - CameraY, ob);
+					g2.drawImage(num2.getImage(), Xstart + num1.getIconWidth()*4/5 - CameraX
+							, Y - num2.getIconHeight() - CameraY, ob);
 				}
 				
 			}
@@ -97,15 +102,20 @@ public class Damage {
 				ImageIcon num3 = skin.AttackNumIcon(third, false, isCrit);
 				
 				if(isCrit) {
-					g2.drawImage(skin.Cri[10].getImage(), Xstart - skin.Cri[10].getIconWidth() / 2 - cx, Y - skin.Cri[10].getIconHeight() - cy, ob);
-					g2.drawImage(num1.getImage(), Xstart - cx, Y - num1.getIconHeight() - cy, ob);
-					g2.drawImage(num2.getImage(), Xstart + num1.getIconWidth()*3/4 - cx, Y - num2.getIconHeight() - cy, ob);
-					g2.drawImage(num3.getImage(), Xstart + num1.getIconWidth()*3/4 + num2.getIconWidth()*3/4 - cx, Y - num3.getIconHeight() - cy, ob);
+					g2.drawImage(skin.Cri[10].getImage(), Xstart - skin.Cri[10].getIconWidth() / 2 - CameraX
+							, Y - skin.Cri[10].getIconHeight() - CameraY, ob);
+					g2.drawImage(num1.getImage(), Xstart - CameraX, Y - num1.getIconHeight() - CameraY, ob);
+					g2.drawImage(num2.getImage(), Xstart + num1.getIconWidth()*3/4 - CameraX
+							, Y - num2.getIconHeight() - CameraY, ob);
+					g2.drawImage(num3.getImage(), Xstart + num1.getIconWidth()*3/4 + num2.getIconWidth()*3/4 - CameraX
+							, Y - num3.getIconHeight() - CameraY, ob);
 				}
 				else {
-					g2.drawImage(num1.getImage(), Xstart - cx, Y - num1.getIconHeight() - cy, ob);
-					g2.drawImage(num2.getImage(), Xstart + num1.getIconWidth()*4/5 - cx, Y - num2.getIconHeight() - cy, ob);
-					g2.drawImage(num3.getImage(), Xstart + num1.getIconWidth()*4/5 + num2.getIconWidth()*4/5 - cx, Y - num3.getIconHeight() - cy, ob);
+					g2.drawImage(num1.getImage(), Xstart - CameraX, Y - num1.getIconHeight() - CameraY, ob);
+					g2.drawImage(num2.getImage(), Xstart + num1.getIconWidth()*4/5 - CameraX
+							, Y - num2.getIconHeight() - CameraY, ob);
+					g2.drawImage(num3.getImage(), Xstart + num1.getIconWidth()*4/5 + num2.getIconWidth()*4/5 - CameraX
+							, Y - num3.getIconHeight() - CameraY, ob);
 				}
 			}
 			else if(damage >= 1000 && damage < 10000) {
@@ -120,35 +130,43 @@ public class Damage {
 				ImageIcon num4 = skin.AttackNumIcon(fourth, false, isCrit);
 				
 				if(isCrit) {
-					g2.drawImage(skin.Cri[10].getImage(), Xstart - skin.Cri[10].getIconWidth() / 2 - cx, Y - skin.Cri[10].getIconHeight() - cy, ob);
-					g2.drawImage(num1.getImage(), Xstart - cx, Y - num1.getIconHeight() - cy, ob);
-					g2.drawImage(num2.getImage(), Xstart + num1.getIconWidth()*3/4 - cx, Y - num2.getIconHeight() - cy, ob);
-					g2.drawImage(num3.getImage(), Xstart + num1.getIconWidth()*3/4 + num2.getIconWidth()*3/4 - cx, Y - num3.getIconHeight() - cy, ob);
-					g2.drawImage(num4.getImage(), Xstart + num1.getIconWidth()*3/4 + num2.getIconWidth()*3/4 + num3.getIconWidth()*3/4 - cx
-							, Y - num3.getIconHeight() - cy, ob);
+					g2.drawImage(skin.Cri[10].getImage(), Xstart - skin.Cri[10].getIconWidth() / 2 - CameraX
+							, Y - skin.Cri[10].getIconHeight() - CameraY, ob);
+					g2.drawImage(num1.getImage(), Xstart - CameraX, Y - num1.getIconHeight() - CameraY, ob);
+					g2.drawImage(num2.getImage(), Xstart + num1.getIconWidth()*3/4 - CameraX
+							, Y - num2.getIconHeight() - CameraY, ob);
+					g2.drawImage(num3.getImage(), Xstart + num1.getIconWidth()*3/4 + num2.getIconWidth()*3/4 - CameraX
+							, Y - num3.getIconHeight() - CameraY, ob);
+					g2.drawImage(num4.getImage()
+							, Xstart + num1.getIconWidth()*3/4 + num2.getIconWidth()*3/4 + num3.getIconWidth()*3/4 - CameraX
+							, Y - num3.getIconHeight() - CameraY, ob);
 				}
 				else {
-					g2.drawImage(num1.getImage(), Xstart - cx, Y - num1.getIconHeight() - cy, ob);
-					g2.drawImage(num2.getImage(), Xstart + num1.getIconWidth()*4/5 - cx, Y - num2.getIconHeight() - cy, ob);
-					g2.drawImage(num3.getImage(), Xstart + num1.getIconWidth()*4/5 + num2.getIconWidth()*4/5 - cx, Y - num3.getIconHeight() - cy, ob);
-					g2.drawImage(num4.getImage(), Xstart + num1.getIconWidth()*4/5 + num2.getIconWidth()*4/5 + num3.getIconWidth()*4/5 - cx,
-							Y - num3.getIconHeight() - cy, ob);
+					g2.drawImage(num1.getImage(), Xstart - CameraX, Y - num1.getIconHeight() - CameraY, ob);
+					g2.drawImage(num2.getImage(), Xstart + num1.getIconWidth()*4/5 - CameraX
+							, Y - num2.getIconHeight() - CameraY, ob);
+					g2.drawImage(num3.getImage(), Xstart + num1.getIconWidth()*4/5 + num2.getIconWidth()*4/5 - CameraX
+							, Y - num3.getIconHeight() - CameraY, ob);
+					g2.drawImage(num4.getImage()
+							, Xstart + num1.getIconWidth()*4/5 + num2.getIconWidth()*4/5 + num3.getIconWidth()*4/5 - CameraX,
+							Y - num3.getIconHeight() - CameraY, ob);
 				}
 			}
 		}
 	}
 	
-	public void Show_Hit_Damage(Graphics2D g2, ImageObserver ob, int cx, int cy) {
+	public void Show_Hit_Damage(Graphics2D g2, ImageObserver ob, int CameraX, int CameraY) {
 		Damage_Skin skin = Maplestory.player.damage_skin;
 		
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
 		if(damage <= 0) {
-			g2.drawImage(skin.Hit[10].getImage(), X - skin.Hit[10].getIconWidth() / 2 - cx, Y - skin.Hit[10].getIconHeight() - cy, ob);
+			g2.drawImage(skin.Hit[10].getImage(), X - skin.Hit[10].getIconWidth() / 2 - CameraX
+					, Y - skin.Hit[10].getIconHeight() - CameraY, ob);
 		}
 		else {
 			if(damage > 0  && damage < 10) {
 				ImageIcon num = skin.HitNumIcon(damage, false);
-				g2.drawImage(num.getImage(), X - num.getIconWidth() / 2 - cx, Y - num.getIconHeight() - cy, ob);
+				g2.drawImage(num.getImage(), X - num.getIconWidth() / 2 - CameraX, Y - num.getIconHeight() - CameraY, ob);
 			}
 			else if(damage >= 10 && damage < 100) {
 				int Xstart = X - 30;
@@ -157,8 +175,8 @@ public class Damage {
 				ImageIcon num1 = skin.HitNumIcon(first, true);
 				ImageIcon num2 = skin.HitNumIcon(second, false);
 				
-				g2.drawImage(num1.getImage(), Xstart - cx, Y - num1.getIconHeight() - cy, ob);
-				g2.drawImage(num2.getImage(), Xstart + num1.getIconWidth()*4/5 - cx, Y - num2.getIconHeight() - cy, ob);
+				g2.drawImage(num1.getImage(), Xstart - CameraX, Y - num1.getIconHeight() - CameraY, ob);
+				g2.drawImage(num2.getImage(), Xstart + num1.getIconWidth()*4/5 - CameraX, Y - num2.getIconHeight() - CameraY, ob);
 			}
 			else if(damage >= 100 && damage < 1000) {
 				int Xstart = X - 45;
@@ -168,9 +186,10 @@ public class Damage {
 				ImageIcon num1 = skin.HitNumIcon(first, true);
 				ImageIcon num2 = skin.HitNumIcon(second, false);
 				ImageIcon num3 = skin.HitNumIcon(third, false);
-				g2.drawImage(num1.getImage(), Xstart - cx, Y - num1.getIconHeight() - cy, ob);
-				g2.drawImage(num2.getImage(), Xstart + num1.getIconWidth()*4/5 - cx, Y - num2.getIconHeight() - cy, ob);
-				g2.drawImage(num3.getImage(), Xstart + num1.getIconWidth()*4/5 + num2.getIconWidth()*4/5 - cx, Y - num3.getIconHeight() - cy, ob);
+				g2.drawImage(num1.getImage(), Xstart - CameraX, Y - num1.getIconHeight() - CameraY, ob);
+				g2.drawImage(num2.getImage(), Xstart + num1.getIconWidth()*4/5 - CameraX, Y - num2.getIconHeight() - CameraY, ob);
+				g2.drawImage(num3.getImage(), Xstart + num1.getIconWidth()*4/5 + num2.getIconWidth()*4/5 - CameraX
+						, Y - num3.getIconHeight() - CameraY, ob);
 			}
 			else if(damage >= 1000 && damage < 10000) {
 				int Xstart = X - 60;
@@ -183,11 +202,13 @@ public class Damage {
 				ImageIcon num3 = skin.HitNumIcon(third, false);
 				ImageIcon num4 = skin.HitNumIcon(fourth, false);
 				
-				g2.drawImage(num1.getImage(), Xstart - cx, Y - num1.getIconHeight() - cy, ob);
-				g2.drawImage(num2.getImage(), Xstart + num1.getIconWidth()*4/5 - cx, Y - num2.getIconHeight() - cy, ob);
-				g2.drawImage(num3.getImage(), Xstart + num1.getIconWidth()*4/5 + num2.getIconWidth()*4/5 - cx, Y - num3.getIconHeight() - cy, ob);
-				g2.drawImage(num4.getImage(), Xstart + num1.getIconWidth()*4/5 + num2.getIconWidth()*4/5 + num3.getIconWidth()*4/5 - cx,
-						Y - num3.getIconHeight() - cy, ob);
+				g2.drawImage(num1.getImage(), Xstart - CameraX, Y - num1.getIconHeight() - CameraY, ob);
+				g2.drawImage(num2.getImage(), Xstart + num1.getIconWidth()*4/5 - CameraX, Y - num2.getIconHeight() - CameraY, ob);
+				g2.drawImage(num3.getImage(), Xstart + num1.getIconWidth()*4/5 + num2.getIconWidth()*4/5 - CameraX
+						, Y - num3.getIconHeight() - CameraY, ob);
+				g2.drawImage(num4.getImage()
+						, Xstart + num1.getIconWidth()*4/5 + num2.getIconWidth()*4/5 + num3.getIconWidth()*4/5 - CameraX,
+						Y - num3.getIconHeight() - CameraY, ob);
 			}
 		}
 	}

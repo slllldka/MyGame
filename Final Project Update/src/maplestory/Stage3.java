@@ -15,8 +15,9 @@ public class Stage3 extends Stage{
 	 */
 	private static final long serialVersionUID = 1L;
 	protected int MeteorNum; //number of meteors(throwing stars)
-	public Stage3(int CD, String BGName, String GName, String FH1Name, String FH2Name, JFrame _frame, JButton _back) {
-		super(CD, BGName, GName, FH1Name, FH2Name, _frame, _back); //constructor of super class(Stage class)
+	public Stage3(int CD, String BGName, String GName, String FH1Name, String FH2Name, JFrame _frame, JButton _back
+			, boolean _isTown, Stage _nearestTown) {
+		super(CD, BGName, GName, FH1Name, FH2Name, _frame, _back, _isTown, _nearestTown);
 		
 		theme = "SleepyWood";
 		
@@ -31,7 +32,7 @@ public class Stage3 extends Stage{
 
 		MiniMap_Available = true;
 		
-		super.setCharacter(1700, 680);
+		super.setCharacter(1700, 750);
 		
 		//add footholds
 		super.setFootholds(new Foothold(new FH_Part(new Point(0, 750), new Point(1800, 750))));

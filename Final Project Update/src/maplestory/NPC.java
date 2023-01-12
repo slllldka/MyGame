@@ -20,13 +20,16 @@ public abstract class NPC extends JLabel {
 	protected String subName = "";
 	protected ImageIcon image;
 	
-	protected int xpos, ypos, direction;
+	protected int xcenter, xpos, ybottom, ypos, direction;
 	
-	public NPC(String _name, ImageIcon _image, int _xpos, int _ypos) {
+	public NPC(String _name, ImageIcon _image, int _xcenter, int _ybottom) {
 		name = _name;
 		image = _image;
-		xpos = _xpos - image.getIconWidth() / 2;
-		ypos = _ypos - image.getIconHeight();
+		
+		xcenter = _xcenter;
+		xpos = _xcenter - image.getIconWidth() / 2;
+		ybottom = _ybottom;
+		ypos = _ybottom - image.getIconHeight();
 		
 		setBounds(0, 0, image.getIconWidth(), image.getIconHeight());
 		
@@ -43,11 +46,13 @@ public abstract class NPC extends JLabel {
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				clickEvent(e);
+				clickEvent();
 			}
 		});
 	}
 	
-	public abstract void clickEvent(MouseEvent e);
+	public abstract void clickEvent();
+	
+	public abstract String getType();
 	
 }

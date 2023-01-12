@@ -100,7 +100,7 @@ public class StageSelect extends JPanel{
 		}
 		frame.pack();
 
-		Maplestory.keysetting.Keyboard_Set(this);
+		Maplestory.keyConfig.setKeyBoard(this);
 		grabFocus();
 		StageSelect_Music.play();
 	}

@@ -30,6 +30,10 @@ public class UI_Status_Bar extends JLabel{
 		setBounds(0, 529, 800, 71);
 		BackButton.setBounds(730, 1, 70, 70);
 		add(BackButton);
+		
+		Manage_HpBar();
+		Manage_MpBar();
+		Manage_ExpBar();
 	}
 	
 	@Override

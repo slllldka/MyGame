@@ -1,6 +1,8 @@
 package maplestory;
 
 public class Portal {
+	protected static boolean isAvailable = true;
+	
 	protected Stage map;
 	protected Portal link;
 	protected int xcenter, xstart, xend, y;
