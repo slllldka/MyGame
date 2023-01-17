@@ -433,6 +433,51 @@ public class Images {
 	protected ImageIcon BubblingDieLeft2 = new ImageIcon(getClass().getClassLoader().getResource("Bubbling_Left_Die_2.png"));
 	protected ImageIcon BubblingDieLeft3 = new ImageIcon(getClass().getClassLoader().getResource("Bubbling_Left_Die_3.png"));
 	
+		//MushMom
+	protected ImageIcon MushMomHit = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.hit1.0.png"));
+	protected ImageIcon MushMomMove0 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.move.0.png"));
+	protected ImageIcon MushMomMove1 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.move.1.png"));
+	protected ImageIcon MushMomMove2 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.move.2.png"));
+	protected ImageIcon MushMomMove3 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.move.3.png"));
+	protected ImageIcon MushMomMove4 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.move.4.png"));
+	protected ImageIcon MushMomMove5 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.move.1.png"));
+	protected ImageIcon MushMomStand = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.move.0.png"));
+	protected ImageIcon MushMomJump = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.move.3.png"));
+	protected ImageIcon MushMomAttack0 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.attack1.0.png"));
+	protected ImageIcon MushMomAttack1 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.attack1.1.png"));
+	protected ImageIcon MushMomAttack2 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.attack1.2.png"));
+	protected ImageIcon MushMomAttack3 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.attack1.2.png"));
+	protected ImageIcon MushMomAttack4 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.attack1.4.png"));
+	protected ImageIcon MushMomDie0 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.die1.0.png"));
+	protected ImageIcon MushMomDie1 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.die1.1.png"));
+	protected ImageIcon MushMomDie2 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.die1.2.png"));
+	protected ImageIcon MushMomDie3 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.die1.3.png"));
+	protected ImageIcon MushMomDie4 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.die1.4.png"));
+	protected ImageIcon MushMomDie5 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.die1.5.png"));
+	protected ImageIcon MushMomAttackEffect0 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.attack1.info.effect.0.png"));
+	protected ImageIcon MushMomAttackEffect1 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.attack1.info.effect.1.png"));
+	protected ImageIcon MushMomAttackEffect2 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.attack1.info.effect.2.png"));
+	protected ImageIcon MushMomAttackEffect3 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.attack1.info.effect.3.png"));
+	protected ImageIcon MushMomAttackEffect4 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.attack1.info.effect.4.png"));
+	protected ImageIcon MushMomAttackEffect5 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.attack1.info.effect.5.png"));
+	protected ImageIcon MushMomAttackEffect6 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.attack1.info.effect.6.png"));
+	protected ImageIcon MushMomAttackEffect7 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.attack1.info.effect.7.png"));
+	protected ImageIcon MushMomAttackEffect8 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.attack1.info.effect.8.png"));
+	protected ImageIcon MushMomAttackEffect9 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.attack1.info.effect.9.png"));
+	protected ImageIcon MushMomAttackEffect10 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.attack1.info.effect.10.png"));
+	protected ImageIcon MushMomAttackEffect11 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.attack1.info.effect.11.png"));
+	protected ImageIcon MushMomAttackEffect12 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.attack1.info.effect.12.png"));
+	protected ImageIcon MushMomAttackEffect13 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.attack1.info.effect.13.png"));
+	protected ImageIcon MushMomAttackEffect14 = new ImageIcon(getClass().getClassLoader().getResource("6130101.img.attack1.info.effect.14.png"));
+	protected ImageIcon MushMomGaugeIcon = new ImageIcon(getClass().getClassLoader().getResource("MushMom_Gauge_Icon.png"));
+	
+	//Boss Hp Bar
+	protected ImageIcon BossGaugeBackGround1 = new ImageIcon(getClass().getClassLoader().getResource("MobGage.backgrnd.png"));
+	protected ImageIcon BossGaugeBackGround2 = new ImageIcon(getClass().getClassLoader().getResource("MobGage.backgrnd2.png"));
+	protected ImageIcon BossGaugeBackGround3 = new ImageIcon(getClass().getClassLoader().getResource("MobGage.backgrnd3.png"));
+	protected ImageIcon BossGaugeBackGround4 = new ImageIcon(getClass().getClassLoader().getResource("MobGage.backgrnd4.png"));
+	protected ImageIcon BossGaugeRed = new ImageIcon(getClass().getClassLoader().getResource("BossGaugeRed.png"));
+	
 	public Images() {
 		Inventory_Coin_Rollover[0] = new ImageIcon(getClass().getClassLoader().getResource("BtCoin.mouseOver.0.png"));
 		Inventory_Coin_Rollover[1] = new ImageIcon(getClass().getClassLoader().getResource("BtCoin.mouseOver.1.png"));

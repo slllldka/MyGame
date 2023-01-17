@@ -41,12 +41,12 @@ public class UI_Quick_Slot extends JLabel{
 						}
 						
 						//Not Moving Key
-						if(Stage.move == null) {
+						if(Map.move == null) {
 							Item item = Maplestory.ui_keySetting.Slot[index].getItem();
 							if(item != null) {
 								Music DragStart_Music = new Music("DragStart.wav", 1);
 								DragStart_Music.play();
-								Stage.move = Maplestory.ui_keySetting.Slot[index].item.getRawIcon();
+								Map.move = Maplestory.ui_keySetting.Slot[index].item.getRawIcon();
 								Maplestory.player.inventory.move_index = -1;
 								Maplestory.ui_quick_slot.move_index = quickslotindex;
 								Maplestory.ui_keySetting.move_index = index;
@@ -56,7 +56,7 @@ public class UI_Quick_Slot extends JLabel{
 								if(!actionMapKey.equals("")) {
 									Music DragStart_Music = new Music("DragStart.wav", 1);
 									DragStart_Music.play();
-									Stage.move = Maplestory.ui_keySetting.Slot[index].actionImage;
+									Map.move = Maplestory.ui_keySetting.Slot[index].actionImage;
 									Maplestory.player.inventory.move_index = -1;
 									Maplestory.ui_quick_slot.move_index = quickslotindex;
 									Maplestory.ui_keySetting.move_index = index;
@@ -69,7 +69,7 @@ public class UI_Quick_Slot extends JLabel{
 							if(Maplestory.player.inventory.move_index != -1) {
 								Music DragEnd_Music = new Music("DragEnd.wav", 1);
 								DragEnd_Music.play();
-								Stage.move = null;
+								Map.move = null;
 								if(index < 67) {
 									Item update = Maplestory.player.inventory.current_inventory_list.get(Maplestory.player.inventory.move_index);
 									if(update.getType().equals("Consume")) {
@@ -93,7 +93,7 @@ public class UI_Quick_Slot extends JLabel{
 											else if(Maplestory.ui_keySetting.Slot[index].actionMapKey.equals("Skill")) {
 											}
 											else {
-												Stage.move = Maplestory.ui_keySetting.Slot[index].actionImage;
+												Map.move = Maplestory.ui_keySetting.Slot[index].actionImage;
 												Maplestory.player.inventory.move_index = -1;
 												Maplestory.ui_quick_slot.move_index = -1;
 												Maplestory.ui_keySetting.move_index = Maplestory.ui_keySetting.moveSlotToBottom(Maplestory.ui_keySetting.Slot[index]);
@@ -119,13 +119,13 @@ public class UI_Quick_Slot extends JLabel{
 								
 								//Same Slot
 								if(index == Maplestory.ui_keySetting.move_index) {
-									Stage.move = null;
+									Map.move = null;
 									Maplestory.ui_quick_slot.move_index = -1;
 									Maplestory.ui_keySetting.move_index = -1;
 								}
 								//Different Slot
 								else {
-									Stage.move = null;
+									Map.move = null;
 									Item srcItem = Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index].item;
 									Item dstItem = Maplestory.ui_keySetting.Slot[index].item;
 									String srcKey = Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index].actionMapKey;
@@ -138,7 +138,7 @@ public class UI_Quick_Slot extends JLabel{
 										Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index].item = dstItem;
 										Maplestory.ui_keySetting.Slot[index].item = temp;
 										
-										Stage.move = Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index].item.getRawIcon();
+										Map.move = Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index].item.getRawIcon();
 										Maplestory.player.inventory.move_index = -1;
 										Maplestory.ui_quick_slot.move_index = move_index;
 										Maplestory.ui_keySetting.move_index = Maplestory.ui_keySetting.move_index;
@@ -159,7 +159,7 @@ public class UI_Quick_Slot extends JLabel{
 											Maplestory.ui_keySetting.move_index = -1;
 										}
 										else {
-											Stage.move = Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index].actionImage;
+											Map.move = Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index].actionImage;
 											Maplestory.player.inventory.move_index = -1;
 											Maplestory.ui_quick_slot.move_index = move_index;
 											Maplestory.ui_keySetting.move_index = Maplestory.ui_keySetting.move_index; 
@@ -174,7 +174,7 @@ public class UI_Quick_Slot extends JLabel{
 										Maplestory.ui_keySetting.Slot[index].actionMapKey = srcKey;
 										Maplestory.ui_keySetting.Slot[index].actionImage= srcImage;
 										
-										Stage.move = Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index].item.getRawIcon();
+										Map.move = Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index].item.getRawIcon();
 										Maplestory.player.inventory.move_index = -1;
 										Maplestory.ui_quick_slot.move_index = move_index;
 										Maplestory.ui_keySetting.move_index = Maplestory.ui_keySetting.move_index;
@@ -196,7 +196,7 @@ public class UI_Quick_Slot extends JLabel{
 											Maplestory.ui_keySetting.move_index = -1;
 										}
 										else {
-											Stage.move = Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index].actionImage;
+											Map.move = Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index].actionImage;
 											Maplestory.player.inventory.move_index = -1;
 											Maplestory.ui_quick_slot.move_index = move_index;
 											Maplestory.ui_keySetting.move_index = Maplestory.ui_keySetting.move_index; 
@@ -220,15 +220,15 @@ public class UI_Quick_Slot extends JLabel{
 					UI_KeyConfig_Slot source = (UI_KeyConfig_Slot)e.getSource();
 					Item data = source.getItem();
 					if(data != null) {
-						Stage.info = data.getInfo();
-						Stage.info_x = getMousePosition().x + getLocation().x;
-						Stage.info_y = getMousePosition().y + getLocation().y;
+						Map.info = data.getInfo();
+						Map.info_x = getMousePosition().x + getLocation().x;
+						Map.info_y = getMousePosition().y + getLocation().y;
 					}
 				}
 				
 				@Override
 				public void mouseExited(MouseEvent e) {
-					Stage.info = null;
+					Map.info = null;
 				}
 			});
 			quickSlot[i].addKeyListener(new KeyAdapter() {

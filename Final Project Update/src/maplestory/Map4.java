@@ -5,15 +5,15 @@ import java.awt.Point;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
-public class Stage4 extends Stage {
+public class Map4 extends Map {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public Stage4(int CD, String BGName, String GName, String FH1Name, String FH2Name, JFrame _frame, JButton _back
-			, boolean _isTown, Stage _nearestTown) {
+	public Map4(int CD, String BGName, String GName, String FH1Name, String FH2Name, JFrame _frame, JButton _back
+			, boolean _isTown, Map _nearestTown) {
 		super(CD, BGName, GName, FH1Name, FH2Name, _frame, _back, _isTown, _nearestTown);
 		
 		theme = "Ellinia";

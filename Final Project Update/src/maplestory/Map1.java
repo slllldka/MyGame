@@ -6,7 +6,7 @@ import java.awt.Point;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
-public class Stage1 extends Stage{
+public class Map1 extends Map{
 	
 	/**
 	 * 
@@ -14,8 +14,8 @@ public class Stage1 extends Stage{
 	private static final long serialVersionUID = 1L;
 	//CD: CharacterDirection, CX: Character Xpos, CY: Character Ypos, CW: Character Width, CH: Character Heigth
 	//(B)GName: (Back)Ground Image Name, FHName: FootHold Image Name
-	public Stage1(int CD, String BGName, String GName, String FH1Name, String FH2Name, JFrame _frame, JButton _back
-			, boolean _isTown, Stage _nearestTown) {
+	public Map1(int CD, String BGName, String GName, String FH1Name, String FH2Name, JFrame _frame, JButton _back
+			, boolean _isTown, Map _nearestTown) {
 		super(CD, BGName, GName, FH1Name, FH2Name, _frame, _back, _isTown, _nearestTown);
 		
 		theme = "Henesys";

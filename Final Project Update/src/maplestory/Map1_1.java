@@ -5,15 +5,15 @@ import java.awt.Point;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 
-public class Stage1_1 extends Stage {
+public class Map1_1 extends Map {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	public Stage1_1(int CD, String BGName, String GName, String FH1Name, String FH2Name, JFrame _frame, JButton _back
-			, boolean _isTown, Stage _nearestTown) {
+	public Map1_1(int CD, String BGName, String GName, String FH1Name, String FH2Name, JFrame _frame, JButton _back
+			, boolean _isTown, Map _nearestTown) {
 		super(CD, BGName, GName, FH1Name, FH2Name, _frame, _back, _isTown, _nearestTown);
 		
 		theme = "Henesys";
@@ -25,7 +25,7 @@ public class Stage1_1 extends Stage {
 		Y_Size = 1500;
 		
 		CameraX_offset = 3;
-		CameraY_offset = 8;
+		CameraY_offset = 9;
 		
 		CameraFirstX = 0;
 		CameraFirstY = 720;

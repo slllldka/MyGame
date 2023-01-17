@@ -9,7 +9,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
-public class Stage2 extends Stage{
+public class Map2 extends Map{
 	/**
 	 * 
 	 */
@@ -17,8 +17,8 @@ public class Stage2 extends Stage{
 	protected int MeteorNum; //number of meteors(throwing stars)
 	//CD: CharacterDirection, CX: Character Xpos, CY: Character Ypos, CW: Character Width, CH: Character Heigth
 	//(B)GName: (Back)Ground Image Name, FHName: FootHold Image Name
-	public Stage2(int CD, String BGName, String GName, String FH1Name, String FH2Name, JFrame _frame, JButton _back
-			, boolean _isTown, Stage _nearestTown) {
+	public Map2(int CD, String BGName, String GName, String FH1Name, String FH2Name, JFrame _frame, JButton _back
+			, boolean _isTown, Map _nearestTown) {
 		super(CD, BGName, GName, FH1Name, FH2Name, _frame, _back, _isTown, _nearestTown);
 		
 		theme = "Ellinia";

@@ -74,7 +74,7 @@ public class UI_Status_Bar extends JLabel{
 		
 		//Chatting
 		g.setColor(Color.YELLOW);
-		g.setFont(Stage.font_meso);
+		g.setFont(Map.font_meso);
 		g.drawString(notice, 5, 22);
 	}
 	

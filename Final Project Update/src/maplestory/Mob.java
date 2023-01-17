@@ -1,5 +1,7 @@
 package maplestory;
 
+import java.awt.Graphics;
+import java.awt.image.ImageObserver;
 import java.util.Random;
 
 import javax.swing.ImageIcon;
@@ -7,12 +9,12 @@ import javax.swing.ImageIcon;
 public abstract class Mob {
 	protected boolean isBoss = false;
 	
-	protected Stage stage = null;
+	protected Map map = null;
 	
 	protected int FirstX, FirstY, X, Y;
 	protected long HP, MP;
 	protected int Direction; // Left: -1, Right: 1
-	protected ImageIcon current_Img;
+	protected ImageIcon current_Img, current_EffectImg = null, gaugeIcon = null;
 	protected Foothold cur_foothold;
 	protected boolean hit, alive, available, isStart, respawn, dropped_item;
 	protected boolean First_respawn;
@@ -47,7 +49,7 @@ public abstract class Mob {
 	
 	public boolean isLandable() {
 		int MX_CENTER = X + getWidth() / 2;
-		for (Foothold foothold : stage.Foothold_List) {
+		for (Foothold foothold : map.Foothold_List) {
 			if(foothold.isLandable(MX_CENTER, Y)) {
 				cur_foothold = foothold;
 				Y = cur_foothold.getY(MX_CENTER);
@@ -77,8 +79,10 @@ public abstract class Mob {
 		return damage;
 	}
 	
-	public int Hit_Damage_Calculate(int _Min_ATK, int _Max_ATK) {
-		int damage = random.nextInt(_Max_ATK - _Min_ATK+1) + _Min_ATK - Maplestory.player.DEF;
+	public int Hit_Damage_Calculate(int _Min_ATK, int _Max_ATK, double damagePercent) {
+		int minDamage = (int)(_Min_ATK*damagePercent);
+		int maxDamage = (int)(_Max_ATK*damagePercent);
+		int damage = random.nextInt(maxDamage - minDamage+1) + minDamage - Maplestory.player.DEF;
 		damage = damage * getLevel() / Maplestory.player.Level;
 		if(damage < 0) {
 			damage = 0;
@@ -98,17 +102,26 @@ public abstract class Mob {
 	public abstract int getLevel();
 	public abstract long getMaxHP();
 	public abstract int getWidth();
-	public abstract int getOffset();
+	public abstract int getHeight();
+	public abstract int getXOffset();
+	public int getYOffset() {
+		return 0;
+	};
 	public abstract long getExp();
-	public abstract void Mob_Stand();
-	public abstract void Mob_Move();
-	public void Mob_Jump() {};
-	public abstract void Mob_Hit(int stroke_num, int Damage_Percent);
-	public abstract void Mob_DropItem();
-	public abstract void Mob_Die();
-	public abstract void Mob_Start();
-	public abstract void Mob_Done();
-	public abstract void Mob_Respawn();
-	public abstract void Mob_BodyAttack();
+	
+	public void drawEffect(Graphics g, ImageObserver observer) {}
+	
+	public abstract void stand();
+	public abstract void move();
+	public void jump() {};
+	public void trackPlayer() {};
+	
+	public abstract void hit(int stroke_num, int Damage_Percent);
+	public abstract void dropItem();
+	public abstract void die();
+	public abstract void start();
+	public abstract void done();
+	public abstract void respawn();
+	public abstract void bodyAttack();
 	
 }

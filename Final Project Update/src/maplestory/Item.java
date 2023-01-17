@@ -24,7 +24,16 @@ public abstract class Item {
 				}
 				
 				angle = 0;
-				X_Center = _X_Center;
+				
+				if(_X_Center - getRawIcon().getIconWidth() / 2 < 0) {
+					X_Center = getRawIcon().getIconWidth() / 2;
+				}
+				else if(_X_Center + getRawIcon().getIconWidth() / 2 > Maplestory.current_stage.X_Size) {
+					X_Center = Maplestory.current_stage.X_Size - getRawIcon().getIconWidth() / 2;
+				}
+				else {
+					X_Center = _X_Center;
+				}
 				Y_Center = _Y_Center;
 				pickable = false;
 				

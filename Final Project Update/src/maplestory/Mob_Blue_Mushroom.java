@@ -4,7 +4,7 @@ import javax.swing.ImageIcon;
 
 public class Mob_Blue_Mushroom extends Mob {
 	protected static final String name = "파란버섯";
-	protected static final int width = 60;
+	protected static final int width = 60, height = 60; 
 	protected static final int level = 20;
 	protected static final int MaxHP = 350, MaxMP = 20;
 	protected static final int Min_ATK = 20, Max_ATK = 40;
@@ -61,7 +61,10 @@ public class Mob_Blue_Mushroom extends Mob {
 	public int getWidth() {
 		return width;
 	}
-	public int getOffset() {
+	public int getHeight() {
+		return height;
+	}
+	public int getXOffset() {
 		return 0;
 	}
 	public long getExp() {
@@ -69,7 +72,7 @@ public class Mob_Blue_Mushroom extends Mob {
 	}
 
 	// Mob methods
-	public void Mob_Stand() {
+	public void stand() {
 		Runnable runnable = new Runnable() {
 
 			@Override
@@ -91,10 +94,10 @@ public class Mob_Blue_Mushroom extends Mob {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					Mob_BodyAttack();
+					bodyAttack();
 				}
 
-				Mob_Done();
+				done();
 			}
 
 		};
@@ -102,7 +105,7 @@ public class Mob_Blue_Mushroom extends Mob {
 		Maplestory.thread_pool.submit(runnable);
 	}
 
-	public void Mob_Move() {
+	public void move() {
 		Runnable runnable = new Runnable() {
 
 			@Override
@@ -134,7 +137,7 @@ public class Mob_Blue_Mushroom extends Mob {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						Mob_BodyAttack();
+						bodyAttack();
 					}
 				} else if (Direction == 1) {
 					for (int i = 0; i < 60; i++) {
@@ -163,11 +166,11 @@ public class Mob_Blue_Mushroom extends Mob {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						Mob_BodyAttack();
+						bodyAttack();
 					}
 				}
 
-				Mob_Done();
+				done();
 			}
 
 		};
@@ -175,7 +178,7 @@ public class Mob_Blue_Mushroom extends Mob {
 		Maplestory.thread_pool.submit(runnable);
 	}
 
-	public void Mob_Jump() {
+	public void jump() {
 		Runnable runnable = new Runnable() {
 
 			@Override
@@ -197,7 +200,7 @@ public class Mob_Blue_Mushroom extends Mob {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-							Mob_BodyAttack();
+							bodyAttack();
 						}
 						while(true) {
 							if (!alive) {
@@ -214,7 +217,7 @@ public class Mob_Blue_Mushroom extends Mob {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-							Mob_BodyAttack();
+							bodyAttack();
 						}
 						if (!hit) {
 							current_Img = StandImgLeft[1];
@@ -235,7 +238,7 @@ public class Mob_Blue_Mushroom extends Mob {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-							Mob_BodyAttack();
+							bodyAttack();
 						}
 						while(true) {
 							if (!alive) {
@@ -252,7 +255,7 @@ public class Mob_Blue_Mushroom extends Mob {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
-							Mob_BodyAttack();
+							bodyAttack();
 						}
 						if (!hit) {
 							current_Img = StandImgLeft[1];
@@ -260,7 +263,7 @@ public class Mob_Blue_Mushroom extends Mob {
 					}
 				}
 
-				Mob_Done();
+				done();
 			}
 
 		};
@@ -268,7 +271,7 @@ public class Mob_Blue_Mushroom extends Mob {
 		Maplestory.thread_pool.submit(runnable);
 	}
 
-	public void Mob_Hit(int stroke_num, int Damage_Percent) {
+	public void hit(int stroke_num, int Damage_Percent) {
 		Runnable runnable = new Runnable() {
 
 			@Override
@@ -297,7 +300,7 @@ public class Mob_Blue_Mushroom extends Mob {
 						if (HP <= 0) {
 							HP = 0;
 							if(!dropped_item) {
-								Mob_DropItem();
+								dropItem();
 								dropped_item = true;
 							}
 						} else {
@@ -308,7 +311,7 @@ public class Mob_Blue_Mushroom extends Mob {
 							if (HP == 0) {
 								hit = false;
 								alive = false;
-								Mob_Die();
+								die();
 							}
 						}
 					}
@@ -328,7 +331,7 @@ public class Mob_Blue_Mushroom extends Mob {
 		Maplestory.thread_pool.submit(runnable);
 	}
 	
-	public void Mob_DropItem() {
+	public void dropItem() {
 		synchronized(Maplestory.current_stage.Item_List) {
 			int random1 = random.nextInt(10000)+1;
 			int random2 = random.nextInt(10000)+1;
@@ -366,7 +369,7 @@ public class Mob_Blue_Mushroom extends Mob {
 		}
 	}
 
-	public void Mob_Die() {
+	public void die() {
 		Runnable runnable = new Runnable() {
 
 			@Override
@@ -409,7 +412,7 @@ public class Mob_Blue_Mushroom extends Mob {
 
 	}
 
-	public void Mob_Start() {
+	public void start() {
 		Runnable runnable = new Runnable() {
 
 			@Override
@@ -420,28 +423,28 @@ public class Mob_Blue_Mushroom extends Mob {
 				direction = random.nextInt(2);
 
 				if (kind == 0) {
-					Mob_Stand();
+					stand();
 				} else {
 					if (direction == 0) {
 						if (Direction == 1) {
 							Direction = -1;
-							Mob_Move();
+							move();
 						} else {
 							if (kind == 1) {
-								Mob_Move();
+								move();
 							} else if (kind == 2) {
-								Mob_Jump();
+								jump();
 							}
 						}
 					} else if (direction == 1) {
 						if (Direction == -1) {
 							Direction = 1;
-							Mob_Move();
+							move();
 						} else {
 							if (kind == 1) {
-								Mob_Move();
+								move();
 							} else if (kind == 2) {
-								Mob_Jump();
+								jump();
 							}
 						}
 					}
@@ -455,14 +458,14 @@ public class Mob_Blue_Mushroom extends Mob {
 		}
 	}
 
-	public void Mob_Done() {
+	public void done() {
 		isStart = false;
 		if (available && alive) {
-			Mob_Start();
+			start();
 		}
 	}
 
-	public void Mob_Respawn() {
+	public void respawn() {
 		Runnable runnable = new Runnable() {
 
 			@Override
@@ -484,7 +487,7 @@ public class Mob_Blue_Mushroom extends Mob {
 				alpha = 1f;
 				hit_time = 0;
 
-				Mob_Start();
+				start();
 			}
 
 		};
@@ -492,7 +495,7 @@ public class Mob_Blue_Mushroom extends Mob {
 		Maplestory.thread_pool.submit(runnable);
 	}
 
-	public void Mob_BodyAttack() {
+	public void bodyAttack() {
 		Runnable runnable = new Runnable() {
 
 			@Override
@@ -504,7 +507,7 @@ public class Mob_Blue_Mushroom extends Mob {
 						&& (Maplestory.player.CharacterY <= Y + Character.CharacterHeight - 10)) {
 					if ((Maplestory.player.CharacterX >= X - Character.CharacterWidth + 10)
 							&& (Maplestory.player.CharacterX <= X + width - 10)) {
-						int damage = Hit_Damage_Calculate(Min_ATK, Max_ATK);
+						int damage = Hit_Damage_Calculate(Min_ATK, Max_ATK, 1);
 						Maplestory.player.HP_Damage(damage);
 						int num = random.nextInt(100)+1;
 						if (num >= 1 && num <= 100 - Maplestory.player.Stance) {
@@ -527,7 +530,7 @@ public class Mob_Blue_Mushroom extends Mob {
 			}
 		};
 
-		if (Stage.Hittable && !hit && Stage.Available && Maplestory.player.HP != 0 && alive) {
+		if (Map.Hittable && !hit && Map.Available && Maplestory.player.HP != 0 && alive) {
 			Maplestory.thread_pool.submit(runnable);
 		}
 	}

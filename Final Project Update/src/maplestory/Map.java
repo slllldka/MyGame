@@ -24,7 +24,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 
 //All Stages extends this class
-public class Stage extends JPanel {
+public class Map extends JPanel {
 	/**
 	 * 
 	 */
@@ -35,7 +35,7 @@ public class Stage extends JPanel {
 	protected JFrame frame; // JFrame on Maplestory Class
 	
 	protected boolean isTown;
-	protected Stage nearestTown;
+	protected Map nearestTown;
 	
 	//Mouse Position
 	protected int MouseX = 0, MouseY = 0;
@@ -159,8 +159,8 @@ public class Stage extends JPanel {
 	protected static boolean Attacking = false;
 	protected static boolean Hittable = true;
 
-	public Stage(int CD, String BGName, String GName, String FH1Name, String FH2Name, JFrame _frame, JButton _back
-			, boolean _isTown, Stage _nearestTown) {
+	public Map(int CD, String BGName, String GName, String FH1Name, String FH2Name, JFrame _frame, JButton _back
+			, boolean _isTown, Map _nearestTown) {
 		addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
@@ -380,11 +380,11 @@ public class Stage extends JPanel {
 	@Override
 	public void paint(Graphics g) {
 		if(!hasFocus()) {
-			Stage.LeftKey = false;
-			Stage.RightKey = false;
-			Stage.UpKey = false;
-			Stage.DownKey = false;
-			Stage.AltKey = false;
+			Map.LeftKey = false;
+			Map.RightKey = false;
+			Map.UpKey = false;
+			Map.DownKey = false;
+			Map.AltKey = false;
 		}
 		
 		frame.pack();
@@ -497,47 +497,51 @@ public class Stage extends JPanel {
 			for (int i = 0; i < Mob_List.size(); i++) {
 				Mob temp = Mob_List.get(i);
 				if (!temp.alive && temp.respawn && temp.alpha == 0f) {
-					temp.Mob_Respawn();
+					if(!temp.isBoss) {
+						temp.respawn();
+					}
 				}
 			}
 		}
 
 		// Draw Mobs
-		int mob_icon_width, mob_icon_height, mob_offset, mob_rate, mob_xcenter;
+		int mob_icon_width, mob_icon_height, mob_xoffset, mob_yoffset, mob_hpRate, mob_xcenter;
 		
 		synchronized(Mob_List) {
 			for(Mob mob : Mob_List) {
 				mob_icon_width = mob.current_Img.getIconWidth();
 				mob_icon_height = mob.current_Img.getIconHeight();
-				mob_offset = mob.getOffset();
+				mob_xoffset = mob.getXOffset();
+				mob_yoffset = mob.getYOffset();
 				//Mob Image
 				g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, mob.alpha));
 				if(mob.Direction == -1) {
-					g2.drawImage(mob.current_Img.getImage(), mob.X - CameraX + mob_offset,
-							mob.Y - mob_icon_height - CameraY, this);
+					g2.drawImage(mob.current_Img.getImage(), mob.X - CameraX + mob_xoffset,
+							mob.Y - mob_icon_height - CameraY + mob_yoffset, this);
 				}
 				else if(mob.Direction == 1) {
 					int width = mob.getWidth();
 					//flip image left and right
-					g2.drawImage(mob.current_Img.getImage(), mob.X-CameraX+width-mob_icon_width-mob_offset, mob.Y-mob_icon_height-CameraY
-							, mob.X-CameraX+width-mob_offset, mob.Y-CameraY, mob_icon_width, 0, 0, mob_icon_height, this);
+					g2.drawImage(mob.current_Img.getImage(), mob.X-CameraX+width-mob_icon_width-mob_xoffset, mob.Y-mob_icon_height+mob_yoffset-CameraY
+							, mob.X-CameraX+width-mob_xoffset, mob.Y+mob_yoffset-CameraY, mob_icon_width, 0, 0, mob_icon_height, this);
 				}
+				mob.drawEffect(g2, this);
 				
 				//Mob HP Bar and Name
 				if(!mob.isBoss) {
 					if (mob.alive && (System.currentTimeMillis() >= mob.hit_time)
 							&& (System.currentTimeMillis() <= mob.hit_time + 5000)) {
-						mob_rate = (int) ((float)mob.HP / mob.getMaxHP() * 100);
+						mob_hpRate = (int) ((float)mob.HP / mob.getMaxHP() * 100);
 						mob_xcenter = mob.X + mob.getWidth() / 2;
-						g2.drawImage(Mob_HP_BarImg.getImage(), mob_xcenter - 28 - CameraX, mob.Y - mob_icon_height - CameraY - 11, 56, 9, this);
+						g2.drawImage(Mob_HP_BarImg.getImage(), mob_xcenter - 28 - CameraX, mob.Y - mob_icon_height + mob_yoffset - CameraY - 11, 56, 9, this);
 						g2.setPaint(Color.GREEN);
-						g2.fillRect(mob_xcenter - 25 - CameraX, mob.Y - mob_icon_height - CameraY - 8,
-								50 * mob_rate / 100, 3);
+						g2.fillRect(mob_xcenter - 25 - CameraX, mob.Y - mob_icon_height + mob_yoffset - CameraY - 8,
+								50 * mob_hpRate / 100, 3);
 						
 						len = metrics.stringWidth(mob.getName());
 						g2.setColor(Color.BLACK);
 						g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.5f));
-						g2.fillRect(mob_xcenter - len / 2 - CameraX, mob.Y - CameraY, len, 15);
+						g2.fillRect(mob_xcenter - len / 2 - CameraX, mob.Y + mob_yoffset - CameraY, len, 15);
 						g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
 						g2.setFont(font);
 						
@@ -555,7 +559,23 @@ public class Stage extends JPanel {
 					}
 				}
 				else {
-					
+					if(mob.alive && (System.currentTimeMillis() >= mob.hit_time)
+							&& (System.currentTimeMillis() <= mob.hit_time + 60000)) {
+						mob_hpRate = (int) ((float)mob.HP / mob.getMaxHP() * 100);
+						int gaugeXstart = 0;
+						if(Maplestory.ui_minimap.isOpen) {
+							gaugeXstart = Maplestory.ui_minimap.getWidth();
+						}
+						g2.drawImage(Maplestory.images.BossGaugeBackGround1.getImage(), gaugeXstart, 0, this);
+						g2.drawImage(Maplestory.images.BossGaugeBackGround2.getImage(), gaugeXstart + 37, 0, this);
+						g2.drawImage(Maplestory.images.BossGaugeBackGround3.getImage()
+								, gaugeXstart + 40, 0, 800 - 45 - gaugeXstart, 20, this);
+						g2.drawImage(Maplestory.images.BossGaugeBackGround4.getImage(), 800 - 5, 0, this);
+						
+						g2.drawImage(mob.gaugeIcon.getImage(), gaugeXstart + 6, 6, this);
+						g2.drawImage(Maplestory.images.BossGaugeRed.getImage()
+								, gaugeXstart + 40, 5, (800 - 45 - gaugeXstart) * mob_hpRate / 100, 10, this);
+					}
 				}
 				
 			}
@@ -878,7 +898,7 @@ public class Stage extends JPanel {
 						}
 					}
 					//character can't be attacked twice or more, which means character can be attacked again after landing to the ground
-					if(!Stage.attacked && Stage.Hittable) {
+					if(!Map.attacked && Map.Hittable) {
 						//character is attacked
 						if((Maplestory.player.CharacterY - Character.CharacterHeight >= ypos-60)
 								&& (Maplestory.player.CharacterY - Character.CharacterHeight <= ypos+meteor.getHeight()-10)) {
@@ -926,6 +946,11 @@ public class Stage extends JPanel {
 		for(int i=0;i<NPC_List.size();i++) {
 			add(NPC_List.get(i), 7 + i);
 		}
+		
+		setComponentZOrder(Maplestory.player.inventory, Inventory.ZOrder);
+		setComponentZOrder(Maplestory.generalStore, Shop_GeneralStore.ZOrder);
+		setComponentZOrder(Maplestory.ui_keySetting, UI_KeyConfig.ZOrder);
+		
 		BackButton.setEnabled(false);
 		frame.add(this);
 	}
@@ -963,13 +988,13 @@ public class Stage extends JPanel {
 			public void run() {
 				for (int i = 0; i < Mob_List.size(); i++) {
 					Mob_List.get(i).available = true;
-					Mob_List.get(i).stage = Maplestory.current_stage;
+					Mob_List.get(i).map = Maplestory.current_stage;
 				}
 				
 				//mobs
 				for (int i = 0; i < Mob_List.size(); i++) {
 					if (Mob_List.get(i).available && !Mob_List.get(i).isStart && Mob_List.get(i).alive) {
-						Mob_List.get(i).Mob_Start();
+						Mob_List.get(i).start();
 					}
 				}
 
@@ -1001,7 +1026,7 @@ public class Stage extends JPanel {
 					CameraX = CameraFirstX;
 					CameraY = CameraFirstY;
 				}
-				else {;
+				else {
 					SetCamera(Maplestory.player.CharacterX, Maplestory.player.CharacterY);
 				}
 				
@@ -1158,6 +1183,10 @@ public class Stage extends JPanel {
 		attacked = false;
 		Attacking = false;
 		Hittable = false;
+		
+		Inventory.ZOrder = getComponentZOrder(Maplestory.player.inventory);
+		Shop_GeneralStore.ZOrder = getComponentZOrder(Maplestory.generalStore);
+		UI_KeyConfig.ZOrder = getComponentZOrder(Maplestory.ui_keySetting);
 		
 		for (int i = 0; i < Mob_List.size(); i++) {
 			Mob_List.get(i).available = false;

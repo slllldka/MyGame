@@ -18,6 +18,8 @@ public class Inventory extends JLabel{
 	 */
 	private static final long serialVersionUID = 1L;
 	
+	protected static int ZOrder = 1;
+	
 	//Slot
 	private Inventory_Slot[] Slot;
 	
@@ -144,7 +146,7 @@ public class Inventory extends JLabel{
 			}
 		}
 		
-		g.setFont(Stage.font_meso);
+		g.setFont(Map.font_meso);
 		g.setColor(Color.BLACK);
 		decimal = Item_Meso.dec_format.format(Maplestory.player.inventory.Meso);
 		g.drawString(decimal, 143 - 3 - Maplestory.current_stage.getFontMetrics_meso().stringWidth(decimal), 281 - 2);
@@ -173,12 +175,12 @@ public class Inventory extends JLabel{
 							//Click Once
 							if(e.getClickCount() % 4 == 1) {
 								//Not Moving Item
-								if(Stage.move == null) {
+								if(Map.move == null) {
 									Item item_src = current_inventory_list.get(index);
 									if(item_src != null) {
 										Music DragStart_Music = new Music("DragStart.wav", 1);
 										DragStart_Music.play();
-										Stage.move = item_src.getRawIcon();
+										Map.move = item_src.getRawIcon();
 										Maplestory.ui_quick_slot.move_index = -1;
 										Maplestory.ui_keySetting.move_index = -1;
 										move_index = index;
@@ -193,20 +195,20 @@ public class Inventory extends JLabel{
 										Item item_src = current_inventory_list.get(move_index);
 										//Same Slot
 										if(index == move_index) {
-											Stage.move = null;
+											Map.move = null;
 										}
 										//Different Slot
 										else {
 											Item item_dst = current_inventory_list.get(index);
 											//Dst Slot is empty
 											if(item_dst == null) {
-												Stage.move = null;
+												Map.move = null;
 												current_inventory_list.set(index, item_src);
 												current_inventory_list.set(move_index, null);
 											}
 											//Dst Slot is not empty
 											else {
-												Stage.move = null;
+												Map.move = null;
 												Item temp = item_dst;
 												current_inventory_list.set(index, item_src);
 												current_inventory_list.set(move_index, temp);
@@ -219,19 +221,19 @@ public class Inventory extends JLabel{
 									else {
 										Music DragEnd_Music = new Music("DragEnd.wav", 1);
 										DragEnd_Music.play();
-										Stage.move = null;
+										Map.move = null;
 									}
 								}
 							}
 							//Click Twice or More
 							else if(e.getClickCount() % 4 == 2){
-								if(Stage.move != null) {
+								if(Map.move != null) {
 									if(move_index != -1) {
 										Music DragEnd_Music = new Music("DragEnd.wav", 1);
 										DragEnd_Music.play();
 										Item data = current_inventory_list.get(index);
 										if(data != null) {
-											Stage.move = null;
+											Map.move = null;
 											if(Maplestory.player.alive) {
 												data.Use(index);
 											}
@@ -251,9 +253,9 @@ public class Inventory extends JLabel{
 						if(index < current_size) {
 							Item data = current_inventory_list.get(index);
 							if(data != null) {
-								Stage.info = data.getInfo();
-								Stage.info_x = getMousePosition().x + getLocation().x;
-								Stage.info_y = getMousePosition().y + getLocation().y;
+								Map.info = data.getInfo();
+								Map.info_x = getMousePosition().x + getLocation().x;
+								Map.info_y = getMousePosition().y + getLocation().y;
 								//System.out.println(data.Get_name() + "\r\n" + data.Get_tooltip());
 							}
 						}
@@ -262,7 +264,7 @@ public class Inventory extends JLabel{
 				
 				@Override
 				public void mouseExited(MouseEvent e) {
-					Stage.info = null;
+					Map.info = null;
 /*					Inventory_Slot source = (Inventory_Slot)e.getSource();
 					int index = source.Get_Index();
 */				}
@@ -699,10 +701,10 @@ public class Inventory extends JLabel{
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				if(SwingUtilities.isLeftMouseButton(e) && !UI_Notice.isOpen) {
-					if(Stage.move != null) {
+					if(Map.move != null) {
 						Music DragEnd_Music = new Music("DragEnd.wav", 1);
 						DragEnd_Music.play();
-						Stage.move = null;
+						Map.move = null;
 					}
 				}
 			}
@@ -865,7 +867,7 @@ public class Inventory extends JLabel{
 		current_max_line_index = Equip_max_line_index;
 		current_line_index = Equip_line_index;
 
-		Stage.move = null;
+		Map.move = null;
 		setScrollingObjects();
 	}
 	public void Show_Consume() {
@@ -880,7 +882,7 @@ public class Inventory extends JLabel{
 		current_max_line_index = Consume_max_line_index;
 		current_line_index = Consume_line_index;
 
-		Stage.move = null;
+		Map.move = null;
 		setScrollingObjects();
 	}
 	public void Show_Etc() {
@@ -895,7 +897,7 @@ public class Inventory extends JLabel{
 		current_max_line_index = Etc_max_line_index;
 		current_line_index = Etc_line_index;
 
-		Stage.move = null;
+		Map.move = null;
 		setScrollingObjects();
 	}
 	public void Show_Install() {
@@ -910,7 +912,7 @@ public class Inventory extends JLabel{
 		current_max_line_index = Install_max_line_index;
 		current_line_index = Install_line_index;
 
-		Stage.move = null;
+		Map.move = null;
 		setScrollingObjects();
 	}
 	public void Show_Cash() {
@@ -925,7 +927,7 @@ public class Inventory extends JLabel{
 		current_max_line_index = Cash_max_line_index;
 		current_line_index = Cash_line_index;
 
-		Stage.move = null;
+		Map.move = null;
 		setScrollingObjects();
 	}
 	
@@ -945,11 +947,11 @@ public class Inventory extends JLabel{
 	public void close() {
 		Music MenuDown_Music = new Music("MenuDown.wav", 1);
 		MenuDown_Music.play();
-		if(Stage.move != null && Maplestory.player.inventory.move_index != -1) {
-			Stage.move = null;
+		if(Map.move != null && Maplestory.player.inventory.move_index != -1) {
+			Map.move = null;
 		}
-		if(Stage.info != null) {
-			Stage.info = null;
+		if(Map.info != null) {
+			Map.info = null;
 		}
 		
 		setVisible(false);

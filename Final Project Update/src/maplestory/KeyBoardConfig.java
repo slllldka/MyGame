@@ -367,7 +367,7 @@ public class KeyBoardConfig {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			Stage.AltKey = true;
+			Map.AltKey = true;
 			robot.keyPress(KeyEvent.VK_PAUSE);
 			
 			if(!Ladder_Jump_Checking) {
@@ -377,9 +377,9 @@ public class KeyBoardConfig {
 					@Override
 					public void run() {
 						while(true) {
-							if(Maplestory.player.alive && Stage.Ladder && !Shop.isOpen && !UI_Notice.isOpen) {
-								if(Stage.AltKey && !Stage.DownKey && !Stage.Jump && !Stage.Attacking && !Stage.attacked) {
-									if(Stage.LeftKey) {
+							if(Maplestory.player.alive && Map.Ladder && !Shop.isOpen && !UI_Notice.isOpen) {
+								if(Map.AltKey && !Map.DownKey && !Map.Jump && !Map.Attacking && !Map.attacked) {
+									if(Map.LeftKey) {
 										Maplestory.player.current_Img = Maplestory.player.characterJumpLeftImg;
 										Maplestory.player.Character_LeftJump(true);
 										try {
@@ -388,7 +388,7 @@ public class KeyBoardConfig {
 											e.printStackTrace();
 										}
 									}
-									else if(Stage.RightKey) {
+									else if(Map.RightKey) {
 										Maplestory.player.current_Img = Maplestory.player.characterJumpRightImg;
 										Maplestory.player.Character_RightJump(true);
 										try {
@@ -412,8 +412,8 @@ public class KeyBoardConfig {
 			}
 			
 			if(Maplestory.player.alive && !Shop.isOpen && !UI_Notice.isOpen) {
-				if (Maplestory.player.IsLandable() && !Stage.Attacking && !Stage.attacked) {
-					if (Stage.DownKey) {
+				if (Maplestory.player.IsLandable() && !Map.Attacking && !Map.attacked) {
+					if (Map.DownKey) {
 						if (!Maplestory.player.cur_foothold.isBottom) {
 							if (Maplestory.player.CharDirection == -1) {
 								Maplestory.player.current_Img = Maplestory.player.characterJumpLeftImg;
@@ -423,11 +423,11 @@ public class KeyBoardConfig {
 							Maplestory.player.Character_DownJump();
 						}
 					}
-					else if (Stage.LeftKey) {
+					else if (Map.LeftKey) {
 						Maplestory.player.current_Img = Maplestory.player.characterJumpLeftImg;
 						Maplestory.player.Character_LeftJump(false);
 					}
-					else if (Stage.RightKey) {
+					else if (Map.RightKey) {
 						Maplestory.player.current_Img = Maplestory.player.characterJumpRightImg;
 						Maplestory.player.Character_RightJump(false);
 					}
@@ -453,15 +453,15 @@ public class KeyBoardConfig {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			Stage.LeftKey = true;
+			Map.LeftKey = true;
 			if(Maplestory.player.alive && !Shop.isOpen && !UI_Notice.isOpen) {
-				if (Stage.Attacking == false) {
+				if (Map.Attacking == false) {
 					Maplestory.player.CharDirection = -1;
-					if (Stage.Jump == true) {
+					if (Map.Jump == true) {
 						Maplestory.player.current_Img = Maplestory.player.characterJumpLeftImg;
 					} else {
-						if (!Stage.Left && !Stage.Ladder) {
-							Stage.Right = false;
+						if (!Map.Left && !Map.Ladder) {
+							Map.Right = false;
 							Maplestory.player.current_Img = Maplestory.player.characterLeftImg;
 							Maplestory.player.Character_Left();
 						}
@@ -480,7 +480,7 @@ public class KeyBoardConfig {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			Stage.LeftKey = false;
+			Map.LeftKey = false;
 			/*if (Stage.Attacking == false) {
 				if (Stage.RightKey == true && Stage.Right == false && Stage.Jump == false) {
 					Maplestory.player.current_Img = Maplestory.player.characterRightImg;
@@ -500,15 +500,15 @@ public class KeyBoardConfig {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			Stage.RightKey = true;
+			Map.RightKey = true;
 			if(Maplestory.player.alive && !Shop.isOpen && !UI_Notice.isOpen) {
-				if (Stage.Attacking == false) {
+				if (Map.Attacking == false) {
 					Maplestory.player.CharDirection = 1;
-					if (Stage.Jump == true) {
+					if (Map.Jump == true) {
 						Maplestory.player.current_Img = Maplestory.player.characterJumpRightImg;
 					} else {
-						if (!Stage.Right && !Stage.Ladder) {
-							Stage.Left = false;
+						if (!Map.Right && !Map.Ladder) {
+							Map.Left = false;
 							Maplestory.player.current_Img = Maplestory.player.characterRightImg;
 							Maplestory.player.Character_Right();
 						}
@@ -527,7 +527,7 @@ public class KeyBoardConfig {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			Stage.RightKey = false;
+			Map.RightKey = false;
 			/*if (Stage.Attacking == false) {
 				if (Stage.LeftKey == true && Stage.Left == false && Stage.Jump == false) {
 					Maplestory.player.current_Img = Maplestory.player.characterLeftImg;
@@ -546,7 +546,7 @@ public class KeyBoardConfig {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			Stage.UpKey = true;
+			Map.UpKey = true;
 			if (!Ladder_Checking) {
 				Ladder_Checking = true;
 				Runnable runnable = new Runnable() {
@@ -556,7 +556,7 @@ public class KeyBoardConfig {
 						int LadderIdx;
 						while(true) {
 							if(Maplestory.player.alive && !Shop.isOpen && !UI_Notice.isOpen
-									&& Stage.UpKey && !Stage.Up && !Stage.Down && !Stage.Attacking && !Stage.attacked && !Stage.Ladder_Jump) {
+									&& Map.UpKey && !Map.Up && !Map.Down && !Map.Attacking && !Map.attacked && !Map.Ladder_Jump) {
 								if ((LadderIdx = Maplestory.player.IsLadderAvailable(1)) >= 0) {
 									Maplestory.player.Character_LadderUp(LadderIdx);
 									try {
@@ -578,7 +578,7 @@ public class KeyBoardConfig {
 				Maplestory.thread_pool.submit(runnable);
 			}
 			if(Maplestory.player.alive && !Shop.isOpen && !UI_Notice.isOpen) {
-				if (!Stage.Attacking) {
+				if (!Map.Attacking) {
 					for(Portal portal : Maplestory.current_stage.Portal_List) {
 						if ((Maplestory.player.CharacterX + 25 >= portal.xstart)
 								&& (Maplestory.player.CharacterX + 25 <= portal.xend)
@@ -593,14 +593,14 @@ public class KeyBoardConfig {
 									Music Portal_Music = new Music("Portal.wav", 1);
 									Portal_Music.play();
 									
-									Stage.Left = false;
-									Stage.Right = false;
-									Stage.Up = false;
-									Stage.Down = false;
-									Stage.Ladder = false;
+									Map.Left = false;
+									Map.Right = false;
+									Map.Up = false;
+									Map.Down = false;
+									Map.Ladder = false;
 		
 									if (Maplestory.StageNow == 1) {
-										Maplestory.stage1.close(portal);
+										Maplestory.map1.close(portal);
 									} else if (Maplestory.StageNow == 11) {
 										/*boolean open = true;
 										for(Mob mob : Maplestory.current_stage.Mob_List) {
@@ -630,7 +630,7 @@ public class KeyBoardConfig {
 												e1.printStackTrace();
 											}
 										}*/
-										Maplestory.stage1_1.close(portal);
+										Maplestory.map1_1.close(portal);
 									} else if (Maplestory.StageNow == 2) {
 										/*if (Maplestory.IsStage3Locked) {
 											Maplestory.IsStage3Locked = false;
@@ -647,7 +647,7 @@ public class KeyBoardConfig {
 												e1.printStackTrace();
 											}
 										}*/
-										Maplestory.stage2.close(portal);
+										Maplestory.map2.close(portal);
 									} else if (Maplestory.StageNow == 3) {
 										/*if (Maplestory.IsStage4Locked) {
 											Maplestory.IsStage4Locked = false;
@@ -664,9 +664,9 @@ public class KeyBoardConfig {
 												e1.printStackTrace();
 											}
 										}*/
-										Maplestory.stage3.close(portal);
+										Maplestory.map3.close(portal);
 									} else if (Maplestory.StageNow == 4) {
-										Maplestory.stage4.close(portal);
+										Maplestory.map4.close(portal);
 									}
 									
 									try {
@@ -697,7 +697,7 @@ public class KeyBoardConfig {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			Stage.UpKey = false;
+			Map.UpKey = false;
 		}
 
 	}
@@ -711,14 +711,14 @@ public class KeyBoardConfig {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			Stage.DownKey = true;
+			Map.DownKey = true;
 			if(Maplestory.player.alive && !Shop.isOpen && !UI_Notice.isOpen) {
-				if (!Stage.Up && !Stage.Down && !Stage.Attacking && !Stage.Jump) {
+				if (!Map.Up && !Map.Down && !Map.Attacking && !Map.Jump) {
 					int LadderIdx;
 					if ((LadderIdx = Maplestory.player.IsLadderAvailable(-1)) >= 0) {
 						Maplestory.player.Character_LadderDown(LadderIdx);
-					} else if (Stage.LeftKey == false && Stage.RightKey == false && Stage.Jump == false
-							&& Stage.Ladder == false) {
+					} else if (Map.LeftKey == false && Map.RightKey == false && Map.Jump == false
+							&& Map.Ladder == false) {
 						if (Maplestory.player.CharDirection == -1) {
 							Maplestory.player.current_Img = Maplestory.player.characterProneLeftImg;
 						} else if (Maplestory.player.CharDirection == 1) {
@@ -741,10 +741,10 @@ public class KeyBoardConfig {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			Stage.DownKey = false;
+			Map.DownKey = false;
 			if(Maplestory.player.alive && !Shop.isOpen && !UI_Notice.isOpen) {
-				if (Stage.Ladder == false && Stage.Attacking == false) {
-					if (Stage.LeftKey == false && Stage.RightKey == false && Stage.Jump == false) {
+				if (Map.Ladder == false && Map.Attacking == false) {
+					if (Map.LeftKey == false && Map.RightKey == false && Map.Jump == false) {
 						if (Maplestory.player.CharDirection == -1) {
 							Maplestory.player.current_Img = Maplestory.player.characterLeftImg;
 						} else if (Maplestory.player.CharDirection == 1) {
@@ -767,7 +767,7 @@ public class KeyBoardConfig {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			Stage.AltKey = false;
+			Map.AltKey = false;
 		}
 		
 	}
@@ -812,7 +812,7 @@ public class KeyBoardConfig {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(Maplestory.player.alive && !Shop.isOpen && !UI_Notice.isOpen) {
-				if (!Stage.Attacking && !Stage.Ladder) {
+				if (!Map.Attacking && !Map.Ladder) {
 					Maplestory.player.Character_Attack(1, 70, Character.CharacterWidth / 2, Character.CharacterHeight / 2,
 							Character.CharacterHeight / 2, 1, 100);
 				}
@@ -832,7 +832,7 @@ public class KeyBoardConfig {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(Maplestory.player.alive && !Shop.isOpen && !UI_Notice.isOpen) {
-				if (!Stage.Attacking && !Stage.Ladder) {
+				if (!Map.Attacking && !Map.Ladder) {
 					int cost = 10;
 					if (Maplestory.player.MP >= cost) {
 						Maplestory.player.Character_Attack(2, 200, Character.CharacterWidth / 2
@@ -908,7 +908,7 @@ public class KeyBoardConfig {
 			};
 
 			if (Maplestory.player.alive && !Shop.isOpen && !UI_Notice.isOpen
-					&& !Stage.Attacking && !Stage.Ladder && Maplestory.player.pickable) {
+					&& !Map.Attacking && !Map.Ladder && Maplestory.player.pickable) {
 				Maplestory.thread_pool.submit(runnable);
 			}
 		}

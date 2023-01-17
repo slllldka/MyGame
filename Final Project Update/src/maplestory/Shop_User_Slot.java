@@ -29,7 +29,7 @@ public class Shop_User_Slot extends JLabel {
 		if(Shop.selectedUserSlotIndex == index) {
 			g.drawImage(Maplestory.images.Shop_Select.getImage(), 36, 0, this);
 		}
-		g.setFont(Stage.font);
+		g.setFont(Map.font);
 		g.drawString(item.getName(), 40, 14);
 		g.drawString(Item_Meso.dec_format.format(item.getSellPrice()) + " 메소", 40, 31);
 	}

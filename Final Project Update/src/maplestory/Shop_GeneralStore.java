@@ -6,6 +6,8 @@ public class Shop_GeneralStore extends Shop {
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+	
+	protected static int ZOrder = 2;
 
 	public Shop_GeneralStore() {
 		setSellList();

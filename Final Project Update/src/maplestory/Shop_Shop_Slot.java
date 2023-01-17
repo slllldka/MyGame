@@ -26,7 +26,7 @@ public class Shop_Shop_Slot extends JLabel {
 		if(Shop.selectedShopSlotIndex == index) {
 			g.drawImage(Maplestory.images.Shop_Select.getImage(), 36, 0, this);
 		}
-		g.setFont(Stage.font);
+		g.setFont(Map.font);
 		if(Shop.currentSellList.get(index).item.Quantity == 0) {
 			g.setColor(Color.RED);
 		}

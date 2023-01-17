@@ -53,12 +53,13 @@ public class Maplestory extends JFrame {
 	protected static Start start;
 	protected static HowToPlay HTP;
 	protected static StageSelect SS;
-	protected static Stage1 stage1;
-	protected static Stage1_1 stage1_1;
-	protected static Stage2 stage2;
-	protected static Stage3 stage3;
-	protected static Stage4 stage4;
-	protected static Stage current_stage;
+	protected static Map1 map1;
+	protected static Map1_1 map1_1;
+	protected static Map1_2 map1_2;
+	protected static Map2 map2;
+	protected static Map3 map3;
+	protected static Map4 map4;
+	protected static Map current_stage;
 	
 	//Stage Controlling Variables
 	protected static int StageNow = -1; //0: Stage Select, 1 ~: Stage Number
@@ -138,16 +139,13 @@ public class Maplestory extends JFrame {
 		make_UIs();
 		makeShops();
 		make_StageSelect();
-		make_Stage1();
-		make_Stage1_1();
-		make_Stage2();
-		make_Stage3();
-		make_Stage4();
+		
+		makeMaps();
 		set_Portals();
 		
-		stage1.open(null);
-		//start_Start();
-		//Start_Music.play();
+		//map1_2.open(null);
+		start_Start();
+		Start_Music.play();
 	}
 
 	public void make_Threads() {
@@ -382,62 +380,78 @@ public class Maplestory extends JFrame {
 		HTP.setup();
 		HTP.open();
 	}
-	//Make Stage Select
 	public void make_StageSelect() {
 		SS = new StageSelect(this, Stage1_Button, Stage2_Button, Stage3_Button, Stage4_Button, BackButton_SS);
 	}
-	//Make Stage1
-	public void make_Stage1() {
-		stage1 = new Stage1(1, "Henesys.png", "Ground1_Long.png", "Foothold1.png", "Foothold2.png"
+	
+	public void makeMaps() {
+		makeMap1();
+		makeMap1_1();
+		makeMap1_2();
+		makeMap2();
+		makeMap3();
+		makeMap4();
+	}
+	
+	public void makeMap1() {
+		map1 = new Map1(1, "Henesys.png", "Ground1_Long.png", "Foothold1.png", "Foothold2.png"
 				, this, BackButton, true, null);
-		stage1.nearestTown = stage1;
-		stage1.CharacterFirstImg = player.characterRightImg;
+		map1.nearestTown = map1;
+		map1.CharacterFirstImg = player.characterRightImg;
 	}
-	//Make Stage1-1
-	public void make_Stage1_1() {
-		stage1_1 = new Stage1_1(1, "Henesys.png", "Ground1_Long.png", "Foothold1.png", "Foothold2.png"
-				, this, BackButton, false, stage1);
-		stage1_1.CharacterFirstImg = player.characterRightImg;
+	public void makeMap1_1() {
+		map1_1 = new Map1_1(1, "Henesys.png", "Ground1_Long.png", "Foothold1.png", "Foothold2.png"
+				, this, BackButton, false, map1);
+		map1_1.CharacterFirstImg = player.characterRightImg;
 	}
-	//Make Stage2
-	public void make_Stage2() {
-		stage2 = new Stage2(1, "Ellinia.png", "Ground2_Long.png", "Foothold3.png", "Foothold4.png"
-				, this, BackButton, false, stage1);
-		stage2.CharacterFirstImg = player.characterRightImg;
+	public void makeMap1_2() {
+		map1_2 = new Map1_2(1, "Henesys.png", "Ground1_Long.png", "Foothold1.png", "Foothold2.png"
+				, this, BackButton, false, map1);
+		map1_2.CharacterFirstImg = player.characterRightImg;
 	}
-	//Make Stage3
-	public void make_Stage3() {
-		stage3 = new Stage3(-1, "SleepyWood.png", "Ground3_Long.png", "Foothold5.png", "Foothold6.png"
-				, this, BackButton, false, stage1);
-		stage3.CharacterFirstImg = player.characterLeftImg;
+	
+	public void makeMap2() {
+		map2 = new Map2(1, "Ellinia.png", "Ground2_Long.png", "Foothold3.png", "Foothold4.png"
+				, this, BackButton, false, map1);
+		map2.CharacterFirstImg = player.characterRightImg;
 	}
-	//Make Stage4
-	public void make_Stage4() {
-		stage4 = new Stage4(1, "Ellinia.png", "Ground2_Long.png", "Foothold3.png", "Foothold4.png"
-				, this, BackButton, false, stage1);
-		stage4.CharacterFirstImg = player.characterRightImg;
+	
+	public void makeMap3() {
+		map3 = new Map3(-1, "SleepyWood.png", "Ground3_Long.png", "Foothold5.png", "Foothold6.png"
+				, this, BackButton, false, map1);
+		map3.CharacterFirstImg = player.characterLeftImg;
+	}
+	
+	public void makeMap4() {
+		map4 = new Map4(1, "Ellinia.png", "Ground2_Long.png", "Foothold3.png", "Foothold4.png"
+				, this, BackButton, false, map1);
+		map4.CharacterFirstImg = player.characterRightImg;
 	}
 	//Set Link
 	public void set_Portals() {
 		//Make Portals
-		stage1.setPortal(new Portal(1725, 760, stage1));
-		stage1.setPortal(new Portal(1650, 360, stage1));
-		stage1_1.setPortal(new Portal(75, 1080, stage1_1));
-		stage2.setPortal(new Portal(75, 760, stage2));
-		stage2.setPortal(new Portal(100, 310, stage2));
-		stage3.setPortal(new Portal(1725, 760, stage3));
-		stage3.setPortal(new Portal(560, 620, stage3));
-		stage4.setPortal(new Portal(75, 760, stage4));
+		map1.setPortal(new Portal(1725, 760, map1));
+		map1.setPortal(new Portal(1650, 360, map1));
+		map1_1.setPortal(new Portal(75, 1080, map1_1));
+		map1_1.setPortal(new Portal(1755, 1110, map1_1));
+		map1_2.setPortal(new Portal(70, 310, map1_2));
+		map2.setPortal(new Portal(75, 760, map2));
+		map2.setPortal(new Portal(100, 310, map2));
+		map3.setPortal(new Portal(1725, 760, map3));
+		map3.setPortal(new Portal(560, 620, map3));
+		map4.setPortal(new Portal(75, 760, map4));
 
 		//Set links between Portals
-		stage1.Portal_List.get(0).link = stage1_1.Portal_List.get(0);
-		stage1.Portal_List.get(1).link = stage2.Portal_List.get(0);
-		stage1_1.Portal_List.get(0).link = stage1.Portal_List.get(0);
-		stage2.Portal_List.get(0).link = stage1.Portal_List.get(1);
-		stage2.Portal_List.get(1).link = stage3.Portal_List.get(0);
-		stage3.Portal_List.get(0).link = stage2.Portal_List.get(1);
-		stage3.Portal_List.get(1).link = stage4.Portal_List.get(0);
-		stage4.Portal_List.get(0).link = stage3.Portal_List.get(1);
+		map1.Portal_List.get(0).link = map1_1.Portal_List.get(0);
+		map1.Portal_List.get(1).link = map2.Portal_List.get(0);
+		map1_1.Portal_List.get(0).link = map1.Portal_List.get(0);
+		map1_1.Portal_List.get(1).link = map1_2.Portal_List.get(0);
+		map1_2.Portal_List.get(0).link = map1_1.Portal_List.get(1);
+		map2.Portal_List.get(0).link = map1.Portal_List.get(1);
+		map2.Portal_List.get(1).link = map3.Portal_List.get(0);
+		map3.Portal_List.get(0).link = map2.Portal_List.get(1);
+		map3.Portal_List.get(1).link = map4.Portal_List.get(0);
+		map4.Portal_List.get(0).link = map3.Portal_List.get(1);
 	}
 	
 	//ButtonHandling class
@@ -477,21 +491,21 @@ public class Maplestory extends JFrame {
 
 					@Override
 					public void run() {
-						Stage.Back_Pressed = true;
+						Map.Back_Pressed = true;
 						if(StageNow == 1) {
-							stage1.close(null);
+							map1.close(null);
 						}
 						else if(StageNow == 11) {
-							stage1_1.close(null);
+							map1_1.close(null);
 						}
 						else if(StageNow == 2) {
-							stage2.close(null);
+							map2.close(null);
 						}
 						else if(StageNow == 3) {
-							stage3.close(null);
+							map3.close(null);
 						}
 						else if(StageNow == 4) {
-							stage4.close(null);
+							map4.close(null);
 						}
 					}
 					
@@ -508,19 +522,19 @@ public class Maplestory extends JFrame {
 				
 				//stage 1 button
 				if((JButton)e.getSource() == Stage1_Button) {
-					stage1.open(null);
+					map1.open(null);
 				}
 				//stage 2 button
 				else if((JButton)e.getSource() == Stage2_Button) {
-					stage2.open(null);
+					map2.open(null);
 				}
 				//stage 3 button
 				else if((JButton)e.getSource() == Stage3_Button) {
-					stage3.open(null);
+					map3.open(null);
 				}
 				//stage 4 button
 				else if((JButton)e.getSource() == Stage4_Button) {
-					stage4.open(null);
+					map4.open(null);
 				}
 			}
 		}

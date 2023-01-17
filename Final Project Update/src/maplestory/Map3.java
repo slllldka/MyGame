@@ -9,14 +9,14 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
-public class Stage3 extends Stage{
+public class Map3 extends Map{
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 	protected int MeteorNum; //number of meteors(throwing stars)
-	public Stage3(int CD, String BGName, String GName, String FH1Name, String FH2Name, JFrame _frame, JButton _back
-			, boolean _isTown, Stage _nearestTown) {
+	public Map3(int CD, String BGName, String GName, String FH1Name, String FH2Name, JFrame _frame, JButton _back
+			, boolean _isTown, Map _nearestTown) {
 		super(CD, BGName, GName, FH1Name, FH2Name, _frame, _back, _isTown, _nearestTown);
 		
 		theme = "SleepyWood";

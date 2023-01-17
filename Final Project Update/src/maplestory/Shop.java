@@ -137,7 +137,7 @@ public abstract class Shop extends JLabel {
 			}
 		}
 		
-		g.setFont(Stage.font_meso);
+		g.setFont(Map.font_meso);
 		g.setColor(Color.BLACK);
 		decimal = Item_Meso.dec_format.format(Maplestory.player.inventory.Meso);
 		g.drawString(decimal, 7 + 446 - 3 - Maplestory.current_stage.getFontMetrics_meso().stringWidth(decimal), 64 + 15 - 2);
@@ -178,16 +178,16 @@ public abstract class Shop extends JLabel {
 						int index = source.index;
 						Item data = currentSellList.get(index).item;
 						if(data != null) {
-							Stage.info = data.getInfo();
-							Stage.info_x = getMousePosition().x + getLocation().x;
-							Stage.info_y = getMousePosition().y + getLocation().y;
+							Map.info = data.getInfo();
+							Map.info_x = getMousePosition().x + getLocation().x;
+							Map.info_y = getMousePosition().y + getLocation().y;
 						}
 					}
 				}
 				
 				@Override
 				public void mouseExited(MouseEvent e) {
-					Stage.info = null;
+					Map.info = null;
 				}
 			});
 			add(shop_slot[i]);
@@ -225,16 +225,16 @@ public abstract class Shop extends JLabel {
 						int index = source.index;
 						Item data = currentNullRemovedList.get(index);
 						if(data != null) {
-							Stage.info = data.getInfo();
-							Stage.info_x = getMousePosition().x + getLocation().x;
-							Stage.info_y = getMousePosition().y + getLocation().y;
+							Map.info = data.getInfo();
+							Map.info_x = getMousePosition().x + getLocation().x;
+							Map.info_y = getMousePosition().y + getLocation().y;
 						}
 					}
 				}
 				
 				@Override
 				public void mouseExited(MouseEvent e) {
-					Stage.info = null;
+					Map.info = null;
 				}
 			});
 			add(user_slot[i]);
@@ -967,7 +967,7 @@ public abstract class Shop extends JLabel {
 		current_type = 0;
 		current_user_slot_index = Equip_user_line_index;
 
-		Stage.move = null;
+		Map.move = null;
 		setShopScrollingObjects();
 		setUserScrollingObjects();
 	}
@@ -982,7 +982,7 @@ public abstract class Shop extends JLabel {
 		current_type = 1;
 		current_user_slot_index = Consume_user_line_index;
 
-		Stage.move = null;
+		Map.move = null;
 		setShopScrollingObjects();
 		setUserScrollingObjects();
 	}
@@ -997,7 +997,7 @@ public abstract class Shop extends JLabel {
 		current_type = 2;
 		current_user_slot_index = Etc_user_line_index;
 
-		Stage.move = null;
+		Map.move = null;
 		setShopScrollingObjects();
 		setUserScrollingObjects();
 	}
@@ -1012,7 +1012,7 @@ public abstract class Shop extends JLabel {
 		current_type = 3;
 		current_user_slot_index = Install_user_line_index;
 
-		Stage.move = null;
+		Map.move = null;
 		setShopScrollingObjects();
 		setUserScrollingObjects();
 	}
@@ -1027,7 +1027,7 @@ public abstract class Shop extends JLabel {
 		current_type = 4;
 		current_user_slot_index = Cash_user_line_index;
 
-		Stage.move = null;
+		Map.move = null;
 		setShopScrollingObjects();
 		setUserScrollingObjects();
 	}
@@ -1089,7 +1089,7 @@ public abstract class Shop extends JLabel {
 		if(isOpen) {
 			return;
 		}
-		Stage.current_shop = this;
+		Map.current_shop = this;
 		
 		NPCImage = _NPCImage;
 		
@@ -1119,7 +1119,7 @@ public abstract class Shop extends JLabel {
 	}
 	
 	public void close() {
-		Stage.current_shop = null;
+		Map.current_shop = null;
 		
 		isOpen = false;
 		settoBottom();

@@ -73,7 +73,7 @@ public class Item_ReturnScroll_Town extends Item{
 						Maplestory.player.inventory.Reduce_Item(index, 1);
 						Maplestory.player.Item_usable = false;
 						
-						Stage nearestTown = Maplestory.current_stage.nearestTown;
+						Map nearestTown = Maplestory.current_stage.nearestTown;
 						Maplestory.current_stage.close(null);
 						nearestTown.open(null);
 						try {

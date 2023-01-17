@@ -100,14 +100,14 @@ public class Character {
 			
 			@Override
 			public void run() {
-				Stage.attacked = true;
+				Map.attacked = true;
 				try {
 					Thread.sleep(Hit_Delay);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				Stage.attacked = false;
+				Map.attacked = false;
 			}
 		};
 		Maplestory.thread_pool.submit(runnable);
@@ -117,14 +117,14 @@ public class Character {
 			
 			@Override
 			public void run() {
-				Stage.Hittable = false;
+				Map.Hittable = false;
 				try {
 					Thread.sleep(Hit_Delay);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				Stage.Hittable = true;
+				Map.Hittable = true;
 			}
 		};
 		Maplestory.thread_pool.submit(runnable);
@@ -134,15 +134,15 @@ public class Character {
 
 			@Override
 			public void run() {
-				Stage.Ladder_Jump = true;
-				if(Stage.Ladder_Jump) {
+				Map.Ladder_Jump = true;
+				if(Map.Ladder_Jump) {
 					try {
 						Thread.sleep(100);
 					} catch (InterruptedException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					Stage.Ladder_Jump = false;
+					Map.Ladder_Jump = false;
 				}
 			}
 		};
@@ -182,7 +182,7 @@ public class Character {
 			}
 			// Down Direction
 			else if (direction == -1) {
-				if (Stage.Ladder == false) {
+				if (Map.Ladder == false) {
 					if ((xpos + 20 >= CharacterX + 25) && (xpos - 20 <= CharacterX + 25)
 							&& (CharacterY == ystart)) {
 						return i;
@@ -201,14 +201,14 @@ public class Character {
 	
 	//true: can go, false: can't go
 	public boolean wallCheck() {
-		if(Stage.Left) {
+		if(Map.Left) {
 			for (Wall wall : Maplestory.current_stage.Wall_List) {
 				if(!wall.canLeftGo(CharacterX, CharacterY, CharacterWidth, CharacterHeight)){
 					return false;
 				}
 			}
 		}
-		else if(Stage.Right) {
+		else if(Map.Right) {
 			for (Wall wall : Maplestory.current_stage.Wall_List) {
 				if(!wall.canRightGo(CharacterX, CharacterY, CharacterWidth, CharacterHeight)){
 					return false;
@@ -226,16 +226,16 @@ public class Character {
 			@Override
 			public void run() {
 				if(xd > 0) {
-					Stage.Left = false;
-					Stage.Right = true;
+					Map.Left = false;
+					Map.Right = true;
 				}
 				else {
-					Stage.Left = true;
-					Stage.Right = false;
+					Map.Left = true;
+					Map.Right = false;
 				}
-				Stage.Jump = true;
-				Stage.Ladder = false;
-				Stage.attacked = true;
+				Map.Jump = true;
+				Map.Ladder = false;
+				Map.attacked = true;
 				ManageHittable();
 				
 				if (xd > 0) {
@@ -247,7 +247,7 @@ public class Character {
 				int x = CharacterX;
 				int y = CharacterY;
 				// character flies high
-				while (alive && Stage.Available && x > 0 && x < Maplestory.current_stage.X_Size-Character.CharacterWidth) {
+				while (alive && Map.Available && x > 0 && x < Maplestory.current_stage.X_Size-Character.CharacterWidth) {
 					try {
 						Thread.sleep(1);
 					} catch (InterruptedException e) {
@@ -264,7 +264,7 @@ public class Character {
 					Update_Position(x, y);
 				}
 				// character falls
-				while (alive && Stage.Available) {
+				while (alive && Map.Available) {
 					current_Img = characterJumpLeftImg;
 					if (IsLandable()) {
 						break;
@@ -284,29 +284,29 @@ public class Character {
 
 				// Done
 
-				if(alive && Stage.Available) {
-					Stage.Left = false;
-					Stage.Right = false;
-					Stage.Jump = false;
-					Stage.attacked = false;
+				if(alive && Map.Available) {
+					Map.Left = false;
+					Map.Right = false;
+					Map.Jump = false;
+					Map.attacked = false;
 					// setting character's state(where character is looking, if character is
 					// proning) according to direction, key board inputs
-					if (Stage.Ladder == false && Stage.Attacking == false) {
+					if (Map.Ladder == false && Map.Attacking == false) {
 						if (CharDirection == 1) {
-							if (Stage.DownKey == true) {
+							if (Map.DownKey == true) {
 								current_Img = characterProneRightImg;
 							} else {
 								current_Img = characterRightImg;
-								if (Stage.RightKey == true && Stage.Right == false) {
+								if (Map.RightKey == true && Map.Right == false) {
 									Character_Right();
 								}
 							}
 						} else if (CharDirection == -1) {
-							if (Stage.DownKey == true) {
+							if (Map.DownKey == true) {
 								current_Img = characterProneLeftImg;
 							} else {
 								current_Img = characterLeftImg;
-								if (Stage.LeftKey == true && Stage.Left == false) {
+								if (Map.LeftKey == true && Map.Left == false) {
 									Character_Left();
 								}
 							}
@@ -316,7 +316,7 @@ public class Character {
 			}
 		};
 
-		if(alive && Stage.Hittable && Stage.Available) {
+		if(alive && Map.Hittable && Map.Available) {
 			Maplestory.thread_pool.submit(runnable);
 		}
 	}
@@ -329,15 +329,15 @@ public class Character {
 			@Override
 			public void run() {
 				if(xd > 0) {
-					Stage.Left = false;
-					Stage.Right = true;
+					Map.Left = false;
+					Map.Right = true;
 				}
 				else {
-					Stage.Left = true;
-					Stage.Right = false;
+					Map.Left = true;
+					Map.Right = false;
 				}
-				Stage.Jump = true;
-				Stage.Ladder = false;
+				Map.Jump = true;
+				Map.Ladder = false;
 				
 				//can switch
 				//Stage.attacked = true;
@@ -354,7 +354,7 @@ public class Character {
 				int y = CharacterY;
 				// character flies a little
 				for (int i = 0; i < 13; i++) {
-					if(!alive || !Stage.Available) {
+					if(!alive || !Map.Available) {
 						break;
 					}
 					try {
@@ -373,11 +373,11 @@ public class Character {
 					Update_Position(x, y);
 				}
 				// character falls
-				while (alive && Stage.Available) {
+				while (alive && Map.Available) {
 					if (IsLandable()) {
 						break;
 					}
-					else if(Stage.Ladder) {
+					else if(Map.Ladder) {
 						return;
 					}
 					try {
@@ -397,30 +397,30 @@ public class Character {
 				
 				// Done
 				
-				if(alive && Stage.Available) {
-					Stage.Left = false;
-					Stage.Right = false;
-					Stage.Jump = false;
-					Stage.Ladder = false;
-					Stage.attacked = false;
+				if(alive && Map.Available) {
+					Map.Left = false;
+					Map.Right = false;
+					Map.Jump = false;
+					Map.Ladder = false;
+					Map.attacked = false;
 					// setting character's state(where character is looking, if character is
 					// proning) according to direction, key board inputs
-					if (Stage.Ladder == false && Stage.Attacking == false) {
+					if (Map.Ladder == false && Map.Attacking == false) {
 						if (CharDirection == 1) {
-							if (Stage.DownKey == true) {
+							if (Map.DownKey == true) {
 								current_Img = characterProneRightImg;
 							} else {
 								current_Img = characterRightImg;
-								if (Stage.RightKey == true && Stage.Right == false) {
+								if (Map.RightKey == true && Map.Right == false) {
 									Character_Right();
 								}
 							}
 						} else if (CharDirection == -1) {
-							if (Stage.DownKey == true) {
+							if (Map.DownKey == true) {
 								current_Img = characterProneLeftImg;
 							} else {
 								current_Img = characterLeftImg;
-								if (Stage.LeftKey == true && Stage.Left == false) {
+								if (Map.LeftKey == true && Map.Left == false) {
 									Character_Left();
 								}
 							}
@@ -430,7 +430,7 @@ public class Character {
 			}
 
 		};
-		if(alive && Stage.Hittable && Stage.Available) {
+		if(alive && Map.Hittable && Map.Available) {
 			Maplestory.thread_pool.submit(runnable);
 		}
 	}
@@ -441,7 +441,7 @@ public class Character {
 
 			@Override
 			public void run() {
-				Stage.Left = true;
+				Map.Left = true;
 
 				boolean islandable;
 				int x = CharacterX;
@@ -449,11 +449,11 @@ public class Character {
 				int setWalkImg = 1;
 				islandable = true;
 				// character moves left
-				while (Stage.LeftKey == true) {
-					if (Stage.Left == false || Stage.Ladder == true || Stage.Attacking == true) {
+				while (Map.LeftKey == true) {
+					if (Map.Left == false || Map.Ladder == true || Map.Attacking == true) {
 						break;
 					}
-					if(Stage.Jump == true || Stage.attacked == true) {
+					if(Map.Jump == true || Map.attacked == true) {
 						return;
 					}
 					if (!IsLandable()) {
@@ -495,10 +495,10 @@ public class Character {
 				y = CharacterY;
 				// character falls
 				if (!islandable) {
-					Stage.Jump = true;
+					Map.Jump = true;
 					current_Img = characterJumpLeftImg;
-					while (alive && Stage.Available) {
-						if (Stage.Ladder == true || Stage.attacked == true) {
+					while (alive && Map.Available) {
+						if (Map.Ladder == true || Map.attacked == true) {
 							break;
 						}
 						try {
@@ -515,7 +515,7 @@ public class Character {
 							Update_Position(x, y);
 						}
 						if (IsLandable()) {
-							Stage.Jump = false;
+							Map.Jump = false;
 							break;
 						}
 					}
@@ -523,38 +523,38 @@ public class Character {
 
 				// Done
 
-				if(alive && Stage.Available) {
-					Stage.Left = false;
+				if(alive && Map.Available) {
+					Map.Left = false;
 					// setting character's state(where character is looking, if character is
 					// proning) according to direction, key board inputs
-					if (Stage.Ladder == false && Stage.attacked == false && Stage.Attacking == false) {
-						if (Stage.DownKey == false) {
+					if (Map.Ladder == false && Map.attacked == false && Map.Attacking == false) {
+						if (Map.DownKey == false) {
 							if (!islandable) {
 								if (CharDirection == 1) {
 									current_Img = characterRightImg;
-									if (Stage.RightKey == true && Stage.Right == false) {
+									if (Map.RightKey == true && Map.Right == false) {
 										Character_Right();
 									}
 								} else if (CharDirection == -1) {
 									current_Img = characterLeftImg;
-									if (Stage.LeftKey == true && Stage.Left == false) {
+									if (Map.LeftKey == true && Map.Left == false) {
 										Character_Left();
 									}
 								}
-							} else if (Stage.Right == false && Stage.Jump == false && Stage.Attacking == false) {
+							} else if (Map.Right == false && Map.Jump == false && Map.Attacking == false) {
 								current_Img = characterLeftImg;
 							}
 						} else {
 							if (!islandable) {
 								if (CharDirection == 1) {
-									if (Stage.RightKey == true && Stage.Right == false) {
+									if (Map.RightKey == true && Map.Right == false) {
 										current_Img = characterRightImg;
 										Character_Right();
 									} else {
 										current_Img = characterProneRightImg;
 									}
 								} else if (CharDirection == -1) {
-									if (Stage.LeftKey == true && Stage.Left == false) {
+									if (Map.LeftKey == true && Map.Left == false) {
 										current_Img = characterLeftImg;
 										Character_Left();
 									} else {
@@ -568,7 +568,7 @@ public class Character {
 							}
 						}
 					} else {
-						Stage.Jump = false;
+						Map.Jump = false;
 					}
 				}
 			}
@@ -585,7 +585,7 @@ public class Character {
 
 			@Override
 			public void run() {
-				Stage.Right = true;
+				Map.Right = true;
 
 				boolean islandable;
 				int x = CharacterX;
@@ -593,11 +593,11 @@ public class Character {
 				int setWalkImg = 1;
 				islandable = true;
 				// character moves right
-				while (Stage.RightKey == true) {
-					if (Stage.Right == false || Stage.Ladder == true || Stage.Attacking == true) {
+				while (Map.RightKey == true) {
+					if (Map.Right == false || Map.Ladder == true || Map.Attacking == true) {
 						break;
 					}
-					if(Stage.Jump == true || Stage.attacked == true) {
+					if(Map.Jump == true || Map.attacked == true) {
 						return;
 					}
 					if (!IsLandable()) {
@@ -640,10 +640,10 @@ public class Character {
 				y = CharacterY;
 				// character falls
 				if (!islandable) {
-					Stage.Jump = true;
+					Map.Jump = true;
 					current_Img = characterJumpRightImg;
-					while (alive && Stage.Available) {
-						if (Stage.Ladder == true || Stage.attacked == true) {
+					while (alive && Map.Available) {
+						if (Map.Ladder == true || Map.attacked == true) {
 							break;
 						}
 						try {
@@ -660,7 +660,7 @@ public class Character {
 							Update_Position(x, y);
 						}
 						if (IsLandable()) {
-							Stage.Jump = false;
+							Map.Jump = false;
 							break;
 						}
 						if (setWalkImg == 60) {
@@ -673,38 +673,38 @@ public class Character {
 
 				// Done
 
-				if(alive && Stage.Available) {
-					Stage.Right = false;
+				if(alive && Map.Available) {
+					Map.Right = false;
 					// setting character's state(where character is looking, if character is
 					// proning) according to direction, key board inputs
-					if (Stage.Ladder == false && Stage.attacked == false && Stage.Attacking == false) {
-						if (Stage.DownKey == false) {
+					if (Map.Ladder == false && Map.attacked == false && Map.Attacking == false) {
+						if (Map.DownKey == false) {
 							if (!islandable) {
 								if (CharDirection == 1) {
 									current_Img = characterRightImg;
-									if (Stage.RightKey == true && Stage.Right == false) {
+									if (Map.RightKey == true && Map.Right == false) {
 										Character_Right();
 									}
 								} else if (CharDirection == -1) {
 									current_Img = characterLeftImg;
-									if (Stage.LeftKey == true && Stage.Left == false) {
+									if (Map.LeftKey == true && Map.Left == false) {
 										Character_Left();
 									}
 								}
-							} else if (Stage.Left == false && Stage.Jump == false && Stage.Attacking == false) {
+							} else if (Map.Left == false && Map.Jump == false && Map.Attacking == false) {
 								current_Img = characterRightImg;
 							}
 						} else {
 							if (!islandable) {
 								if (CharDirection == 1) {
-									if (Stage.RightKey == true && Stage.Right == false) {
+									if (Map.RightKey == true && Map.Right == false) {
 										current_Img = characterRightImg;
 										Character_Right();
 									} else {
 										current_Img = characterProneRightImg;
 									}
 								} else if (CharDirection == -1) {
-									if (Stage.LeftKey == true && Stage.Left == false) {
+									if (Map.LeftKey == true && Map.Left == false) {
 										current_Img = characterLeftImg;
 										Character_Left();
 									} else {
@@ -718,7 +718,7 @@ public class Character {
 							}
 						}
 					} else {
-						Stage.Jump = false;
+						Map.Jump = false;
 					}
 				}
 			}
@@ -737,20 +737,20 @@ public class Character {
 				Music Jump_Music = new Music(Jump_Music_Name, 1);
 				Jump_Music.play();
 				
-				Stage.Jump = true;
+				Map.Jump = true;
 				
 				int x = CharacterX;
 				int y = CharacterY;
 				// jump up
 				for (int i = 0; i < 30; i++) {
-					if (!alive || !Stage.Available) {
+					if (!alive || !Map.Available) {
 						break;
 					}
-					if(Stage.Ladder) {
-						Stage.Jump = false;
+					if(Map.Ladder) {
+						Map.Jump = false;
 						return;
 					}
-					if(Stage.attacked) {
+					if(Map.attacked) {
 						return;
 					}
 					try {
@@ -767,12 +767,12 @@ public class Character {
 					}
 				}
 				// jump down
-				while (alive && Stage.Available) {
-					if(Stage.Ladder) {
-						Stage.Jump = false;
+				while (alive && Map.Available) {
+					if(Map.Ladder) {
+						Map.Jump = false;
 						return;
 					}
-					if(Stage.attacked) {
+					if(Map.attacked) {
 						return;
 					}
 					if (IsLandable()) {
@@ -790,32 +790,32 @@ public class Character {
 
 				// Done
 
-				if(alive && Stage.Available) {
-					Stage.Jump = false;
+				if(alive && Map.Available) {
+					Map.Jump = false;
 					// setting character's state(where character is looking, if character is
 					// proning) according to direction, key board inputs
-					if (Stage.Ladder == false && Stage.attacked == false && Stage.Attacking == false) {
+					if (Map.Ladder == false && Map.attacked == false && Map.Attacking == false) {
 						if (CharDirection == 1) {
-							if (Stage.DownKey == true) {
+							if (Map.DownKey == true) {
 								current_Img = characterProneRightImg;
 							} else {
 								current_Img = characterRightImg;
-								if (Stage.RightKey == true && Stage.Right == false) {
+								if (Map.RightKey == true && Map.Right == false) {
 									Character_Right();
 								}
 							}
 						} else if (CharDirection == -1) {
-							if (Stage.DownKey == true) {
+							if (Map.DownKey == true) {
 								current_Img = characterProneLeftImg;
 							} else {
 								current_Img = characterLeftImg;
-								if (Stage.LeftKey == true && Stage.Left == false) {
+								if (Map.LeftKey == true && Map.Left == false) {
 									Character_Left();
 								}
 							}
 						}
 					} else {
-						Stage.Jump = false;
+						Map.Jump = false;
 					}
 				}
 			}
@@ -831,9 +831,9 @@ public class Character {
 
 			@Override
 			public void run() {
-				Stage.Left = true;
-				Stage.Jump = true;
-				Stage.Ladder = false;
+				Map.Left = true;
+				Map.Jump = true;
+				Map.Ladder = false;
 				
 				Music Jump_Music = new Music(Jump_Music_Name, 1);
 				Jump_Music.play();
@@ -850,16 +850,16 @@ public class Character {
 				int y = CharacterY;
 				// jump up
 				for (int i = 0; i < height; i++) {
-					if (!alive || !Stage.Available) {
+					if (!alive || !Map.Available) {
 						break;
 					}
-					if(Stage.Ladder) {
-						Stage.Left = false;
-						Stage.Jump = false;
+					if(Map.Ladder) {
+						Map.Left = false;
+						Map.Jump = false;
 						ManageLadderJump();
 						return;
 					}
-					if(Stage.attacked) {
+					if(Map.attacked) {
 						return;
 					}
 					try {
@@ -879,14 +879,14 @@ public class Character {
 					Update_Position(x, y);
 				}
 				// jump down
-				while (alive && Stage.Available) {
-					if(Stage.Ladder) {
-						Stage.Left = false;
-						Stage.Jump = false;
+				while (alive && Map.Available) {
+					if(Map.Ladder) {
+						Map.Left = false;
+						Map.Jump = false;
 						ManageLadderJump();
 						return;
 					}
-					if(Stage.attacked) {
+					if(Map.attacked) {
 						return;
 					}
 					if (IsLandable()) {
@@ -907,33 +907,33 @@ public class Character {
 
 				// Done
 
-				if(alive && Stage.Available) {
-					Stage.Left = false;
-					Stage.Jump = false;
+				if(alive && Map.Available) {
+					Map.Left = false;
+					Map.Jump = false;
 					// setting character's state(where character is looking, if character is
 					// proning) according to direction, key board inputs
-					if (Stage.Ladder == false && Stage.attacked == false && Stage.Attacking == false) {
+					if (Map.Ladder == false && Map.attacked == false && Map.Attacking == false) {
 						if (CharDirection == 1) {
-							if (Stage.DownKey == true) {
+							if (Map.DownKey == true) {
 								current_Img = characterProneRightImg;
 							} else {
 								current_Img = characterRightImg;
-								if (Stage.RightKey == true && Stage.Right == false) {
+								if (Map.RightKey == true && Map.Right == false) {
 									Character_Right();
 								}
 							}
 						} else if (CharDirection == -1) {
-							if (Stage.DownKey == true) {
+							if (Map.DownKey == true) {
 								current_Img = characterProneLeftImg;
 							} else {
 								current_Img = characterLeftImg;
-								if (Stage.LeftKey == true && Stage.Left == false) {
+								if (Map.LeftKey == true && Map.Left == false) {
 									Character_Left();
 								}
 							}
 						}
 					} else {
-						Stage.Jump = false;
+						Map.Jump = false;
 					}
 				}
 			}
@@ -949,9 +949,9 @@ public class Character {
 
 			@Override
 			public void run() {
-				Stage.Right = true;
-				Stage.Jump = true;
-				Stage.Ladder = false;
+				Map.Right = true;
+				Map.Jump = true;
+				Map.Ladder = false;
 				
 				Music Jump_Music = new Music(Jump_Music_Name, 1);
 				Jump_Music.play();
@@ -968,16 +968,16 @@ public class Character {
 				int y = CharacterY;
 				// jump up
 				for (int i = 0; i < height; i++) {
-					if (!alive || !Stage.Available) {
+					if (!alive || !Map.Available) {
 						break;
 					}
-					if(Stage.Ladder) {
-						Stage.Right = false;
-						Stage.Jump = false;
+					if(Map.Ladder) {
+						Map.Right = false;
+						Map.Jump = false;
 						ManageLadderJump();
 						return;
 					}
-					if(Stage.attacked) {
+					if(Map.attacked) {
 						return;
 					}
 					try {
@@ -997,14 +997,14 @@ public class Character {
 					Update_Position(x, y);
 				}
 				// jump down
-				while (alive && Stage.Available) {
-					if(Stage.Ladder) {
-						Stage.Right = false;
-						Stage.Jump = false;
+				while (alive && Map.Available) {
+					if(Map.Ladder) {
+						Map.Right = false;
+						Map.Jump = false;
 						ManageLadderJump();
 						return;
 					}
-					if(Stage.attacked) {
+					if(Map.attacked) {
 						return;
 					}
 					if (IsLandable()) {
@@ -1025,33 +1025,33 @@ public class Character {
 
 				// Done
 
-				if(alive && Stage.Available) {
-					Stage.Right = false;
-					Stage.Jump = false;
+				if(alive && Map.Available) {
+					Map.Right = false;
+					Map.Jump = false;
 					// setting character's state(where character is looking, if character is
 					// proning) according to direction, key board inputs
-					if (Stage.Ladder == false && Stage.attacked == false && Stage.Attacking == false) {
+					if (Map.Ladder == false && Map.attacked == false && Map.Attacking == false) {
 						if (CharDirection == 1) {
-							if (Stage.DownKey == true) {
+							if (Map.DownKey == true) {
 								current_Img = characterProneRightImg;
 							} else {
 								current_Img = characterRightImg;
-								if (Stage.RightKey == true && Stage.Right == false) {
+								if (Map.RightKey == true && Map.Right == false) {
 									Character_Right();
 								}
 							}
 						} else if (CharDirection == -1) {
-							if (Stage.DownKey == true) {
+							if (Map.DownKey == true) {
 								current_Img = characterProneLeftImg;
 							} else {
 								current_Img = characterLeftImg;
-								if (Stage.LeftKey == true && Stage.Left == false) {
+								if (Map.LeftKey == true && Map.Left == false) {
 									Character_Left();
 								}
 							}
 						}
 					} else {
-						Stage.Jump = false;
+						Map.Jump = false;
 					}
 				}
 			}
@@ -1067,7 +1067,7 @@ public class Character {
 
 			@Override
 			public void run() {
-				Stage.Jump = true;
+				Map.Jump = true;
 				
 				Music Jump_Music = new Music(Jump_Music_Name, 1);
 				Jump_Music.play();
@@ -1075,8 +1075,8 @@ public class Character {
 				int x = CharacterX;
 				int y = CharacterY;
 				// jump down
-				while (alive && Stage.Available) {
-					if (Stage.attacked) {
+				while (alive && Map.Available) {
+					if (Map.attacked) {
 						return;
 					}
 					try {
@@ -1094,26 +1094,26 @@ public class Character {
 
 				// Done
 
-				if(alive && Stage.Available) {
-					Stage.Jump = false;
+				if(alive && Map.Available) {
+					Map.Jump = false;
 					// setting character's state(where character is looking, if character is
 					// proning) according to direction, key board inputs
-					if (Stage.attacked == false && Stage.Attacking == false) {
+					if (Map.attacked == false && Map.Attacking == false) {
 						if (CharDirection == 1) {
-							if (Stage.DownKey == true) {
+							if (Map.DownKey == true) {
 								current_Img = characterProneRightImg;
 							} else {
 								current_Img = characterRightImg;
-								if (Stage.RightKey == true && Stage.Right == false) {
+								if (Map.RightKey == true && Map.Right == false) {
 									Character_Right();
 								}
 							}
 						} else if (CharDirection == -1) {
-							if (Stage.DownKey == true) {
+							if (Map.DownKey == true) {
 								current_Img = characterProneLeftImg;
 							} else {
 								current_Img = characterLeftImg;
-								if (Stage.LeftKey == true && Stage.Left == false) {
+								if (Map.LeftKey == true && Map.Left == false) {
 									Character_Left();
 								}
 							}
@@ -1134,9 +1134,9 @@ public class Character {
 
 			@Override
 			public void run() {
-				Stage.Ladder = true;
-				Stage.Up = true;
-				Stage.Jump = false;
+				Map.Ladder = true;
+				Map.Up = true;
+				Map.Jump = false;
 				
 				Ladder ladder = Maplestory.current_stage.Ladder_List.get(idx);
 				int xpos = ladder.getX();
@@ -1149,10 +1149,10 @@ public class Character {
 				int y = CharacterY;
 				int setLadderImg = 1;
 
-				while (Stage.UpKey) {
-					if(Stage.Jump || Stage.attacked) {
-						Stage.Up = false;
-						Stage.Ladder = false;
+				while (Map.UpKey) {
+					if(Map.Jump || Map.attacked) {
+						Map.Up = false;
+						Map.Ladder = false;
 						return;
 					}
 					if (setLadderImg == 1) {
@@ -1178,17 +1178,17 @@ public class Character {
 					}
 					if (y == ystart) {
 						IsLandable();
-						Stage.Ladder = false;
+						Map.Ladder = false;
 						break;
 					}
 				}
 
 				// Done
 
-				if(alive && Stage.Available) {
-					Stage.Up = false;
+				if(alive && Map.Available) {
+					Map.Up = false;
 					// setting character's state(where character is looking) according to direction
-					if (Stage.Ladder == false && Stage.attacked == false && Stage.Attacking == false) {
+					if (Map.Ladder == false && Map.attacked == false && Map.Attacking == false) {
 						if (CharDirection == -1) {
 							current_Img = characterLeftImg;
 						} else if (CharDirection == 1) {
@@ -1210,8 +1210,8 @@ public class Character {
 
 			@Override
 			public void run() {
-				Stage.Ladder = true;
-				Stage.Down = true;
+				Map.Ladder = true;
+				Map.Down = true;
 
 				Ladder ladder = Maplestory.current_stage.Ladder_List.get(idx);
 				int xpos = ladder.getX();
@@ -1226,10 +1226,10 @@ public class Character {
 				int setLadderImg = 1;
 				islandable = false;
 
-				while (Stage.DownKey) {
-					if (Stage.attacked) {
-						Stage.Down = false;
-						Stage.Ladder = false;
+				while (Map.DownKey) {
+					if (Map.attacked) {
+						Map.Down = false;
+						Map.Ladder = false;
 						return;
 					}
 					if (setLadderImg == 1) {
@@ -1254,22 +1254,22 @@ public class Character {
 						setLadderImg++;
 					}
 					if ((ystart < y) && ((y - CharacterHeight == yend) || (islandable = IsLandable()))) {
-						Stage.Ladder = false;
+						Map.Ladder = false;
 						break;
 					}
 				}
 
 				// character falls
-				if (!islandable && !Stage.Ladder) {
-					Stage.Down = false;
-					Stage.Jump = true;
+				if (!islandable && !Map.Ladder) {
+					Map.Down = false;
+					Map.Jump = true;
 					current_Img = characterJumpLeftImg;
-					while (alive && Stage.Available) {
-						if (Stage.attacked) {
+					while (alive && Map.Available) {
+						if (Map.attacked) {
 							return;
 						}
 						if (IsLandable()) {
-							Stage.Jump = false;
+							Map.Jump = false;
 							islandable = true;
 							break;
 						}
@@ -1286,10 +1286,10 @@ public class Character {
 
 				// Done
 
-				if(alive && Stage.Available) {
-					Stage.Down = false;
+				if(alive && Map.Available) {
+					Map.Down = false;
 					// setting character's state(where character is looking) according to direction
-					if (islandable == true && Stage.Ladder == false && Stage.Attacking == false) {
+					if (islandable == true && Map.Ladder == false && Map.Attacking == false) {
 						if (CharDirection == -1) {
 							current_Img = characterLeftImg;
 						} else if (CharDirection == 1) {
@@ -1310,7 +1310,7 @@ public class Character {
 
 			@Override
 			public void run() {
-				Stage.Attacking = true;
+				Map.Attacking = true;
 				
 				int Player_Xcenter = CharacterX + CharacterWidth / 2;
 				int Player_Ycenter = CharacterY - CharacterHeight / 2;
@@ -1354,18 +1354,18 @@ public class Character {
 					
 					for(Mob temp : Maplestory.current_stage.Mob_List) {
 						int Mob_Xstart = temp.X;
-						int Mob_Xend = temp.X + temp.current_Img.getIconWidth();
-						int Mob_Ystart = temp.Y - temp.current_Img.getIconHeight();
+						int Mob_Xend = temp.X + temp.getWidth();
+						int Mob_Ystart = temp.Y - temp.getHeight();
 						int Mob_Yend = temp.Y;
+						int Range_Xstart = Player_Xcenter - Range_Xfront;
+						int Range_Xend = Player_Xcenter + Range_Xbehind;
+						int Range_Ystart = Player_Ycenter - Range_Yabove;
+						int Range_Yend = Player_Ycenter + Range_Ybelow;
 
 						if (temp.available && temp.alive) {
-							if (((Mob_Xstart >= Player_Xcenter - Range_Xfront && Mob_Xstart <= Player_Xcenter + Range_Xbehind)
-									|| (Mob_Xend >= Player_Xcenter - Range_Xfront && Mob_Xend <= Player_Xcenter + Range_Xbehind))
-									&& ((Mob_Ystart >= Player_Ycenter - Range_Yabove
-											&& Mob_Ystart <= Player_Ycenter + Range_Ybelow)
-											|| (Mob_Yend >= Player_Ycenter - Range_Yabove
-													&& Mob_Yend <= Player_Ycenter + Range_Ybelow))) {
-								temp.Mob_Hit(stroke_num, Damage_Percent);
+							if ((Mob_Xend >= Range_Xstart && Mob_Xstart <= Range_Xend)
+									&& (Mob_Yend >= Range_Ystart && Mob_Ystart <= Range_Yend)) {
+								temp.hit(stroke_num, Damage_Percent);
 								count++;
 								if (count == target_num) {
 									break;
@@ -1397,15 +1397,15 @@ public class Character {
 						int Mob_Xend = temp.X + temp.current_Img.getIconWidth();
 						int Mob_Ystart = temp.Y - temp.current_Img.getIconHeight();
 						int Mob_Yend = temp.Y;
+						int Range_Xstart = Player_Xcenter - Range_Xbehind;
+						int Range_Xend = Player_Xcenter + Range_Xfront;
+						int Range_Ystart = Player_Ycenter - Range_Yabove;
+						int Range_Yend = Player_Ycenter + Range_Ybelow;
 
 						if (temp.available && temp.alive) {
-							if (((Mob_Xstart >= Player_Xcenter - Range_Xbehind && Mob_Xstart <= Player_Xcenter + Range_Xfront)
-									|| (Mob_Xend >= Player_Xcenter - Range_Xbehind && Mob_Xend <= Player_Xcenter + Range_Xfront))
-									&& ((Mob_Ystart >= Player_Ycenter - Range_Yabove
-											&& Mob_Ystart <= Player_Ycenter + Range_Ybelow)
-											|| (Mob_Yend >= Player_Ycenter - Range_Yabove
-													&& Mob_Yend <= Player_Ycenter + Range_Ybelow))) {
-								temp.Mob_Hit(stroke_num, Damage_Percent);
+							if ((Mob_Xend >= Range_Xstart && Mob_Xstart <= Range_Xend)
+									&& (Mob_Yend >= Range_Ystart && Mob_Ystart <= Range_Yend)) {
+								temp.hit(stroke_num, Damage_Percent);
 								count++;
 								if (count == target_num) {
 									break;
@@ -1423,22 +1423,22 @@ public class Character {
 					current_Img = characterRightImg;
 				}
 
-				Stage.Attacking = false;
+				Map.Attacking = false;
 				if (CharDirection == 1) {
-					if (Stage.DownKey == true) {
+					if (Map.DownKey == true) {
 						current_Img = characterProneRightImg;
 					} else {
 						current_Img = characterRightImg;
-						if (Stage.RightKey == true && Stage.Right == false) {
+						if (Map.RightKey == true && Map.Right == false) {
 							Character_Right();
 						}
 					}
 				} else if (CharDirection == -1) {
-					if (Stage.DownKey == true) {
+					if (Map.DownKey == true) {
 						current_Img = characterProneLeftImg;
 					} else {
 						current_Img = characterLeftImg;
-						if (Stage.LeftKey == true && Stage.Left == false) {
+						if (Map.LeftKey == true && Map.Left == false) {
 							Character_Left();
 						}
 					}
@@ -1497,16 +1497,16 @@ public class Character {
 				LoseExp();
 				
 				alive = false;
-				Stage.LeftKey = false;
-				Stage.RightKey = false;
-				Stage.UpKey = false;
-				Stage.DownKey = false;
-				Stage.Left = false;
-				Stage.Right = false;
-				Stage.Jump = false;
-				Stage.Ladder = false;
-				Stage.Up = false;
-				Stage.Down = false;
+				Map.LeftKey = false;
+				Map.RightKey = false;
+				Map.UpKey = false;
+				Map.DownKey = false;
+				Map.Left = false;
+				Map.Right = false;
+				Map.Jump = false;
+				Map.Ladder = false;
+				Map.Up = false;
+				Map.Down = false;
 				
 				try {
 					Thread.sleep(100);
@@ -1535,7 +1535,7 @@ public class Character {
 					current_Img = characterDieRightImg;
 				}
 				
-				Stage.Hittable = false;
+				Map.Hittable = false;
 				
 				if(Maplestory.ui_notice.open(UI_Notice.DIE_NOTICE, "")) {
 					while(UI_Notice.isOpen) {
@@ -1548,7 +1548,7 @@ public class Character {
 					}
 					
 					if(UI_Notice.status == UI_Notice.OK) {
-						Stage nearestTown = Maplestory.current_stage.nearestTown;
+						Map nearestTown = Maplestory.current_stage.nearestTown;
 						if(nearestTown == Maplestory.current_stage) {
 							Maplestory.current_stage.reopen();
 						}

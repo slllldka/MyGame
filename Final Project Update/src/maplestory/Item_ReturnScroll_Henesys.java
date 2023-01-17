@@ -67,14 +67,14 @@ public class Item_ReturnScroll_Henesys extends Item{
 			@Override
 			public void run() {
 				synchronized(Maplestory.player.inventory.Consume_inventory_list) {
-					if(Maplestory.current_stage != Maplestory.stage1 && Maplestory.StageNow != Maplestory.stage1.StageNum) {
+					if(Maplestory.current_stage != Maplestory.map1 && Maplestory.StageNow != Maplestory.map1.StageNum) {
 						Music Scroll_Use_Music = new Music("ReturnScrollMapUse.wav", 1);
 						Scroll_Use_Music.play();
 						Maplestory.player.inventory.Reduce_Item(index, 1);
 						Maplestory.player.Item_usable = false;
 						
 						Maplestory.current_stage.close(null);
-						Maplestory.stage1.open(null);
+						Maplestory.map1.open(null);
 						try {
 							Thread.sleep(500);
 						} catch (InterruptedException e) {
