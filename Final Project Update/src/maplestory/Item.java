@@ -140,8 +140,8 @@ public abstract class Item {
 				
 				for(float i=1f;i>0f;i-=0.003f) {
 					alpha = i;
-					Char_X_Center = Maplestory.player.CharacterX + Character.CharacterWidth/2;
-					Char_Y_Center = Maplestory.player.CharacterY - Character.CharacterHeight/2;
+					Char_X_Center = Maplestory.player.PlayerX + Player.PlayerWidth/2;
+					Char_Y_Center = Maplestory.player.PlayerY - Player.PlayerHeight/2;
 					Delta_X = Char_X_Center - X_Center;
 					Delta_Y = Char_Y_Center - Y_Center;
 					X_Center_float += (Delta_X / 333);
@@ -181,6 +181,135 @@ public abstract class Item {
 	public abstract ImageIcon getInfo();
 	public abstract int getSellPrice();
 	public abstract Item getNew(int Quantity);
+	
+	public static Item getItem(String type, int itemcode, int Quantity) {
+		if(type.equals("Equip")) {
+			
+		}
+		else if(type.equals("Consume")) {
+			if(itemcode == 0) {
+				return new Item_Red_Potion(Quantity);
+			}
+			else if(itemcode == 1) {
+				return new Item_Blue_Potion(Quantity);
+			}
+			else if(itemcode == 2) {
+				return new Item_Orange_Potion(Quantity);
+			}
+			else if(itemcode == 3) {
+				return new Item_White_Potion(Quantity);
+			}
+			else if(itemcode == 4) {
+				return new Item_Green_Apple(Quantity);
+			}
+			else if(itemcode == 5) {
+				return new Item_Mana_Elixir(Quantity);
+			}
+			else if(itemcode == 6) {
+				return new Item_Apple(Quantity);
+			}
+			else if(itemcode == 7) {
+				return new Item_Egg(Quantity);
+			}
+			else if(itemcode == 8) {
+				return new Item_Meat(Quantity);
+			}
+			else if(itemcode == 9) {
+				return new Item_Orange(Quantity);
+			}
+			else if(itemcode == 10) {
+				return new Item_Lemon(Quantity);
+			}
+			else if(itemcode == 11) {
+				return new Item_Chocolate(Quantity);
+			}
+			else if(itemcode == 12) {
+				return new Item_ReturnScroll_Town(Quantity);
+			}
+			else if(itemcode == 13) {
+				return new Item_ReturnScroll_Henesys(Quantity);
+			}
+		}
+		else if(type.equals("Etc")) {
+			if(itemcode == 0) {
+				return new Item_Snail_Shell(Quantity);
+			}
+			else if(itemcode == 1) {
+				return new Item_Blue_Shell(Quantity);
+			}
+			else if(itemcode == 2) {
+				return new Item_Red_Shell(Quantity);
+			}
+			else if(itemcode == 3) {
+				return null;
+			}
+			else if(itemcode == 4) {
+				return null;
+			}
+			else if(itemcode == 5) {
+				return null;
+			}
+			else if(itemcode == 6) {
+				return null;
+			}
+			else if(itemcode == 7) {
+				return null;
+			}
+			else if(itemcode == 8) {
+				return null;
+			}
+			else if(itemcode == 9) {
+				return null;
+			}
+			else if(itemcode == 10) {
+				return new Item_Orange_God(Quantity);
+			}
+			else if(itemcode == 11) {
+				return new Item_Orange_Omok_Piece(Quantity);
+			}
+			else if(itemcode == 12) {
+				return new Item_Blue_God(Quantity);
+			}
+			else if(itemcode == 13) {
+				return new Item_MushMom_spore(Quantity);
+			}
+			else if(itemcode == 14) {
+				return null;
+			}
+			else if(itemcode == 15) {
+				return null;
+			}
+			else if(itemcode == 16) {
+				return null;
+			}
+			else if(itemcode == 17) {
+				return null;
+			}
+			else if(itemcode == 18) {
+				return null;
+			}
+			else if(itemcode == 19) {
+				return null;
+			}
+			else if(itemcode == 20) {
+				return new Item_Squishy_Liquid(Quantity);
+			}
+			else if(itemcode == 21) {
+				return new Item_Slime_Bubble(Quantity);
+			}
+			else if(itemcode == 22) {
+				return new Item_Slime_Omok_Piece(Quantity);
+			}
+			else if(itemcode == 23) {
+				return new Item_Bubbling_Bubble(Quantity);
+			}
+			else if(itemcode == 0) {
+				return null;
+			}
+		}
+		
+		return null;
+	}
 	
 	//for consume
 	public void Use(int index) {}

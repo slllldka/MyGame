@@ -5,6 +5,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -235,9 +238,9 @@ public class UI_Quick_Slot extends JLabel{
 				@Override
 				public void keyPressed(KeyEvent e) {
 					if(selectedIndex != -1) {
-						if(Maplestory.ui_keySetting.slotIndex[e.getKeyCode()] != -1) {
+						if(UI_KeyConfig.slotIndex[e.getKeyCode()] != -1) {
 							quickSlot[selectedIndex].setQuickSlotKey(Maplestory.ui_keySetting
-									.Slot[Maplestory.ui_keySetting.slotIndex[e.getKeyCode()]]);
+									.Slot[UI_KeyConfig.slotIndex[e.getKeyCode()]]);
 						}
 					}
 				}
@@ -246,19 +249,36 @@ public class UI_Quick_Slot extends JLabel{
 			add(quickSlot[i]);
 		}
 		
-		quickSlot[0].setQuickSlotKey(Maplestory.ui_keySetting.Slot[55]);
-		quickSlot[1].setQuickSlotKey(Maplestory.ui_keySetting.Slot[12]);
-		quickSlot[2].setQuickSlotKey(Maplestory.ui_keySetting.Slot[13]);
-		quickSlot[3].setQuickSlotKey(Maplestory.ui_keySetting.Slot[14]);
-		quickSlot[4].setQuickSlotKey(Maplestory.ui_keySetting.Slot[65]);
-		quickSlot[5].setQuickSlotKey(Maplestory.ui_keySetting.Slot[15]);
-		quickSlot[6].setQuickSlotKey(Maplestory.ui_keySetting.Slot[16]);
-		quickSlot[7].setQuickSlotKey(Maplestory.ui_keySetting.Slot[17]);
+		setQuickSlotKeys();
 	}
 	
 	@Override
 	protected void paintComponent(Graphics g) {
-		// TODO Auto-generated method stub
 		super.paintComponent(g);
+	}
+	
+	public void setQuickSlotKeys() {
+		String query = "";
+		PreparedStatement pstat = null;
+		ResultSet resultSet = null;
+		
+		try {
+			query = "SELECT * FROM QUICKSLOT WHERE NAME = ?";
+			pstat = Maplestory.connection.prepareStatement(query);
+			pstat.setString(1, Maplestory.player.name);
+			resultSet = pstat.executeQuery();
+			
+			resultSet.next();
+			quickSlot[0].setQuickSlotKey(Maplestory.ui_keySetting.Slot[UI_KeyConfig.slotIndex[resultSet.getInt("IDX0")]]);
+			quickSlot[1].setQuickSlotKey(Maplestory.ui_keySetting.Slot[UI_KeyConfig.slotIndex[resultSet.getInt("IDX1")]]);
+			quickSlot[2].setQuickSlotKey(Maplestory.ui_keySetting.Slot[UI_KeyConfig.slotIndex[resultSet.getInt("IDX2")]]);
+			quickSlot[3].setQuickSlotKey(Maplestory.ui_keySetting.Slot[UI_KeyConfig.slotIndex[resultSet.getInt("IDX3")]]);
+			quickSlot[4].setQuickSlotKey(Maplestory.ui_keySetting.Slot[UI_KeyConfig.slotIndex[resultSet.getInt("IDX4")]]);
+			quickSlot[5].setQuickSlotKey(Maplestory.ui_keySetting.Slot[UI_KeyConfig.slotIndex[resultSet.getInt("IDX5")]]);
+			quickSlot[6].setQuickSlotKey(Maplestory.ui_keySetting.Slot[UI_KeyConfig.slotIndex[resultSet.getInt("IDX6")]]);
+			quickSlot[7].setQuickSlotKey(Maplestory.ui_keySetting.Slot[UI_KeyConfig.slotIndex[resultSet.getInt("IDX7")]]);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 }

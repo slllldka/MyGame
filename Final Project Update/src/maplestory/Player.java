@@ -1,16 +1,22 @@
 package maplestory;
 
+import java.awt.event.KeyEvent;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.Iterator;
 
 import javax.swing.ImageIcon;
 
-public class Character {
-	protected static final int CharacterWidth = 50, CharacterHeight = 70;
+public class Player {
+	protected static final int PlayerWidth = 50, PlayerHeight = 70;
+	
+	protected String name = "";
 	
 	//Position
-	protected int CharDirection, CharacterX, CharacterY; //Direction: -1 Left / 1 Right
+	protected int PlayerDirection, PlayerX, PlayerY; //Direction: -1 Left / 1 Right
 	protected Foothold cur_foothold = null;
 	
 	//Damage Skin
@@ -23,9 +29,9 @@ public class Character {
 	
 	//Stat
 	protected int MaxHP = 100, MaxMP = 100, HP = 100, MP = 100;
-	protected int Min_ATK = 14, Max_ATK = 20;
+	protected int MinATK = 14, MaxATK = 20;
 	protected int DEF = 0;
-	protected int Critical_Rate = 5;
+	protected int CriticalRate = 5;
 	protected int Avoidability = 10;
 	protected int Stance = 0;
 	
@@ -34,7 +40,7 @@ public class Character {
 	protected long MaxExp = 100, Exp = 0;
 	
 	//Inventory
-	protected Inventory inventory = new Inventory();
+	protected Inventory inventory = null;
 	
 	//Draw
 	protected ImageIcon current_Img;
@@ -88,10 +94,124 @@ public class Character {
 	protected ImageIcon characterDieRightImg = new ImageIcon(
 			getClass().getClassLoader().getResource("CharacterDieRight.png"));
 	
+	public Player(String _name) {
+		name = _name;
+		loadDB();
+		inventory = new Inventory(name);
+	}
+	
+	public void loadDB() {
+		String query = "";
+		PreparedStatement pstat = null;
+		ResultSet resultSet = null;
+		try {
+			//player info
+			query = "SELECT * FROM PLAYER WHERE NAME = '"+name+"'";
+			resultSet = Maplestory.connection.createStatement().executeQuery(query);
+			
+			if(resultSet.next()) {
+				Level = resultSet.getInt("LEV");
+				HP = resultSet.getInt("HP");
+				MaxHP = resultSet.getInt("MAXHP");
+				MP = resultSet.getInt("MP");
+				MaxMP = resultSet.getInt("MAXMP");
+				Exp = resultSet.getInt("EXP");
+				MaxExp = resultSet.getInt("MAXEXP");
+				MinATK = resultSet.getInt("MINATK");
+				MaxATK = resultSet.getInt("MAXATK");
+				DEF = resultSet.getInt("DEF");
+				CriticalRate = resultSet.getInt("CRITICAL_RATE");
+				Avoidability = resultSet.getInt("AVOIDABILITY");
+				Stance = resultSet.getInt("Stance");
+			}
+			else {
+				query = "INSERT INTO PLAYER VALUES ('"+name+"', 1, 100, 100, 100, 100, 0, 100, 0, 1"
+						+ ", 28, 40, 28, 28, 28, 14, 20, 0, 5, 10, 0)";
+				Maplestory.connection.createStatement().executeUpdate(query);
+			}
+
+			//player quickslot
+			query = "SELECT * FROM QUICKSLOT WHERE NAME = '"+name+"'";
+			resultSet = Maplestory.connection.createStatement().executeQuery(query);
+			
+			if(!resultSet.next()) {
+				query = "INSERT INTO QUICKSLOT VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+				pstat = Maplestory.connection.prepareStatement(query);
+				pstat.setString(1, name);
+				pstat.setInt(2, KeyEvent.VK_SHIFT);
+				pstat.setInt(3, KeyEvent.VK_INSERT);
+				pstat.setInt(4, KeyEvent.VK_HOME);
+				pstat.setInt(5, KeyEvent.VK_PAGE_UP);
+				pstat.setInt(6, KeyEvent.VK_CONTROL);
+				pstat.setInt(7, KeyEvent.VK_DELETE);
+				pstat.setInt(8, KeyEvent.VK_END);
+				pstat.setInt(9, KeyEvent.VK_PAGE_DOWN);
+				
+				pstat.executeUpdate();
+			}
+			
+			//player keyConfig
+			query = "SELECT * FROM KEYCONFIG WHERE NAME = '"+name+"'";
+			resultSet = Maplestory.connection.createStatement().executeQuery(query);
+			
+			if(!resultSet.next()) {
+				query = "INSERT INTO KEYCONFIG VALUES (?, ?, ?, ?, ?)";
+				pstat = Maplestory.connection.prepareStatement(query);
+				pstat.setString(1, name);
+				pstat.setString(4, "");
+				pstat.setInt(5, -1);
+				
+				pstat.setInt(2, KeyEvent.VK_ESCAPE);
+				pstat.setString(3, "EscPress");
+				pstat.executeUpdate();
+
+				pstat.setInt(2, KeyEvent.VK_TAB);
+				pstat.setString(3, "TabPress");
+				pstat.executeUpdate();
+
+				pstat.setInt(2, KeyEvent.VK_I);
+				pstat.setString(3, "Inventory");
+				pstat.executeUpdate();
+
+				pstat.setInt(2, KeyEvent.VK_BACK_SLASH);
+				pstat.setString(3, "KeyConfigAction");
+				pstat.executeUpdate();
+
+				pstat.setInt(2, KeyEvent.VK_ENTER);
+				pstat.setString(3, "EnterPress");
+				pstat.executeUpdate();
+
+				pstat.setInt(2, KeyEvent.VK_SHIFT);
+				pstat.setString(3, "ShiftPress");
+				pstat.executeUpdate();
+
+				pstat.setInt(2, KeyEvent.VK_Z);
+				pstat.setString(3, "PickUp");
+				pstat.executeUpdate();
+
+				pstat.setInt(2, KeyEvent.VK_M);
+				pstat.setString(3, "Minimap");
+				pstat.executeUpdate();
+
+				pstat.setInt(2, KeyEvent.VK_CONTROL);
+				pstat.setString(3, "CtrlPress");
+				pstat.executeUpdate();
+
+				pstat.setInt(2, KeyEvent.VK_SPACE);
+				pstat.setString(3, "NPC");
+				pstat.executeUpdate();
+				
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void Update_Position(int x, int y) {
 		synchronized(Maplestory.player) {
-			CharacterX = x;
-			CharacterY = y;
+			PlayerX = x;
+			PlayerY = y;
 		}
 	}
 	
@@ -104,7 +224,6 @@ public class Character {
 				try {
 					Thread.sleep(Hit_Delay);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				Map.attacked = false;
@@ -121,7 +240,6 @@ public class Character {
 				try {
 					Thread.sleep(Hit_Delay);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				Map.Hittable = true;
@@ -139,7 +257,6 @@ public class Character {
 					try {
 						Thread.sleep(100);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					Map.Ladder_Jump = false;
@@ -152,11 +269,11 @@ public class Character {
 	// Returns if character is landable on ground
 	// x: character's x position, y: character's y position
 	public boolean IsLandable() {
-		int CX_CENTER = CharacterX+CharacterWidth/2;
+		int CX_CENTER = PlayerX+PlayerWidth/2;
 		for (Foothold foothold : Maplestory.current_stage.Foothold_List) {
-			if(foothold.isLandable(CX_CENTER, CharacterY)) {
+			if(foothold.isLandable(CX_CENTER, PlayerY)) {
 				cur_foothold = foothold;
-				Update_Position(CharacterX, cur_foothold.getY(CX_CENTER));
+				Update_Position(PlayerX, cur_foothold.getY(CX_CENTER));
 				return true;
 			}
 		}
@@ -175,21 +292,21 @@ public class Character {
 			yend = ladder.getYend();
 			// Up Direction
 			if (direction == 1) {
-				if ((xpos + 20 >= CharacterX + 25) && (xpos - 20 <= CharacterX + 25)
-						&& (CharacterY > ystart) && (CharacterY - CharacterHeight <= yend)) {
+				if ((xpos + 20 >= PlayerX + 25) && (xpos - 20 <= PlayerX + 25)
+						&& (PlayerY > ystart) && (PlayerY - PlayerHeight <= yend)) {
 					return i;
 				}
 			}
 			// Down Direction
 			else if (direction == -1) {
 				if (Map.Ladder == false) {
-					if ((xpos + 20 >= CharacterX + 25) && (xpos - 20 <= CharacterX + 25)
-							&& (CharacterY == ystart)) {
+					if ((xpos + 20 >= PlayerX + 25) && (xpos - 20 <= PlayerX + 25)
+							&& (PlayerY == ystart)) {
 						return i;
 					}
 				} else {
-					if ((xpos + 20 >= CharacterX + 25) && (xpos - 20 <= CharacterX + 25)
-							&& (CharacterY > ystart) && (CharacterY - CharacterHeight <= yend)) {
+					if ((xpos + 20 >= PlayerX + 25) && (xpos - 20 <= PlayerX + 25)
+							&& (PlayerY > ystart) && (PlayerY - PlayerHeight <= yend)) {
 						return i;
 					}
 				}
@@ -203,14 +320,14 @@ public class Character {
 	public boolean wallCheck() {
 		if(Map.Left) {
 			for (Wall wall : Maplestory.current_stage.Wall_List) {
-				if(!wall.canLeftGo(CharacterX, CharacterY, CharacterWidth, CharacterHeight)){
+				if(!wall.canLeftGo(PlayerX, PlayerY, PlayerWidth, PlayerHeight)){
 					return false;
 				}
 			}
 		}
 		else if(Map.Right) {
 			for (Wall wall : Maplestory.current_stage.Wall_List) {
-				if(!wall.canRightGo(CharacterX, CharacterY, CharacterWidth, CharacterHeight)){
+				if(!wall.canRightGo(PlayerX, PlayerY, PlayerWidth, PlayerHeight)){
 					return false;
 				}
 			}
@@ -244,20 +361,19 @@ public class Character {
 					current_Img = characterJumpRightImg;
 				}
 				
-				int x = CharacterX;
-				int y = CharacterY;
+				int x = PlayerX;
+				int y = PlayerY;
 				// character flies high
-				while (alive && Map.Available && x > 0 && x < Maplestory.current_stage.X_Size-Character.CharacterWidth) {
+				while (alive && Map.Available && x > 0 && x < Maplestory.current_stage.X_Size-Player.PlayerWidth) {
 					try {
 						Thread.sleep(1);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					if (wallCheck()) {
 						x += xd;
 					}
-					if (y - CharacterHeight - 2 >= 0) {
+					if (y - PlayerHeight - 2 >= 0) {
 						y -= 2;
 					}
 
@@ -272,7 +388,6 @@ public class Character {
 					try {
 						Thread.sleep(Move_Delay);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					if (wallCheck()) {
@@ -292,7 +407,7 @@ public class Character {
 					// setting character's state(where character is looking, if character is
 					// proning) according to direction, key board inputs
 					if (Map.Ladder == false && Map.Attacking == false) {
-						if (CharDirection == 1) {
+						if (PlayerDirection == 1) {
 							if (Map.DownKey == true) {
 								current_Img = characterProneRightImg;
 							} else {
@@ -301,7 +416,7 @@ public class Character {
 									Character_Right();
 								}
 							}
-						} else if (CharDirection == -1) {
+						} else if (PlayerDirection == -1) {
 							if (Map.DownKey == true) {
 								current_Img = characterProneLeftImg;
 							} else {
@@ -350,8 +465,8 @@ public class Character {
 					current_Img = characterJumpRightImg;
 				}
 				
-				int x = CharacterX;
-				int y = CharacterY;
+				int x = PlayerX;
+				int y = PlayerY;
 				// character flies a little
 				for (int i = 0; i < 13; i++) {
 					if(!alive || !Map.Available) {
@@ -360,13 +475,12 @@ public class Character {
 					try {
 						Thread.sleep(Move_Delay);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					if (wallCheck()) {
 						x += xd;
 					}
-					if (y - CharacterHeight - 2 >= 0) {
+					if (y - PlayerHeight - 2 >= 0) {
 						y -= 2;
 					}
 
@@ -383,7 +497,6 @@ public class Character {
 					try {
 						Thread.sleep(Move_Delay);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					if (wallCheck()) {
@@ -406,7 +519,7 @@ public class Character {
 					// setting character's state(where character is looking, if character is
 					// proning) according to direction, key board inputs
 					if (Map.Ladder == false && Map.Attacking == false) {
-						if (CharDirection == 1) {
+						if (PlayerDirection == 1) {
 							if (Map.DownKey == true) {
 								current_Img = characterProneRightImg;
 							} else {
@@ -415,7 +528,7 @@ public class Character {
 									Character_Right();
 								}
 							}
-						} else if (CharDirection == -1) {
+						} else if (PlayerDirection == -1) {
 							if (Map.DownKey == true) {
 								current_Img = characterProneLeftImg;
 							} else {
@@ -444,8 +557,8 @@ public class Character {
 				Map.Left = true;
 
 				boolean islandable;
-				int x = CharacterX;
-				int y = CharacterY;
+				int x = PlayerX;
+				int y = PlayerY;
 				int setWalkImg = 1;
 				islandable = true;
 				// character moves left
@@ -469,19 +582,18 @@ public class Character {
 
 					try {
 						if(cur_foothold != null) {
-							Thread.sleep((long)(Move_Delay * cur_foothold.getDistanceRatio(x+CharacterWidth/2)));
+							Thread.sleep((long)(Move_Delay * cur_foothold.getDistanceRatio(x+PlayerWidth/2)));
 						}
 						else {
 							Thread.sleep(Move_Delay);
 						}
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					if (wallCheck()) {
 						x--;
-						if(cur_foothold.getY(x+CharacterWidth/2) != -1) {
-							y = cur_foothold.getY(x+CharacterWidth/2);
+						if(cur_foothold.getY(x+PlayerWidth/2) != -1) {
+							y = cur_foothold.getY(x+PlayerWidth/2);
 						}
 						Update_Position(x, y);
 					}
@@ -492,7 +604,7 @@ public class Character {
 					}
 				}
 				
-				y = CharacterY;
+				y = PlayerY;
 				// character falls
 				if (!islandable) {
 					Map.Jump = true;
@@ -504,7 +616,6 @@ public class Character {
 						try {
 							Thread.sleep(Move_Delay);
 						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						y += 2;
@@ -530,12 +641,12 @@ public class Character {
 					if (Map.Ladder == false && Map.attacked == false && Map.Attacking == false) {
 						if (Map.DownKey == false) {
 							if (!islandable) {
-								if (CharDirection == 1) {
+								if (PlayerDirection == 1) {
 									current_Img = characterRightImg;
 									if (Map.RightKey == true && Map.Right == false) {
 										Character_Right();
 									}
-								} else if (CharDirection == -1) {
+								} else if (PlayerDirection == -1) {
 									current_Img = characterLeftImg;
 									if (Map.LeftKey == true && Map.Left == false) {
 										Character_Left();
@@ -546,14 +657,14 @@ public class Character {
 							}
 						} else {
 							if (!islandable) {
-								if (CharDirection == 1) {
+								if (PlayerDirection == 1) {
 									if (Map.RightKey == true && Map.Right == false) {
 										current_Img = characterRightImg;
 										Character_Right();
 									} else {
 										current_Img = characterProneRightImg;
 									}
-								} else if (CharDirection == -1) {
+								} else if (PlayerDirection == -1) {
 									if (Map.LeftKey == true && Map.Left == false) {
 										current_Img = characterLeftImg;
 										Character_Left();
@@ -561,9 +672,9 @@ public class Character {
 										current_Img = characterProneLeftImg;
 									}
 								}
-							} else if (CharDirection == 1) {
+							} else if (PlayerDirection == 1) {
 								current_Img = characterProneRightImg;
-							} else if (CharDirection == -1) {
+							} else if (PlayerDirection == -1) {
 								current_Img = characterProneLeftImg;
 							}
 						}
@@ -588,8 +699,8 @@ public class Character {
 				Map.Right = true;
 
 				boolean islandable;
-				int x = CharacterX;
-				int y = CharacterY;
+				int x = PlayerX;
+				int y = PlayerY;
 				int setWalkImg = 1;
 				islandable = true;
 				// character moves right
@@ -613,19 +724,18 @@ public class Character {
 
 					try {
 						if(cur_foothold != null) {
-							Thread.sleep((long)(Move_Delay * cur_foothold.getDistanceRatio(x+CharacterWidth/2)));
+							Thread.sleep((long)(Move_Delay * cur_foothold.getDistanceRatio(x+PlayerWidth/2)));
 						}
 						else {
 							Thread.sleep(Move_Delay);
 						}
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					if (wallCheck()) {
 						x++;
-						if(cur_foothold.getY(x+CharacterWidth/2) != -1) {
-							y = cur_foothold.getY(x+CharacterWidth/2);
+						if(cur_foothold.getY(x+PlayerWidth/2) != -1) {
+							y = cur_foothold.getY(x+PlayerWidth/2);
 						}
 						Update_Position(x, y);
 					}
@@ -637,7 +747,7 @@ public class Character {
 					}
 				}
 				
-				y = CharacterY;
+				y = PlayerY;
 				// character falls
 				if (!islandable) {
 					Map.Jump = true;
@@ -649,7 +759,6 @@ public class Character {
 						try {
 							Thread.sleep(Move_Delay);
 						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						y += 2;
@@ -680,12 +789,12 @@ public class Character {
 					if (Map.Ladder == false && Map.attacked == false && Map.Attacking == false) {
 						if (Map.DownKey == false) {
 							if (!islandable) {
-								if (CharDirection == 1) {
+								if (PlayerDirection == 1) {
 									current_Img = characterRightImg;
 									if (Map.RightKey == true && Map.Right == false) {
 										Character_Right();
 									}
-								} else if (CharDirection == -1) {
+								} else if (PlayerDirection == -1) {
 									current_Img = characterLeftImg;
 									if (Map.LeftKey == true && Map.Left == false) {
 										Character_Left();
@@ -696,14 +805,14 @@ public class Character {
 							}
 						} else {
 							if (!islandable) {
-								if (CharDirection == 1) {
+								if (PlayerDirection == 1) {
 									if (Map.RightKey == true && Map.Right == false) {
 										current_Img = characterRightImg;
 										Character_Right();
 									} else {
 										current_Img = characterProneRightImg;
 									}
-								} else if (CharDirection == -1) {
+								} else if (PlayerDirection == -1) {
 									if (Map.LeftKey == true && Map.Left == false) {
 										current_Img = characterLeftImg;
 										Character_Left();
@@ -711,9 +820,9 @@ public class Character {
 										current_Img = characterProneLeftImg;
 									}
 								}
-							} else if (CharDirection == 1) {
+							} else if (PlayerDirection == 1) {
 								current_Img = characterProneRightImg;
-							} else if (CharDirection == -1) {
+							} else if (PlayerDirection == -1) {
 								current_Img = characterProneLeftImg;
 							}
 						}
@@ -739,8 +848,8 @@ public class Character {
 				
 				Map.Jump = true;
 				
-				int x = CharacterX;
-				int y = CharacterY;
+				int x = PlayerX;
+				int y = PlayerY;
 				// jump up
 				for (int i = 0; i < 30; i++) {
 					if (!alive || !Map.Available) {
@@ -756,10 +865,9 @@ public class Character {
 					try {
 						Thread.sleep(Move_Delay);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					if (y - CharacterHeight - 2 >= 0) {
+					if (y - PlayerHeight - 2 >= 0) {
 						y -= 2;
 						Update_Position(x, y);
 					} else {
@@ -781,7 +889,6 @@ public class Character {
 					try {
 						Thread.sleep(Move_Delay);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					y += 2;
@@ -795,7 +902,7 @@ public class Character {
 					// setting character's state(where character is looking, if character is
 					// proning) according to direction, key board inputs
 					if (Map.Ladder == false && Map.attacked == false && Map.Attacking == false) {
-						if (CharDirection == 1) {
+						if (PlayerDirection == 1) {
 							if (Map.DownKey == true) {
 								current_Img = characterProneRightImg;
 							} else {
@@ -804,7 +911,7 @@ public class Character {
 									Character_Right();
 								}
 							}
-						} else if (CharDirection == -1) {
+						} else if (PlayerDirection == -1) {
 							if (Map.DownKey == true) {
 								current_Img = characterProneLeftImg;
 							} else {
@@ -846,8 +953,8 @@ public class Character {
 					height = 30;
 				}
 				
-				int x = CharacterX;
-				int y = CharacterY;
+				int x = PlayerX;
+				int y = PlayerY;
 				// jump up
 				for (int i = 0; i < height; i++) {
 					if (!alive || !Map.Available) {
@@ -865,13 +972,12 @@ public class Character {
 					try {
 						Thread.sleep(Move_Delay);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					if (wallCheck()) {
 						x--;
 					}
-					if (y - CharacterHeight - 2 >= 0) {
+					if (y - PlayerHeight - 2 >= 0) {
 						y -= 2;
 					} else {
 						break;
@@ -895,7 +1001,6 @@ public class Character {
 					try {
 						Thread.sleep(Move_Delay);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					if (wallCheck()) {
@@ -913,7 +1018,7 @@ public class Character {
 					// setting character's state(where character is looking, if character is
 					// proning) according to direction, key board inputs
 					if (Map.Ladder == false && Map.attacked == false && Map.Attacking == false) {
-						if (CharDirection == 1) {
+						if (PlayerDirection == 1) {
 							if (Map.DownKey == true) {
 								current_Img = characterProneRightImg;
 							} else {
@@ -922,7 +1027,7 @@ public class Character {
 									Character_Right();
 								}
 							}
-						} else if (CharDirection == -1) {
+						} else if (PlayerDirection == -1) {
 							if (Map.DownKey == true) {
 								current_Img = characterProneLeftImg;
 							} else {
@@ -964,8 +1069,8 @@ public class Character {
 					height = 30;
 				}
 				
-				int x = CharacterX;
-				int y = CharacterY;
+				int x = PlayerX;
+				int y = PlayerY;
 				// jump up
 				for (int i = 0; i < height; i++) {
 					if (!alive || !Map.Available) {
@@ -983,13 +1088,12 @@ public class Character {
 					try {
 						Thread.sleep(Move_Delay);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					if (wallCheck()) {
 						x++;
 					}
-					if (y - CharacterHeight - 2 >= 0) {
+					if (y - PlayerHeight - 2 >= 0) {
 						y -= 2;
 					} else {
 						break;
@@ -1013,7 +1117,6 @@ public class Character {
 					try {
 						Thread.sleep(Move_Delay);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					if (wallCheck()) {
@@ -1031,7 +1134,7 @@ public class Character {
 					// setting character's state(where character is looking, if character is
 					// proning) according to direction, key board inputs
 					if (Map.Ladder == false && Map.attacked == false && Map.Attacking == false) {
-						if (CharDirection == 1) {
+						if (PlayerDirection == 1) {
 							if (Map.DownKey == true) {
 								current_Img = characterProneRightImg;
 							} else {
@@ -1040,7 +1143,7 @@ public class Character {
 									Character_Right();
 								}
 							}
-						} else if (CharDirection == -1) {
+						} else if (PlayerDirection == -1) {
 							if (Map.DownKey == true) {
 								current_Img = characterProneLeftImg;
 							} else {
@@ -1072,8 +1175,8 @@ public class Character {
 				Music Jump_Music = new Music(Jump_Music_Name, 1);
 				Jump_Music.play();
 				
-				int x = CharacterX;
-				int y = CharacterY;
+				int x = PlayerX;
+				int y = PlayerY;
 				// jump down
 				while (alive && Map.Available) {
 					if (Map.attacked) {
@@ -1082,7 +1185,6 @@ public class Character {
 					try {
 						Thread.sleep(Move_Delay);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					y += 2;
@@ -1099,7 +1201,7 @@ public class Character {
 					// setting character's state(where character is looking, if character is
 					// proning) according to direction, key board inputs
 					if (Map.attacked == false && Map.Attacking == false) {
-						if (CharDirection == 1) {
+						if (PlayerDirection == 1) {
 							if (Map.DownKey == true) {
 								current_Img = characterProneRightImg;
 							} else {
@@ -1108,7 +1210,7 @@ public class Character {
 									Character_Right();
 								}
 							}
-						} else if (CharDirection == -1) {
+						} else if (PlayerDirection == -1) {
 							if (Map.DownKey == true) {
 								current_Img = characterProneLeftImg;
 							} else {
@@ -1143,10 +1245,10 @@ public class Character {
 				int ystart = ladder.getYstart();
 				int yend = ladder.getYend();
 				
-				Update_Position(xpos - 25, CharacterY);
+				Update_Position(xpos - 25, PlayerY);
 				
-				int x = CharacterX;
-				int y = CharacterY;
+				int x = PlayerX;
+				int y = PlayerY;
 				int setLadderImg = 1;
 
 				while (Map.UpKey) {
@@ -1164,10 +1266,9 @@ public class Character {
 					try {
 						Thread.sleep(Ladder_Delay);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					if ((y - 2 >= ystart) && (y - CharacterHeight - 2 <= yend)) {
+					if ((y - 2 >= ystart) && (y - PlayerHeight - 2 <= yend)) {
 						y -= 2;
 						Update_Position(x, y);
 					}
@@ -1189,9 +1290,9 @@ public class Character {
 					Map.Up = false;
 					// setting character's state(where character is looking) according to direction
 					if (Map.Ladder == false && Map.attacked == false && Map.Attacking == false) {
-						if (CharDirection == -1) {
+						if (PlayerDirection == -1) {
 							current_Img = characterLeftImg;
-						} else if (CharDirection == 1) {
+						} else if (PlayerDirection == 1) {
 							current_Img = characterRightImg;
 						}
 					}
@@ -1218,11 +1319,11 @@ public class Character {
 				int ystart = ladder.getYstart();
 				int yend = ladder.getYend();
 				
-				Update_Position(xpos - 25, CharacterY);
+				Update_Position(xpos - 25, PlayerY);
 				
 				boolean islandable;
-				int x = CharacterX;
-				int y = CharacterY;
+				int x = PlayerX;
+				int y = PlayerY;
 				int setLadderImg = 1;
 				islandable = false;
 
@@ -1241,10 +1342,9 @@ public class Character {
 					try {
 						Thread.sleep(Ladder_Delay);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					if ((y + 2 >= ystart) && (y - CharacterHeight + 2 <= yend)) {
+					if ((y + 2 >= ystart) && (y - PlayerHeight + 2 <= yend)) {
 						y += 2;
 						Update_Position(x, y);
 					}
@@ -1253,7 +1353,7 @@ public class Character {
 					} else {
 						setLadderImg++;
 					}
-					if ((ystart < y) && ((y - CharacterHeight == yend) || (islandable = IsLandable()))) {
+					if ((ystart < y) && ((y - PlayerHeight == yend) || (islandable = IsLandable()))) {
 						Map.Ladder = false;
 						break;
 					}
@@ -1276,7 +1376,6 @@ public class Character {
 						try {
 							Thread.sleep(Move_Delay);
 						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 						y += 2;
@@ -1290,9 +1389,9 @@ public class Character {
 					Map.Down = false;
 					// setting character's state(where character is looking) according to direction
 					if (islandable == true && Map.Ladder == false && Map.Attacking == false) {
-						if (CharDirection == -1) {
+						if (PlayerDirection == -1) {
 							current_Img = characterLeftImg;
-						} else if (CharDirection == 1) {
+						} else if (PlayerDirection == 1) {
 							current_Img = characterRightImg;
 						}
 					}
@@ -1312,8 +1411,8 @@ public class Character {
 			public void run() {
 				Map.Attacking = true;
 				
-				int Player_Xcenter = CharacterX + CharacterWidth / 2;
-				int Player_Ycenter = CharacterY - CharacterHeight / 2;
+				int Player_Xcenter = PlayerX + PlayerWidth / 2;
+				int Player_Ycenter = PlayerY - PlayerHeight / 2;
 				int count = 0;
 
 				synchronized(Maplestory.current_stage.Mob_List) {
@@ -1341,12 +1440,11 @@ public class Character {
 					});
 				}
 
-				if (CharDirection == -1) {
+				if (PlayerDirection == -1) {
 					current_Img = characterAttackLeft1Img;
 					try {
 						Thread.sleep(Attack_Delay);
 					} catch (InterruptedException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 					Music Attack_Music = new Music(Attack_Music_Name, 1);
@@ -1377,16 +1475,14 @@ public class Character {
 					try {
 						Thread.sleep(Attack_Delay);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					current_Img = characterLeftImg;
-				} else if (CharDirection == 1) {
+				} else if (PlayerDirection == 1) {
 					current_Img = characterAttackRight1Img;
 					try {
 						Thread.sleep(Attack_Delay);
 					} catch (InterruptedException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 					Music Attack_Music = new Music(Attack_Music_Name, 1);
@@ -1417,14 +1513,13 @@ public class Character {
 					try {
 						Thread.sleep(Attack_Delay);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					current_Img = characterRightImg;
 				}
 
 				Map.Attacking = false;
-				if (CharDirection == 1) {
+				if (PlayerDirection == 1) {
 					if (Map.DownKey == true) {
 						current_Img = characterProneRightImg;
 					} else {
@@ -1433,7 +1528,7 @@ public class Character {
 							Character_Right();
 						}
 					}
-				} else if (CharDirection == -1) {
+				} else if (PlayerDirection == -1) {
 					if (Map.DownKey == true) {
 						current_Img = characterProneLeftImg;
 					} else {
@@ -1452,7 +1547,7 @@ public class Character {
 	
 	public void HP_Damage(int damage) {
 		synchronized(Maplestory.current_stage.Damage_List) {
-			Maplestory.current_stage.Damage_List.add(new Damage(damage, CharacterX + CharacterWidth / 2, CharacterY - CharacterHeight, false, false));
+			Maplestory.current_stage.Damage_List.add(new Damage(damage, PlayerX + PlayerWidth / 2, PlayerY - PlayerHeight, false, false));
 		}
 		if(HP <= damage) {
 			HP = 0;
@@ -1494,7 +1589,7 @@ public class Character {
 				Music Tombstone_Music = new Music("Tombstone.wav", 1);
 				Tombstone_Music.play();
 				
-				LoseExp();
+				loseExp();
 				
 				alive = false;
 				Map.LeftKey = false;
@@ -1511,7 +1606,6 @@ public class Character {
 				try {
 					Thread.sleep(100);
 				} catch (InterruptedException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
 
@@ -1519,19 +1613,18 @@ public class Character {
 					try {
 						Thread.sleep(1);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					CharacterY+=2;
+					PlayerY+=2;
 				}
 				
-				Show_Tomb(CharacterX+CharacterWidth/2, CharacterY);
+				Show_Tomb(PlayerX+PlayerWidth/2, PlayerY);
 				
 				alpha = 0.7f;
-				if(CharDirection == -1) {
+				if(PlayerDirection == -1) {
 					current_Img = characterDieLeftImg;
 				}
-				else if(CharDirection == 1) {
+				else if(PlayerDirection == 1) {
 					current_Img = characterDieRightImg;
 				}
 				
@@ -1542,7 +1635,6 @@ public class Character {
 						try {
 							Thread.sleep(10);
 						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
@@ -1615,7 +1707,6 @@ public class Character {
 						try {
 							Thread.sleep(50);
 						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
@@ -1648,7 +1739,6 @@ public class Character {
 						try {
 							Thread.sleep(50);
 						} catch (InterruptedException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
@@ -1660,8 +1750,8 @@ public class Character {
 	}
 	
 	public void Character_PickUp_Item() {
-		int Char_X_Center = CharacterX + CharacterWidth / 2;
-		int Char_Y =CharacterY - CharacterHeight * 1 / 6;
+		int Char_X_Center = PlayerX + PlayerWidth / 2;
+		int Char_Y =PlayerY - PlayerHeight * 1 / 6;
 		synchronized (Maplestory.current_stage.Item_List) {
 			Iterator<Item> iter1 = Maplestory.current_stage.Item_List.iterator();
 			while (iter1.hasNext()) {
@@ -1687,11 +1777,14 @@ public class Character {
 				ArrayList<Item> inventory_list = null;
 				int size = 0;
 				String msg = "";
+
+				String query = "";
+				PreparedStatement pstat = null;
 				
 				if(item.getType().equals("Meso")) {
 					item.pickable = false;
 					pickable = false;
-					inventory.Meso += item.Quantity;
+					gainMeso(item.Quantity);
 					
 					if(pickup) {
 						msg = Make_CombatMsg(item);
@@ -1742,6 +1835,20 @@ public class Character {
 									data.Quantity += item.Quantity;
 									inventory_list.set(i, data);
 									
+									try {
+										query = "UPDATE "+data.getType()+"_INVENTORY "
+												+"SET QUANTITY = ? WHERE NAME = ? and IDX = ? and ITEMCODE = ?";
+										pstat = Maplestory.connection.prepareStatement(query);
+										pstat.setInt(1, data.Quantity);
+										pstat.setString(2, Maplestory.player.name);
+										pstat.setInt(3, i);
+										pstat.setInt(4, data.getItemCode());
+										
+										pstat.executeUpdate();
+									} catch (SQLException e) {
+										e.printStackTrace();
+									}
+									
 									if(pickup) {
 										msg = Make_CombatMsg(item);
 										synchronized(Message.combat_messages) {
@@ -1762,6 +1869,20 @@ public class Character {
 							inventory_list.set(empty_index, item.getNew(item.Quantity));
 							Maplestory.player.inventory.updateNullRemovedList(item.getType());
 							
+							try {
+								query = "INSERT INTO "+item.getType()+"_INVENTORY (NAME, IDX, ITEMCODE, QUANTITY) "
+										+"VALUES (?, ?, ?, ?)";
+								pstat = Maplestory.connection.prepareStatement(query);
+								pstat.setString(1, Maplestory.player.name);
+								pstat.setInt(2, empty_index);
+								pstat.setInt(3, item.getItemCode());
+								pstat.setInt(4, item.Quantity);
+								
+								pstat.executeUpdate();
+							} catch (SQLException e) {
+								e.printStackTrace();
+							}
+							
 							if(pickup) {
 								msg = Make_CombatMsg(item);
 								synchronized(Message.combat_messages) {
@@ -1781,7 +1902,6 @@ public class Character {
 					try {
 						Thread.sleep(100);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					pickable = true;
@@ -1804,7 +1924,6 @@ public class Character {
 							try {
 								Thread.sleep(10);
 							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						}
@@ -1819,8 +1938,8 @@ public class Character {
 								else if(data.Quantity >= num) {
 									Item item_drop = data.getNew(num);
 									inventory.Reduce_Item(inventory.move_index, num);
-									item_drop.Drop(CharacterX+Character.CharacterWidth/2,
-											CharacterY-Character.CharacterHeight/2);
+									item_drop.Drop(PlayerX+Player.PlayerWidth/2,
+											PlayerY-Player.PlayerHeight/2);
 								}
 								else {
 									Maplestory.ui_notice.open(UI_Notice.WITH_OK, data.Quantity + " 이하의 숫자만 가능합니다.");
@@ -1848,7 +1967,6 @@ public class Character {
 							try {
 								Thread.sleep(10);
 							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						}
@@ -1860,9 +1978,9 @@ public class Character {
 							}
 							else if(Maplestory.player.inventory.Meso >= num) {
 								Item item_drop = new Item_Meso(num);
-								Maplestory.player.inventory.Meso -= num;
-								item_drop.Drop(CharacterX+Character.CharacterWidth/2,
-										CharacterY-Character.CharacterHeight/2);
+								loseMeso(num);
+								item_drop.Drop(PlayerX+Player.PlayerWidth/2,
+										PlayerY-Player.PlayerHeight/2);
 							}
 							else {
 								Maplestory.ui_notice.open(UI_Notice.WITH_OK, Maplestory.player.inventory.Meso + " 이하의 숫자만 가능합니다.");
@@ -1879,10 +1997,10 @@ public class Character {
 	public void Character_TalktoNPC() {
 		if(!Shop.isOpen && !UI_Notice.isOpen) {
 			for(NPC npc : Maplestory.current_stage.NPC_List) {
-				if(((Maplestory.player.CharacterX + Character.CharacterWidth / 2) >= npc.xcenter - 100)
-						&& ((Maplestory.player.CharacterX + Character.CharacterWidth / 2) <= npc.xcenter + 100)
-						&& ((Maplestory.player.CharacterY - Character.CharacterHeight / 2) >= npc.ypos - 100)
-						&& ((Maplestory.player.CharacterY - Character.CharacterHeight / 2) <= npc.ybottom + 100)) {
+				if(((Maplestory.player.PlayerX + Player.PlayerWidth / 2) >= npc.xcenter - 100)
+						&& ((Maplestory.player.PlayerX + Player.PlayerWidth / 2) <= npc.xcenter + 100)
+						&& ((Maplestory.player.PlayerY - Player.PlayerHeight / 2) >= npc.ypos - 100)
+						&& ((Maplestory.player.PlayerY - Player.PlayerHeight / 2) <= npc.ybottom + 100)) {
 					if(npc.getType().equals("Shop")) {
 						npc.clickEvent();
 					}
@@ -1893,15 +2011,18 @@ public class Character {
 	
 	public void Character_Buy_Item(Item item, int price) {
 		Character_Get_Item(item, false);
-		inventory.Meso -= price * item.Quantity;
+		loseMeso(price * item.Quantity);
 	}
 	
 	public void Character_Sell_Item(Item item, int num) {
 		inventory.Reduce_Item(item, num);
-		inventory.Meso += item.getSellPrice() * num;
+		gainMeso(item.getSellPrice() * num);
 	}
 	
 	public void LevelUp() {
+		String query = "";
+		PreparedStatement pstat = null;
+		
 		Music LevelUp_Music = new Music("PvpLevelUp.wav", 1);
 		LevelUp_Music.play();
 		Level++;
@@ -1909,24 +2030,75 @@ public class Character {
 		
 		MaxHP += 10;
 		MaxMP += 10;
-		Max_ATK += 7;
-		Min_ATK += 5;
+		MaxATK += 7;
+		MinATK += 5;
 		DEF += 1;
 		
 		HP_Heal(MaxHP);
 		MP_Heal(MaxMP);
+		
+		try {
+			query = "UPDATE PLAYER "
+					+"SET LEV = ?, MINATK = ?, MAXATK = ?, DEF = ? WHERE NAME = ?";
+			pstat = Maplestory.connection.prepareStatement(query);
+			pstat.setInt(1, Level);
+			pstat.setInt(2, MinATK);
+			pstat.setInt(3, MaxATK);
+			pstat.setInt(4, DEF);
+			pstat.setString(5, Maplestory.player.name);
+			
+			pstat.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 		
 		synchronized(Maplestory.current_stage.LevelUp_List) {
 			Maplestory.current_stage.LevelUp_List.add(new LevelUp());
 		}
 	}
 	
-	public void GainExp(long quantity) {
+	public void gainMeso(int quantity) {
+		String query = "";
+		PreparedStatement pstat = null;
+		
+		inventory.Meso += quantity;
+		
+		try {
+			query = "UPDATE PLAYER SET MESO = ? WHERE NAME = ?";
+			pstat = Maplestory.connection.prepareStatement(query);
+			pstat.setInt(1, inventory.Meso);
+			pstat.setString(2, Maplestory.player.name);
+			
+			pstat.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void loseMeso(int quantity) {
+		String query = "";
+		PreparedStatement pstat = null;
+		
+		inventory.Meso -= quantity;
+		
+		try {
+			query = "UPDATE PLAYER SET MESO = ? WHERE NAME = ?";
+			pstat = Maplestory.connection.prepareStatement(query);
+			pstat.setInt(1, inventory.Meso);
+			pstat.setString(2, Maplestory.player.name);
+			
+			pstat.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void gainExp(long quantity) {
 		if(Exp + quantity >= MaxExp) {
 			long q_left = quantity - (MaxExp - Exp);
 			Exp = 0;
 			LevelUp();
-			GainExp(q_left);
+			gainExp(q_left);
 		}
 		else {
 			Exp += quantity;
@@ -1934,7 +2106,7 @@ public class Character {
 		}
 	}
 	
-	public void LoseExp() {
+	public void loseExp() {
 		Exp -= MaxExp / 10;
 		if(Exp < 0) {
 			Exp = 0;

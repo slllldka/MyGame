@@ -71,7 +71,9 @@ public class Item_Chocolate extends Item{
 					Potion_Use_Music.play();
 					Maplestory.player.HP_Heal(1000);
 					Maplestory.player.MP_Heal(1000);
-					Maplestory.player.inventory.Reduce_Item(index, 1);
+					Maplestory.player.inventory.Reduce_Item(
+							Maplestory.player.inventory.Consume_inventory_list.get(index), 1);
+
 					Maplestory.player.Item_usable = false;
 					try {
 						Thread.sleep(500);

@@ -3,6 +3,8 @@ package maplestory;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -47,6 +49,11 @@ public class UI_Status_Bar extends JLabel{
 		
 		// Level
 		drawLevel(g);
+		
+		// Name
+		g.setColor(Color.WHITE);
+		g.setFont(Map.font);
+		g.drawString(Maplestory.player.name, 85, 65);
 		
 		// HP, MP, EXP Num
 		g.setColor(Color.WHITE);
@@ -128,17 +135,21 @@ public class UI_Status_Bar extends JLabel{
 			
 			@Override
 			public void run() {
-				int cur_hp = Maplestory.player.HP;
-				float prev_percent = hp_bar_percent;
-				float cur_percent = cur_hp / (float)Maplestory.player.MaxHP;
-				float diff = cur_percent - prev_percent;
+				int curHP = Maplestory.player.HP;
+				int curMaxHP = Maplestory.player.MaxHP;
+				float prevPercent = hp_bar_percent;
+				float curPercent = curHP / (float)curMaxHP;
+				float diff = curPercent - prevPercent;
+				
+				String query = "";
+				PreparedStatement pstat = null;
 				
 				for(int i=1;i<=300;i++) {
-					if(cur_hp != Maplestory.player.HP) {
+					if(curHP != Maplestory.player.HP) {
 						return;
 					}
 					
-					hp_bar_percent = prev_percent + i * diff / 300;
+					hp_bar_percent = prevPercent + i * diff / 300;
 					
 					try {
 						Thread.sleep(1);
@@ -147,7 +158,26 @@ public class UI_Status_Bar extends JLabel{
 						e.printStackTrace();
 					}
 				}
-				hp_bar_percent = cur_percent;
+				hp_bar_percent = curPercent;
+				
+				try {
+					query = "UPDATE PLAYER "
+							+"SET MAXHP = ? WHERE NAME = ? AND MAXHP != ?";
+					pstat = Maplestory.connection.prepareStatement(query);
+					pstat.setInt(1, curMaxHP);
+					pstat.setString(2, Maplestory.player.name);
+					pstat.setInt(3, curMaxHP);
+					pstat.executeUpdate();
+					
+					query = "UPDATE PLAYER "
+							+"SET HP = ? WHERE NAME = ?";
+					pstat = Maplestory.connection.prepareStatement(query);
+					pstat.setInt(1, curHP);
+					pstat.setString(2, Maplestory.player.name);
+					pstat.executeUpdate();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			}
 		};
 		Maplestory.thread_pool.submit(runnable);
@@ -158,17 +188,21 @@ public class UI_Status_Bar extends JLabel{
 			
 			@Override
 			public void run() {
-				int cur_mp = Maplestory.player.MP;
-				float prev_percent = mp_bar_percent;
-				float cur_percent = cur_mp / (float)Maplestory.player.MaxMP;
-				float diff = cur_percent - prev_percent;
+				int curMP = Maplestory.player.MP;
+				int curMaxMP = Maplestory.player.MaxMP;
+				float prevPercent = mp_bar_percent;
+				float curPercent = curMP / (float)curMaxMP;
+				float diff = curPercent - prevPercent;
+
+				String query = "";
+				PreparedStatement pstat = null;
 				
 				for(int i=1;i<=300;i++) {
-					if(cur_mp != Maplestory.player.MP) {
+					if(curMP != Maplestory.player.MP) {
 						return;
 					}
 					
-					mp_bar_percent = prev_percent + i * diff / 300;
+					mp_bar_percent = prevPercent + i * diff / 300;
 					
 					try {
 						Thread.sleep(1);
@@ -177,7 +211,26 @@ public class UI_Status_Bar extends JLabel{
 						e.printStackTrace();
 					}
 				}
-				mp_bar_percent = cur_percent;
+				mp_bar_percent = curPercent;
+				
+				try {
+					query = "UPDATE PLAYER "
+							+"SET MAXMP = ? WHERE NAME = ? AND MAXMP != ?";
+					pstat = Maplestory.connection.prepareStatement(query);
+					pstat.setInt(1, curMaxMP);
+					pstat.setString(2, Maplestory.player.name);
+					pstat.setInt(3, curMaxMP);
+					pstat.executeUpdate();
+					
+					query = "UPDATE PLAYER "
+							+"SET MP = ? WHERE NAME = ?";
+					pstat = Maplestory.connection.prepareStatement(query);
+					pstat.setInt(1, curMP);
+					pstat.setString(2, Maplestory.player.name);
+					pstat.executeUpdate();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			}
 		};
 		Maplestory.thread_pool.submit(runnable);
@@ -188,17 +241,21 @@ public class UI_Status_Bar extends JLabel{
 			
 			@Override
 			public void run() {
-				long cur_exp = Maplestory.player.Exp;
-				float prev_percent = exp_bar_percent;
-				float cur_percent = cur_exp / (float)Maplestory.player.MaxExp;
-				float diff = cur_percent - prev_percent;
+				long curExp = Maplestory.player.Exp;
+				long curMaxExp = Maplestory.player.MaxExp;
+				float prevPercent = exp_bar_percent;
+				float curPercent = curExp / (float)curMaxExp;
+				float diff = curPercent - prevPercent;
+
+				String query = "";
+				PreparedStatement pstat = null;
 				
 				for(int i=1;i<=300;i++) {
-					if(cur_exp != Maplestory.player.Exp) {
+					if(curExp != Maplestory.player.Exp) {
 						return;
 					}
 					
-					exp_bar_percent = prev_percent + i * diff / 300;
+					exp_bar_percent = prevPercent + i * diff / 300;
 					
 					try {
 						Thread.sleep(1);
@@ -207,7 +264,26 @@ public class UI_Status_Bar extends JLabel{
 						e.printStackTrace();
 					}
 				}
-				exp_bar_percent = cur_percent;
+				exp_bar_percent = curPercent;
+				
+				try {
+					query = "UPDATE PLAYER "
+							+"SET MAXEXP = ? WHERE NAME = ? AND MAXEXP != ?";
+					pstat = Maplestory.connection.prepareStatement(query);
+					pstat.setLong(1, curMaxExp);
+					pstat.setString(2, Maplestory.player.name);
+					pstat.setLong(3, curMaxExp);
+					pstat.executeUpdate();
+					
+					query = "UPDATE PLAYER "
+							+"SET EXP = ? WHERE NAME = ?";
+					pstat = Maplestory.connection.prepareStatement(query);
+					pstat.setLong(1, curExp);
+					pstat.setString(2, Maplestory.player.name);
+					pstat.executeUpdate();
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
 			}
 		};
 		Maplestory.thread_pool.submit(runnable);

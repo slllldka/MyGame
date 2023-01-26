@@ -21,7 +21,7 @@ public abstract class Shop extends JLabel {
 	
 	protected ArrayList<ItemForSale> sell_list = new ArrayList<ItemForSale>();
 	protected static ArrayList<ItemForSale> currentSellList;
-	protected static ArrayList<Item> currentNullRemovedList = Maplestory.player.inventory.NullRemovedConsumeList;
+	protected static ArrayList<Item> currentNullRemovedList;
 
 	protected static int current_type; //0: Equip, 1: Consume, 2: Etc, 3: Install, 4: Cash
 	protected int current_shop_slot_index = 0;
@@ -82,7 +82,7 @@ public abstract class Shop extends JLabel {
 					, NPCImage.getIconWidth(), 0, 0, NPCImage.getIconHeight(), this);
 		}
 		g.drawImage(Maplestory.player.characterLeftImg.getImage()
-				, 297 - Character.CharacterWidth / 2, 45 - Character.CharacterHeight / 2, this);
+				, 297 - Player.PlayerWidth / 2, 45 - Player.PlayerHeight / 2, this);
 		
 		if(current_type == 0) {
 			g.drawImage(Maplestory.images.Inventory_Equip_Tab_Disabled.getImage(), 240, 90, this);

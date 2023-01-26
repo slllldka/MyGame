@@ -84,8 +84,8 @@ public class UI_MiniMap extends JLabel{
 		}
 
 		// Draw User
-		int player_x = (Maplestory.player.CharacterX + Character.CharacterWidth/2) / offset;
-		int player_y = (Maplestory.player.CharacterY - Character.CharacterHeight/2) / offset;
+		int player_x = (Maplestory.player.PlayerX + Player.PlayerWidth/2) / offset;
+		int player_y = (Maplestory.player.PlayerY - Player.PlayerHeight/2) / offset;
 		g2.drawImage(icon_user.getImage(), player_x - icon_user.getIconWidth() / 2, player_y - icon_user.getIconHeight() / 2, this);
 		
 		paintComponents(g);

@@ -61,7 +61,7 @@ public abstract class Mob {
 	}
 
 	public int Attack_Damage_Calculate(boolean isCrit, int Mob_DEF, int Damage_Percent) {
-		int damage = random.nextInt(Maplestory.player.Max_ATK-Maplestory.player.Min_ATK+1)+Maplestory.player.Min_ATK;
+		int damage = random.nextInt(Maplestory.player.MaxATK-Maplestory.player.MinATK+1)+Maplestory.player.MinATK;
 		damage = damage * Damage_Percent / 100;
 		if(isCrit) {
 			damage *= 1 + (random.nextInt(31)+120) / 100;

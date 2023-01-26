@@ -7,6 +7,9 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.swing.JLabel;
@@ -87,16 +90,97 @@ public class Inventory extends JLabel{
 	protected int Meso = 10000;
 	protected String decimal = "";
 	
-	public Inventory() {
+	public Inventory(String name) {
 		setBounds(50, 50, 175, 289);
 		
 		makeSlots();
 		makeScrollingObjects();
 		makeButtons();
 		setScreenMouseEvents();
-		Show_Equip();
 		
+		loadDB(name);
+		
+		Show_Equip();
 		setVisible(false);
+	}
+	
+	public void loadDB(String name) {
+		String query = "";
+		ResultSet resultSet = null;
+		int index = 0, itemcode = 0, quantity = 0;
+		try {
+			query = "SELECT * FROM PLAYER WHERE NAME = '"+name+"'";
+			resultSet = Maplestory.connection.createStatement().executeQuery(query);
+			while(resultSet.next()) {
+				Meso = resultSet.getInt("MESO");
+				Equip_size = resultSet.getInt("EQUIP_SIZE");
+				Consume_size = resultSet.getInt("CONSUME_SIZE");
+				Etc_size = resultSet.getInt("ETC_SIZE");
+				Install_size = resultSet.getInt("INSTALL_SIZE");
+				Cash_size = resultSet.getInt("CASH_SIZE");
+			}
+			
+			
+			query = "SELECT * FROM EQUIP_INVENTORY WHERE NAME = '"+name+"'";
+			resultSet = Maplestory.connection.createStatement().executeQuery(query);
+			while(resultSet.next()) {
+				index = resultSet.getInt("IDX");
+				itemcode = resultSet.getInt("ITEMCODE");
+				quantity = resultSet.getInt("QUANTITY");
+				
+				Equip_inventory_list.set(index, Item.getItem("Equip", itemcode, quantity));
+			}
+			
+			query = "SELECT * FROM CONSUME_INVENTORY WHERE NAME = '"+name+"'";
+			resultSet = Maplestory.connection.createStatement().executeQuery(query);
+			while(resultSet.next()) {
+				index = resultSet.getInt("IDX");
+				itemcode = resultSet.getInt("ITEMCODE");
+				quantity = resultSet.getInt("QUANTITY");
+				
+				Consume_inventory_list.set(index, Item.getItem("Consume", itemcode, quantity));
+			}
+			
+
+			query = "SELECT * FROM ETC_INVENTORY WHERE NAME = '"+name+"'";
+			resultSet = Maplestory.connection.createStatement().executeQuery(query);
+			while(resultSet.next()) {
+				index = resultSet.getInt("IDX");
+				itemcode = resultSet.getInt("ITEMCODE");
+				quantity = resultSet.getInt("QUANTITY");
+				
+				Etc_inventory_list.set(index, Item.getItem("Etc", itemcode, quantity));
+			}
+
+			query = "SELECT * FROM INSTALL_INVENTORY WHERE NAME = '"+name+"'";
+			resultSet = Maplestory.connection.createStatement().executeQuery(query);
+			while(resultSet.next()) {
+				index = resultSet.getInt("IDX");
+				itemcode = resultSet.getInt("ITEMCODE");
+				quantity = resultSet.getInt("QUANTITY");
+				
+				Install_inventory_list.set(index, Item.getItem("Install", itemcode, quantity));
+			}
+
+			query = "SELECT * FROM CASH_INVENTORY WHERE NAME = '"+name+"'";
+			resultSet = Maplestory.connection.createStatement().executeQuery(query);
+			while(resultSet.next()) {
+				index = resultSet.getInt("IDX");
+				itemcode = resultSet.getInt("ITEMCODE");
+				quantity = resultSet.getInt("QUANTITY");
+				
+				Cash_inventory_list.set(index, Item.getItem("Cash", itemcode, quantity));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+		updateNullRemovedList("Equip");
+		updateNullRemovedList("Consume");
+		updateNullRemovedList("Etc");
+		updateNullRemovedList("Install");
+		updateNullRemovedList("Cash");
 	}
 	
 	@Override
@@ -200,11 +284,37 @@ public class Inventory extends JLabel{
 										//Different Slot
 										else {
 											Item item_dst = current_inventory_list.get(index);
+											String query = "";
+											PreparedStatement pstat = null;
+											
 											//Dst Slot is empty
 											if(item_dst == null) {
 												Map.move = null;
 												current_inventory_list.set(index, item_src);
 												current_inventory_list.set(move_index, null);
+												
+												try {
+													query = "DELETE FROM "+item_src.getType()+"_INVENTORY "
+															+ "WHERE NAME = ? and IDX = ?";
+													pstat = Maplestory.connection.prepareStatement(query);
+													
+													pstat.setString(1, Maplestory.player.name);
+													pstat.setInt(2, move_index);
+													pstat.executeUpdate();
+													
+													query = "INSERT INTO "+item_src.getType()+"_INVENTORY "
+															+ "(NAME, IDX, ITEMCODE, QUANTITY) "
+															+ "VALUES (?, ?, ?, ?)";
+													pstat = Maplestory.connection.prepareStatement(query);
+													
+													pstat.setString(1, Maplestory.player.name);
+													pstat.setInt(2, index);
+													pstat.setInt(3, current_inventory_list.get(index).getItemCode());
+													pstat.setInt(4, current_inventory_list.get(index).Quantity);
+													pstat.executeUpdate();
+												} catch (SQLException exception) {
+													exception.printStackTrace();
+												}
 											}
 											//Dst Slot is not empty
 											else {
@@ -212,6 +322,36 @@ public class Inventory extends JLabel{
 												Item temp = item_dst;
 												current_inventory_list.set(index, item_src);
 												current_inventory_list.set(move_index, temp);
+												
+												try {
+													query = "DELETE FROM "+item_src.getType()+"_INVENTORY "
+															+ "WHERE NAME = ? and IDX = ? or IDX = ?";
+													pstat = Maplestory.connection.prepareStatement(query);
+													
+													pstat.setString(1, Maplestory.player.name);
+													pstat.setInt(2, index);
+													pstat.setInt(3, move_index);
+													pstat.executeUpdate();
+													
+													query = "INSERT INTO "+item_src.getType()+"_INVENTORY "
+															+ "(NAME, IDX, ITEMCODE, QUANTITY) "
+															+ "VALUES (?, ?, ?, ?)";
+													pstat = Maplestory.connection.prepareStatement(query);
+													
+													pstat.setString(1, Maplestory.player.name);
+													pstat.setInt(2, index);
+													pstat.setInt(3, current_inventory_list.get(index).getItemCode());
+													pstat.setInt(4, current_inventory_list.get(index).Quantity);
+													pstat.executeUpdate();
+
+													pstat.setString(1, Maplestory.player.name);
+													pstat.setInt(2, move_index);
+													pstat.setInt(3, current_inventory_list.get(move_index).getItemCode());
+													pstat.setInt(4, current_inventory_list.get(move_index).Quantity);
+													pstat.executeUpdate();
+												} catch (SQLException exception) {
+													exception.printStackTrace();
+												}
 											}
 										}
 										
@@ -256,7 +396,6 @@ public class Inventory extends JLabel{
 								Map.info = data.getInfo();
 								Map.info_x = getMousePosition().x + getLocation().x;
 								Map.info_y = getMousePosition().y + getLocation().y;
-								//System.out.println(data.Get_name() + "\r\n" + data.Get_tooltip());
 							}
 						}
 					}
@@ -626,7 +765,6 @@ public class Inventory extends JLabel{
 					try {
 						Thread.sleep(100);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 				}
@@ -759,43 +897,105 @@ public class Inventory extends JLabel{
 	
 	public void Reduce_Item(int index, int number) {
 		Item data = current_inventory_list.get(index);
+		String query = "";
+		PreparedStatement pstat = null;
 		if(data.Quantity - number == 0) {
 			current_inventory_list.set(index, null);
 			updateNullRemovedList(data.getType());
+			
+			try {
+				query = "DELETE FROM "+data.getType()+"_INVENTORY "
+						+ "WHERE NAME = ? and IDX = ? and ITEMCODE = ?";
+				pstat = Maplestory.connection.prepareStatement(query);
+				pstat.setString(1, Maplestory.player.name);
+				pstat.setInt(2, index);
+				pstat.setInt(3, data.getItemCode());
+				
+				pstat.executeUpdate();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+			
 		}
 		else {
 			data.Quantity -= number;
 			current_inventory_list.set(index, data);
+			
+			try {
+				query = "UPDATE "+data.getType()+"_INVENTORY "
+						+"SET QUANTITY = ? WHERE NAME = ? and IDX = ? and ITEMCODE = ?";
+				pstat = Maplestory.connection.prepareStatement(query);
+				pstat.setInt(1, data.Quantity);
+				pstat.setString(2, Maplestory.player.name);
+				pstat.setInt(3, index);
+				pstat.setInt(4, data.getItemCode());
+				pstat.executeUpdate();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	public void Reduce_Item(Item item, int number) {
+		String query = "";
+		PreparedStatement pstat = null;
+		int index = -1;
+		
+		ArrayList<Item> srcList = null;
+		if(item.getType().equals("Equip")) {
+			srcList = Equip_inventory_list;
+		}
+		else if(item.getType().equals("Consume")) {
+			srcList = Consume_inventory_list;
+		}
+		else if(item.getType().equals("Etc")) {
+			srcList = Etc_inventory_list;
+		}
+		else if(item.getType().equals("Install")) {
+			srcList = Install_inventory_list;
+		}
+		else if(item.getType().equals("Cash")) {
+			srcList = Cash_inventory_list;
+		}
+		
+		for(int i=0;i<srcList.size();i++) {
+			if(srcList.get(i) == item) {
+				index = i;
+			}
+		}
+		
 		if(item.Quantity - number == 0) {
-			ArrayList<Item> srcList = null;
-			if(item.getType().equals("Equip")) {
-				srcList = Equip_inventory_list;
-			}
-			else if(item.getType().equals("Consume")) {
-				srcList = Consume_inventory_list;
-			}
-			else if(item.getType().equals("Etc")) {
-				srcList = Etc_inventory_list;
-			}
-			else if(item.getType().equals("Install")) {
-				srcList = Install_inventory_list;
-			}
-			else if(item.getType().equals("Cash")) {
-				srcList = Cash_inventory_list;
-			}
-			
-			for(int i=0;i<srcList.size();i++) {
-				if(srcList.get(i) == item) {
-					srcList.set(i, null);
-				}
-			}
+			srcList.set(index, null);
 			updateNullRemovedList(item.getType());
+			
+			try {
+				query = "DELETE FROM "+item.getType()+"_INVENTORY "
+						+ "WHERE NAME = ? and IDX = ? and ITEMCODE = ?";
+				pstat = Maplestory.connection.prepareStatement(query);
+				pstat.setString(1, Maplestory.player.name);
+				pstat.setInt(2, index);
+				pstat.setInt(3, item.getItemCode());
+				
+				pstat.executeUpdate();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 		else {
 			item.Quantity -= number;
+			
+			try {
+				query = "UPDATE "+item.getType()+"_INVENTORY "
+						+"SET QUANTITY = ? WHERE NAME = ? and IDX = ? and ITEMCODE = ?";
+				pstat = Maplestory.connection.prepareStatement(query);
+				pstat.setInt(1, item.Quantity);
+				pstat.setString(2, Maplestory.player.name);
+				pstat.setInt(3, index);
+				pstat.setInt(4, item.getItemCode());
+				
+				pstat.executeUpdate();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 	

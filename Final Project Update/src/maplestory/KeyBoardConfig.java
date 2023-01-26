@@ -6,6 +6,9 @@ import java.awt.Robot;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.AbstractAction;
 import javax.swing.JFrame;
@@ -61,90 +64,37 @@ public class KeyBoardConfig {
 		
 		for(int i=0;i<223;i++) {
 			itemUse[i] = new ItemUse();
+			actionMapKeyArray[i] = "";
 		}
 
 		setDefault();
 	}
 	
 	public void setDefault() {
-		actionMapKeyArray[KeyEvent.VK_ESCAPE] = "EscPress";
-		actionMapKeyArray[KeyEvent.VK_F1] = "";
-		actionMapKeyArray[KeyEvent.VK_F2] = "";
-		actionMapKeyArray[KeyEvent.VK_F3] = "";
-		actionMapKeyArray[KeyEvent.VK_F4] = "";
-		actionMapKeyArray[KeyEvent.VK_F5] = "";
-		actionMapKeyArray[KeyEvent.VK_F6] = "";
-		actionMapKeyArray[KeyEvent.VK_F7] = "";
-		actionMapKeyArray[KeyEvent.VK_F8] = "";
-		actionMapKeyArray[KeyEvent.VK_F9] = "";
-		actionMapKeyArray[KeyEvent.VK_F10] = "";
-		actionMapKeyArray[KeyEvent.VK_F11] = "";
-		actionMapKeyArray[KeyEvent.VK_F12] = "";
+		String query = "", actionMapKey = "";
+		PreparedStatement pstat = null;
+		ResultSet resultSet = null;
 		
-		actionMapKeyArray[KeyEvent.VK_INSERT] = "";
-		actionMapKeyArray[KeyEvent.VK_DELETE] = "";
-		actionMapKeyArray[KeyEvent.VK_HOME] = "";
-		actionMapKeyArray[KeyEvent.VK_END] = "";
-		actionMapKeyArray[KeyEvent.VK_PAGE_UP] = "";
-		actionMapKeyArray[KeyEvent.VK_PAGE_DOWN] = "";
-
-		actionMapKeyArray[KeyEvent.VK_BACK_QUOTE] = "";
-		actionMapKeyArray[KeyEvent.VK_1] = "";
-		actionMapKeyArray[KeyEvent.VK_2] = "";
-		actionMapKeyArray[KeyEvent.VK_3] = "";
-		actionMapKeyArray[KeyEvent.VK_4] = "";
-		actionMapKeyArray[KeyEvent.VK_5] = "";
-		actionMapKeyArray[KeyEvent.VK_6] = "";
-		actionMapKeyArray[KeyEvent.VK_7] = "";
-		actionMapKeyArray[KeyEvent.VK_8] = "";
-		actionMapKeyArray[KeyEvent.VK_9] = "";
-		actionMapKeyArray[KeyEvent.VK_0] = "";
-		actionMapKeyArray[KeyEvent.VK_MINUS] = "";
-		actionMapKeyArray[KeyEvent.VK_EQUALS] = "";
-		actionMapKeyArray[KeyEvent.VK_BACK_SPACE] = "";
-
-		actionMapKeyArray[KeyEvent.VK_TAB] = "TabPress";
-		actionMapKeyArray[KeyEvent.VK_Q] = "";
-		actionMapKeyArray[KeyEvent.VK_W] = "";
-		actionMapKeyArray[KeyEvent.VK_E] = "";
-		actionMapKeyArray[KeyEvent.VK_R] = "";
-		actionMapKeyArray[KeyEvent.VK_T] = "";
-		actionMapKeyArray[KeyEvent.VK_Y] = "";
-		actionMapKeyArray[KeyEvent.VK_U] = "";
-		actionMapKeyArray[KeyEvent.VK_I] = "Inventory";
-		actionMapKeyArray[KeyEvent.VK_O] = "";
-		actionMapKeyArray[KeyEvent.VK_P] = "";
-		actionMapKeyArray[KeyEvent.VK_OPEN_BRACKET] = "";
-		actionMapKeyArray[KeyEvent.VK_CLOSE_BRACKET] = "";
-		actionMapKeyArray[KeyEvent.VK_BACK_SLASH] = "KeyConfigAction";
-		
-		actionMapKeyArray[KeyEvent.VK_A] = "";
-		actionMapKeyArray[KeyEvent.VK_S] = "";
-		actionMapKeyArray[KeyEvent.VK_D] = "";
-		actionMapKeyArray[KeyEvent.VK_F] = "";
-		actionMapKeyArray[KeyEvent.VK_G] = "";
-		actionMapKeyArray[KeyEvent.VK_H] = "";
-		actionMapKeyArray[KeyEvent.VK_J] = "";
-		actionMapKeyArray[KeyEvent.VK_K] = "";
-		actionMapKeyArray[KeyEvent.VK_L] = "";
-		actionMapKeyArray[KeyEvent.VK_SEMICOLON] = "";
-		actionMapKeyArray[KeyEvent.VK_QUOTE] = "";
-		actionMapKeyArray[KeyEvent.VK_ENTER] = "EnterPress";
-
-		actionMapKeyArray[KeyEvent.VK_SHIFT] = "ShiftPress";
-		actionMapKeyArray[KeyEvent.VK_Z] = "PickUp";
-		actionMapKeyArray[KeyEvent.VK_X] = "";
-		actionMapKeyArray[KeyEvent.VK_C] = "";
-		actionMapKeyArray[KeyEvent.VK_V] = "";
-		actionMapKeyArray[KeyEvent.VK_B] = "";
-		actionMapKeyArray[KeyEvent.VK_N] = "";
-		actionMapKeyArray[KeyEvent.VK_M] = "Minimap";
-		actionMapKeyArray[KeyEvent.VK_COMMA] = "";
-		actionMapKeyArray[KeyEvent.VK_PERIOD] = "";
-		actionMapKeyArray[KeyEvent.VK_SLASH] = "";
-
-		actionMapKeyArray[KeyEvent.VK_CONTROL] = "CtrlPress";
-		actionMapKeyArray[KeyEvent.VK_SPACE] = "NPC";
+		try {
+			query = "SELECT * FROM KEYCONFIG WHERE NAME = ? AND KEYCODE = ?";
+			pstat = Maplestory.connection.prepareStatement(query);
+			pstat.setString(1, Maplestory.player.name);
+			for(int i=0;i<223;i++) {
+				pstat.setInt(2, i);
+				resultSet = pstat.executeQuery();
+				if(resultSet.next()) {
+					actionMapKey = resultSet.getString("ACTIONMAPKEY");
+					actionMapKeyArray[i] = actionMapKey;
+					if(actionMapKey.equals("ItemUse")) {
+						actionMapKeyArray[i] = "ItemUse" + i;
+						itemUse[i].setValues(resultSet.getInt("ITEMCODE"), resultSet.getString("ITEMTYPE"));
+					}
+				}
+			}
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public void setSpecificKey(int keyCode, String str_press) {
@@ -383,7 +333,7 @@ public class KeyBoardConfig {
 										Maplestory.player.current_Img = Maplestory.player.characterJumpLeftImg;
 										Maplestory.player.Character_LeftJump(true);
 										try {
-											Thread.sleep(Character.Ladder_Jump_Delay);
+											Thread.sleep(Player.Ladder_Jump_Delay);
 										} catch (InterruptedException e) {
 											e.printStackTrace();
 										}
@@ -392,7 +342,7 @@ public class KeyBoardConfig {
 										Maplestory.player.current_Img = Maplestory.player.characterJumpRightImg;
 										Maplestory.player.Character_RightJump(true);
 										try {
-											Thread.sleep(Character.Ladder_Jump_Delay);
+											Thread.sleep(Player.Ladder_Jump_Delay);
 										} catch (InterruptedException e) {
 											e.printStackTrace();
 										}
@@ -415,9 +365,9 @@ public class KeyBoardConfig {
 				if (Maplestory.player.IsLandable() && !Map.Attacking && !Map.attacked) {
 					if (Map.DownKey) {
 						if (!Maplestory.player.cur_foothold.isBottom) {
-							if (Maplestory.player.CharDirection == -1) {
+							if (Maplestory.player.PlayerDirection == -1) {
 								Maplestory.player.current_Img = Maplestory.player.characterJumpLeftImg;
-							} else if (Maplestory.player.CharDirection == 1) {
+							} else if (Maplestory.player.PlayerDirection == 1) {
 								Maplestory.player.current_Img = Maplestory.player.characterJumpRightImg;
 							}
 							Maplestory.player.Character_DownJump();
@@ -432,9 +382,9 @@ public class KeyBoardConfig {
 						Maplestory.player.Character_RightJump(false);
 					}
 					else {
-						if (Maplestory.player.CharDirection == -1) {
+						if (Maplestory.player.PlayerDirection == -1) {
 							Maplestory.player.current_Img = Maplestory.player.characterJumpLeftImg;
-						} else if (Maplestory.player.CharDirection == 1) {
+						} else if (Maplestory.player.PlayerDirection == 1) {
 							Maplestory.player.current_Img = Maplestory.player.characterJumpRightImg;
 						}
 						Maplestory.player.Character_Jump();
@@ -456,7 +406,7 @@ public class KeyBoardConfig {
 			Map.LeftKey = true;
 			if(Maplestory.player.alive && !Shop.isOpen && !UI_Notice.isOpen) {
 				if (Map.Attacking == false) {
-					Maplestory.player.CharDirection = -1;
+					Maplestory.player.PlayerDirection = -1;
 					if (Map.Jump == true) {
 						Maplestory.player.current_Img = Maplestory.player.characterJumpLeftImg;
 					} else {
@@ -503,7 +453,7 @@ public class KeyBoardConfig {
 			Map.RightKey = true;
 			if(Maplestory.player.alive && !Shop.isOpen && !UI_Notice.isOpen) {
 				if (Map.Attacking == false) {
-					Maplestory.player.CharDirection = 1;
+					Maplestory.player.PlayerDirection = 1;
 					if (Map.Jump == true) {
 						Maplestory.player.current_Img = Maplestory.player.characterJumpRightImg;
 					} else {
@@ -560,7 +510,7 @@ public class KeyBoardConfig {
 								if ((LadderIdx = Maplestory.player.IsLadderAvailable(1)) >= 0) {
 									Maplestory.player.Character_LadderUp(LadderIdx);
 									try {
-										Thread.sleep(Character.Ladder_Jump_Delay);
+										Thread.sleep(Player.Ladder_Jump_Delay);
 									} catch (InterruptedException e) {
 										e.printStackTrace();
 									}
@@ -580,10 +530,10 @@ public class KeyBoardConfig {
 			if(Maplestory.player.alive && !Shop.isOpen && !UI_Notice.isOpen) {
 				if (!Map.Attacking) {
 					for(Portal portal : Maplestory.current_stage.Portal_List) {
-						if ((Maplestory.player.CharacterX + 25 >= portal.xstart)
-								&& (Maplestory.player.CharacterX + 25 <= portal.xend)
-								&& (portal.y >= Maplestory.player.CharacterY - Character.CharacterHeight + 20)
-								&& (portal.y <= Maplestory.player.CharacterY - Character.CharacterHeight + 120)) {
+						if ((Maplestory.player.PlayerX + 25 >= portal.xstart)
+								&& (Maplestory.player.PlayerX + 25 <= portal.xend)
+								&& (portal.y >= Maplestory.player.PlayerY - Player.PlayerHeight + 20)
+								&& (portal.y <= Maplestory.player.PlayerY - Player.PlayerHeight + 120)) {
 							Runnable runnable = new Runnable() {
 		
 								@Override
@@ -631,6 +581,36 @@ public class KeyBoardConfig {
 											}
 										}*/
 										Maplestory.map1_1.close(portal);
+									} else if (Maplestory.StageNow == 12) {
+										/*boolean open = true;
+										for(Mob mob : Maplestory.current_stage.Mob_List) {
+											if(mob.alive) {
+												open = false;
+												break;
+											}
+										}
+										
+										if(!open) {
+											UI_Status_Bar.notice = "몬스터를 모두 해치워야 합니다.";
+											return;
+										}
+										
+										if (Maplestory.IsStage2Locked) {
+											Maplestory.IsStage2Locked = false;
+											try {
+												if (!Maplestory.Directory.exists()) {
+													Maplestory.Directory.mkdir();
+												}
+												Maplestory.BW = new BufferedWriter(
+														new FileWriter("./JavaProjectData/Lock2.jw"));
+												Maplestory.BW.write(0);
+												Maplestory.BW.flush();
+												Maplestory.BW.close();
+											} catch (IOException e1) {
+												e1.printStackTrace();
+											}
+										}*/
+										Maplestory.map1_2.close(portal);
 									} else if (Maplestory.StageNow == 2) {
 										/*if (Maplestory.IsStage3Locked) {
 											Maplestory.IsStage3Locked = false;
@@ -719,9 +699,9 @@ public class KeyBoardConfig {
 						Maplestory.player.Character_LadderDown(LadderIdx);
 					} else if (Map.LeftKey == false && Map.RightKey == false && Map.Jump == false
 							&& Map.Ladder == false) {
-						if (Maplestory.player.CharDirection == -1) {
+						if (Maplestory.player.PlayerDirection == -1) {
 							Maplestory.player.current_Img = Maplestory.player.characterProneLeftImg;
-						} else if (Maplestory.player.CharDirection == 1) {
+						} else if (Maplestory.player.PlayerDirection == 1) {
 							Maplestory.player.current_Img = Maplestory.player.characterProneRightImg;
 						}
 					}
@@ -745,9 +725,9 @@ public class KeyBoardConfig {
 			if(Maplestory.player.alive && !Shop.isOpen && !UI_Notice.isOpen) {
 				if (Map.Ladder == false && Map.Attacking == false) {
 					if (Map.LeftKey == false && Map.RightKey == false && Map.Jump == false) {
-						if (Maplestory.player.CharDirection == -1) {
+						if (Maplestory.player.PlayerDirection == -1) {
 							Maplestory.player.current_Img = Maplestory.player.characterLeftImg;
-						} else if (Maplestory.player.CharDirection == 1) {
+						} else if (Maplestory.player.PlayerDirection == 1) {
 							Maplestory.player.current_Img = Maplestory.player.characterRightImg;
 						}
 					}
@@ -782,7 +762,7 @@ public class KeyBoardConfig {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			robot.keyPress(KeyEvent.VK_ALT);
-			Maplestory.player.LevelUp();
+			Maplestory.player.gainExp(Maplestory.player.MaxExp);
 			//aplestory.current_stage.reopen();
 		}
 		
@@ -813,8 +793,8 @@ public class KeyBoardConfig {
 		public void actionPerformed(ActionEvent e) {
 			if(Maplestory.player.alive && !Shop.isOpen && !UI_Notice.isOpen) {
 				if (!Map.Attacking && !Map.Ladder) {
-					Maplestory.player.Character_Attack(1, 70, Character.CharacterWidth / 2, Character.CharacterHeight / 2,
-							Character.CharacterHeight / 2, 1, 100);
+					Maplestory.player.Character_Attack(1, 70, Player.PlayerWidth / 2, Player.PlayerHeight / 2,
+							Player.PlayerHeight / 2, 1, 100);
 				}
 			}
 
@@ -835,8 +815,8 @@ public class KeyBoardConfig {
 				if (!Map.Attacking && !Map.Ladder) {
 					int cost = 10;
 					if (Maplestory.player.MP >= cost) {
-						Maplestory.player.Character_Attack(2, 200, Character.CharacterWidth / 2
-								, Character.CharacterHeight / 2, Character.CharacterHeight / 2, (2+Maplestory.player.Level / 10), 120);
+						Maplestory.player.Character_Attack(2, 200, Player.PlayerWidth / 2
+								, Player.PlayerHeight / 2, Player.PlayerHeight / 2, (2+Maplestory.player.Level / 10), 120);
 						Maplestory.player.MP_Use(cost);
 					}
 					else {
@@ -1019,8 +999,8 @@ public class KeyBoardConfig {
 		 */
 		private static final long serialVersionUID = 1L;
 
-		private int item_code = -1;
-		private String type = "";
+		protected int item_code = -1;
+		protected String type = "";
 		
 		public void setValues(int _item_code, String _type) {
 			item_code = _item_code;

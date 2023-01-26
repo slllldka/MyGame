@@ -70,7 +70,9 @@ public class Item_ReturnScroll_Town extends Item{
 					if(Maplestory.current_stage != Maplestory.current_stage.nearestTown) {
 						Music Scroll_Use_Music = new Music("ReturnScrollMapUse.wav", 1);
 						Scroll_Use_Music.play();
-						Maplestory.player.inventory.Reduce_Item(index, 1);
+						Maplestory.player.inventory.Reduce_Item(
+								Maplestory.player.inventory.Consume_inventory_list.get(index), 1);
+
 						Maplestory.player.Item_usable = false;
 						
 						Map nearestTown = Maplestory.current_stage.nearestTown;

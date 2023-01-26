@@ -5,6 +5,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
@@ -25,7 +28,89 @@ public class UI_KeyConfig extends JLabel {
 	private int mouseX, mouseY;
 	
 	protected UI_KeyConfig_Slot[] Slot;
-	protected int[] slotIndex;
+	protected static int[] slotIndex;
+	
+	static {
+		slotIndex = new int[223];
+		
+		for(int i=0;i<223;i++) {
+			slotIndex[i] = -1;
+		}
+		
+		slotIndex[KeyEvent.VK_F1] = 0;
+		slotIndex[KeyEvent.VK_F2] = 1;
+		slotIndex[KeyEvent.VK_F3] = 2;
+		slotIndex[KeyEvent.VK_F4] = 3;
+		slotIndex[KeyEvent.VK_F5] = 4;
+		slotIndex[KeyEvent.VK_F6] = 5;
+		slotIndex[KeyEvent.VK_F7] = 6;
+		slotIndex[KeyEvent.VK_F8] = 7;
+		slotIndex[KeyEvent.VK_F9] = 8;
+		slotIndex[KeyEvent.VK_F10] = 9;
+		slotIndex[KeyEvent.VK_F11] = 10;
+		slotIndex[KeyEvent.VK_F12] = 11;
+
+		slotIndex[KeyEvent.VK_INSERT] = 12;
+		slotIndex[KeyEvent.VK_HOME] = 13;
+		slotIndex[KeyEvent.VK_PAGE_UP] = 14;
+		slotIndex[KeyEvent.VK_DELETE] = 15;
+		slotIndex[KeyEvent.VK_END] = 16;
+		slotIndex[KeyEvent.VK_PAGE_DOWN] = 17;
+		
+		slotIndex[KeyEvent.VK_BACK_QUOTE] = 18;
+		slotIndex[KeyEvent.VK_1] = 19;
+		slotIndex[KeyEvent.VK_2] = 20;
+		slotIndex[KeyEvent.VK_3] = 21;
+		slotIndex[KeyEvent.VK_4] = 22;
+		slotIndex[KeyEvent.VK_5] = 23;
+		slotIndex[KeyEvent.VK_6] = 24;
+		slotIndex[KeyEvent.VK_7] = 25;
+		slotIndex[KeyEvent.VK_8] = 26;
+		slotIndex[KeyEvent.VK_9] = 27;
+		slotIndex[KeyEvent.VK_0] = 28;
+		slotIndex[KeyEvent.VK_MINUS] = 29;
+		slotIndex[KeyEvent.VK_EQUALS] = 30;
+
+		slotIndex[KeyEvent.VK_Q] = 31;
+		slotIndex[KeyEvent.VK_W] = 32;
+		slotIndex[KeyEvent.VK_E] = 33;
+		slotIndex[KeyEvent.VK_R] = 34;
+		slotIndex[KeyEvent.VK_T] = 35;
+		slotIndex[KeyEvent.VK_Y] = 36;
+		slotIndex[KeyEvent.VK_U] = 37;
+		slotIndex[KeyEvent.VK_I] = 38;
+		slotIndex[KeyEvent.VK_O] = 39;
+		slotIndex[KeyEvent.VK_P] = 40;
+		slotIndex[KeyEvent.VK_OPEN_BRACKET] = 41;
+		slotIndex[KeyEvent.VK_CLOSE_BRACKET] = 42;
+		slotIndex[KeyEvent.VK_BACK_SLASH] = 43;
+
+		slotIndex[KeyEvent.VK_A] = 44;
+		slotIndex[KeyEvent.VK_S] = 45;
+		slotIndex[KeyEvent.VK_D] = 46;
+		slotIndex[KeyEvent.VK_F] = 47;
+		slotIndex[KeyEvent.VK_G] = 48;
+		slotIndex[KeyEvent.VK_H] = 49;
+		slotIndex[KeyEvent.VK_J] = 50;
+		slotIndex[KeyEvent.VK_K] = 51;
+		slotIndex[KeyEvent.VK_L] = 52;
+		slotIndex[KeyEvent.VK_SEMICOLON] = 53;
+		slotIndex[KeyEvent.VK_QUOTE] = 54;
+
+		slotIndex[KeyEvent.VK_SHIFT] = 55;
+		slotIndex[KeyEvent.VK_Z] = 56;
+		slotIndex[KeyEvent.VK_X] = 57;
+		slotIndex[KeyEvent.VK_C] = 58;
+		slotIndex[KeyEvent.VK_V] = 59;
+		slotIndex[KeyEvent.VK_B] = 60;
+		slotIndex[KeyEvent.VK_N] = 61;
+		slotIndex[KeyEvent.VK_M] = 62;
+		slotIndex[KeyEvent.VK_COMMA] = 63;
+		slotIndex[KeyEvent.VK_PERIOD] = 64;
+
+		slotIndex[KeyEvent.VK_CONTROL] = 65;
+		slotIndex[KeyEvent.VK_SPACE] = 66;
+	}
 	
 	protected JLabel bt_default, bt_delete, bt_quickslotchange, bt_ok, bt_cancel;
 	
@@ -66,167 +151,74 @@ public class UI_KeyConfig extends JLabel {
 	
 	public void makeSlots() {
 		Slot = new UI_KeyConfig_Slot[121];
-		slotIndex = new int[223];
-		
+
 		for(int i=0;i<223;i++) {
-			slotIndex[i] = -1;
+			if(slotIndex[i] != -1) {
+				Slot[slotIndex[i]] = new UI_KeyConfig_Slot(i, "");
+			}
+		}
+		for(int i=67;i<121;i++) {
+			Slot[i] = new UI_KeyConfig_Slot(-i, "");
 		}
 		
-		Slot[0] = new UI_KeyConfig_Slot(KeyEvent.VK_F1, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_F1]);
-		slotIndex[KeyEvent.VK_F1] = 0;
-		Slot[1] = new UI_KeyConfig_Slot(KeyEvent.VK_F2, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_F2]);
-		slotIndex[KeyEvent.VK_F2] = 1;
-		Slot[2] = new UI_KeyConfig_Slot(KeyEvent.VK_F3, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_F3]);
-		slotIndex[KeyEvent.VK_F3] = 2;
-		Slot[3] = new UI_KeyConfig_Slot(KeyEvent.VK_F4, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_F4]);
-		slotIndex[KeyEvent.VK_F4] = 3;
-		Slot[4] = new UI_KeyConfig_Slot(KeyEvent.VK_F5, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_F5]);
-		slotIndex[KeyEvent.VK_F5] = 4;
-		Slot[5] = new UI_KeyConfig_Slot(KeyEvent.VK_F6, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_F6]);
-		slotIndex[KeyEvent.VK_F6] = 5;
-		Slot[6] = new UI_KeyConfig_Slot(KeyEvent.VK_F7, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_F7]);
-		slotIndex[KeyEvent.VK_F7] = 6;
-		Slot[7] = new UI_KeyConfig_Slot(KeyEvent.VK_F8, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_F8]);
-		slotIndex[KeyEvent.VK_F8] = 7;
-		Slot[8] = new UI_KeyConfig_Slot(KeyEvent.VK_F9, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_F9]);
-		slotIndex[KeyEvent.VK_F9] = 8;
-		Slot[9] = new UI_KeyConfig_Slot(KeyEvent.VK_F10, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_F10]);
-		slotIndex[KeyEvent.VK_F10] = 9;
-		Slot[10] = new UI_KeyConfig_Slot(KeyEvent.VK_F11, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_F11]);
-		slotIndex[KeyEvent.VK_F11] = 10;
-		Slot[11] = new UI_KeyConfig_Slot(KeyEvent.VK_F12, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_F12]);
-		slotIndex[KeyEvent.VK_F12] = 11;
-
-		Slot[12] = new UI_KeyConfig_Slot(KeyEvent.VK_INSERT, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_INSERT]);
-		slotIndex[KeyEvent.VK_INSERT] = 12;
-		Slot[13] = new UI_KeyConfig_Slot(KeyEvent.VK_HOME, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_HOME]);
-		slotIndex[KeyEvent.VK_HOME] = 13;
-		Slot[14] = new UI_KeyConfig_Slot(KeyEvent.VK_PAGE_UP, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_PAGE_UP]);
-		slotIndex[KeyEvent.VK_PAGE_UP] = 14;
-		Slot[15] = new UI_KeyConfig_Slot(KeyEvent.VK_DELETE, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_DELETE]);
-		slotIndex[KeyEvent.VK_DELETE] = 15;
-		Slot[16] = new UI_KeyConfig_Slot(KeyEvent.VK_END, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_END]);
-		slotIndex[KeyEvent.VK_END] = 16;
-		Slot[17] = new UI_KeyConfig_Slot(KeyEvent.VK_PAGE_DOWN, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_PAGE_DOWN]);
-		slotIndex[KeyEvent.VK_PAGE_DOWN] = 17;
+		String query = "";
+		PreparedStatement pstat = null;
+		ResultSet resultSet = null;
 		
-		Slot[18] = new UI_KeyConfig_Slot(KeyEvent.VK_BACK_QUOTE, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_BACK_QUOTE]);
-		slotIndex[KeyEvent.VK_BACK_QUOTE] = 18;
-		Slot[19] = new UI_KeyConfig_Slot(KeyEvent.VK_1, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_1]);
-		slotIndex[KeyEvent.VK_1] = 19;
-		Slot[20] = new UI_KeyConfig_Slot(KeyEvent.VK_2, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_2]);
-		slotIndex[KeyEvent.VK_2] = 20;
-		Slot[21] = new UI_KeyConfig_Slot(KeyEvent.VK_3, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_3]);
-		slotIndex[KeyEvent.VK_3] = 21;
-		Slot[22] = new UI_KeyConfig_Slot(KeyEvent.VK_4, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_4]);
-		slotIndex[KeyEvent.VK_4] = 22;
-		Slot[23] = new UI_KeyConfig_Slot(KeyEvent.VK_5, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_5]);
-		slotIndex[KeyEvent.VK_5] = 23;
-		Slot[24] = new UI_KeyConfig_Slot(KeyEvent.VK_6, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_6]);
-		slotIndex[KeyEvent.VK_6] = 24;
-		Slot[25] = new UI_KeyConfig_Slot(KeyEvent.VK_7, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_7]);
-		slotIndex[KeyEvent.VK_7] = 25;
-		Slot[26] = new UI_KeyConfig_Slot(KeyEvent.VK_8, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_8]);
-		slotIndex[KeyEvent.VK_8] = 26;
-		Slot[27] = new UI_KeyConfig_Slot(KeyEvent.VK_9, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_9]);
-		slotIndex[KeyEvent.VK_9] = 27;
-		Slot[28] = new UI_KeyConfig_Slot(KeyEvent.VK_0, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_0]);
-		slotIndex[KeyEvent.VK_0] = 28;
-		Slot[29] = new UI_KeyConfig_Slot(KeyEvent.VK_MINUS, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_MINUS]);
-		slotIndex[KeyEvent.VK_MINUS] = 29;
-		Slot[30] = new UI_KeyConfig_Slot(KeyEvent.VK_EQUALS, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_EQUALS]);
-		slotIndex[KeyEvent.VK_EQUALS] = 30;
-
-		Slot[31] = new UI_KeyConfig_Slot(KeyEvent.VK_Q, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_Q]);
-		slotIndex[KeyEvent.VK_Q] = 31;
-		Slot[32] = new UI_KeyConfig_Slot(KeyEvent.VK_W, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_W]);
-		slotIndex[KeyEvent.VK_W] = 32;
-		Slot[33] = new UI_KeyConfig_Slot(KeyEvent.VK_E, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_E]);
-		slotIndex[KeyEvent.VK_E] = 33;
-		Slot[34] = new UI_KeyConfig_Slot(KeyEvent.VK_R, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_R]);
-		slotIndex[KeyEvent.VK_R] = 34;
-		Slot[35] = new UI_KeyConfig_Slot(KeyEvent.VK_T, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_T]);
-		slotIndex[KeyEvent.VK_T] = 35;
-		Slot[36] = new UI_KeyConfig_Slot(KeyEvent.VK_Y, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_Y]);
-		slotIndex[KeyEvent.VK_Y] = 36;
-		Slot[37] = new UI_KeyConfig_Slot(KeyEvent.VK_U, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_U]);
-		slotIndex[KeyEvent.VK_U] = 37;
-		Slot[38] = new UI_KeyConfig_Slot(KeyEvent.VK_I, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_I]
-				, Maplestory.images.KeySetting_Inventory);
-		slotIndex[KeyEvent.VK_I] = 38;
-		Slot[39] = new UI_KeyConfig_Slot(KeyEvent.VK_O, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_O]);
-		slotIndex[KeyEvent.VK_O] = 39;
-		Slot[40] = new UI_KeyConfig_Slot(KeyEvent.VK_P, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_P]);
-		slotIndex[KeyEvent.VK_P] = 40;
-		Slot[41] = new UI_KeyConfig_Slot(KeyEvent.VK_OPEN_BRACKET, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_OPEN_BRACKET]);
-		slotIndex[KeyEvent.VK_OPEN_BRACKET] = 41;
-		Slot[42] = new UI_KeyConfig_Slot(KeyEvent.VK_CLOSE_BRACKET, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_CLOSE_BRACKET]);
-		slotIndex[KeyEvent.VK_CLOSE_BRACKET] = 42;
-		Slot[43] = new UI_KeyConfig_Slot(KeyEvent.VK_BACK_SLASH, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_BACK_SLASH]
-				, Maplestory.images.KeySetting_KeyConfig);
-		slotIndex[KeyEvent.VK_BACK_SLASH] = 43;
-
-		Slot[44] = new UI_KeyConfig_Slot(KeyEvent.VK_A, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_A]);
-		slotIndex[KeyEvent.VK_A] = 44;
-		Slot[45] = new UI_KeyConfig_Slot(KeyEvent.VK_S, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_S]);
-		slotIndex[KeyEvent.VK_S] = 45;
-		Slot[46] = new UI_KeyConfig_Slot(KeyEvent.VK_D, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_D]);
-		slotIndex[KeyEvent.VK_D] = 46;
-		Slot[47] = new UI_KeyConfig_Slot(KeyEvent.VK_F, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_F]);
-		slotIndex[KeyEvent.VK_F] = 47;
-		Slot[48] = new UI_KeyConfig_Slot(KeyEvent.VK_G, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_G]);
-		slotIndex[KeyEvent.VK_G] = 48;
-		Slot[49] = new UI_KeyConfig_Slot(KeyEvent.VK_H, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_H]);
-		slotIndex[KeyEvent.VK_H] = 49;
-		Slot[50] = new UI_KeyConfig_Slot(KeyEvent.VK_J, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_J]);
-		slotIndex[KeyEvent.VK_J] = 50;
-		Slot[51] = new UI_KeyConfig_Slot(KeyEvent.VK_K, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_K]);
-		slotIndex[KeyEvent.VK_K] = 51;
-		Slot[52] = new UI_KeyConfig_Slot(KeyEvent.VK_L, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_L]);
-		slotIndex[KeyEvent.VK_L] = 52;
-		Slot[53] = new UI_KeyConfig_Slot(KeyEvent.VK_SEMICOLON, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_SEMICOLON]);
-		slotIndex[KeyEvent.VK_SEMICOLON] = 53;
-		Slot[54] = new UI_KeyConfig_Slot(KeyEvent.VK_QUOTE, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_QUOTE]);
-		slotIndex[KeyEvent.VK_QUOTE] = 54;
-
-		Slot[55] = new UI_KeyConfig_Slot(KeyEvent.VK_SHIFT, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_SHIFT]
-				, Maplestory.images.KeySetting_Skill);
-		slotIndex[KeyEvent.VK_SHIFT] = 55;
-		Slot[56] = new UI_KeyConfig_Slot(KeyEvent.VK_Z, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_Z]
-				, Maplestory.images.KeySetting_PickUp);
-		slotIndex[KeyEvent.VK_Z] = 56;
-		Slot[57] = new UI_KeyConfig_Slot(KeyEvent.VK_X, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_X]);
-		slotIndex[KeyEvent.VK_X] = 57;
-		Slot[58] = new UI_KeyConfig_Slot(KeyEvent.VK_C, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_C]);
-		slotIndex[KeyEvent.VK_C] = 58;
-		Slot[59] = new UI_KeyConfig_Slot(KeyEvent.VK_V, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_V]);
-		slotIndex[KeyEvent.VK_V] = 59;
-		Slot[60] = new UI_KeyConfig_Slot(KeyEvent.VK_B, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_B]);
-		slotIndex[KeyEvent.VK_B] = 60;
-		Slot[61] = new UI_KeyConfig_Slot(KeyEvent.VK_N, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_N]);
-		slotIndex[KeyEvent.VK_N] = 61;
-		Slot[62] = new UI_KeyConfig_Slot(KeyEvent.VK_M, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_M]
-				, Maplestory.images.KeySetting_Minimap);
-		slotIndex[KeyEvent.VK_M] = 62;
-		Slot[63] = new UI_KeyConfig_Slot(KeyEvent.VK_COMMA, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_COMMA]);
-		slotIndex[KeyEvent.VK_COMMA] = 63;
-		Slot[64] = new UI_KeyConfig_Slot(KeyEvent.VK_PERIOD, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_PERIOD]);
-		slotIndex[KeyEvent.VK_PERIOD] = 64;
-
-		Slot[65] = new UI_KeyConfig_Slot(KeyEvent.VK_CONTROL, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_CONTROL]
-				, Maplestory.images.KeySetting_Attack);
-		slotIndex[KeyEvent.VK_CONTROL] = 65;
-		Slot[66] = new UI_KeyConfig_Slot(KeyEvent.VK_SPACE, Maplestory.keyConfig.actionMapKeyArray[KeyEvent.VK_SPACE]
-				, Maplestory.images.KeySetting_NPC);
-		slotIndex[KeyEvent.VK_SPACE] = 66;
-		
-		for(int i=67;i<121;i++) {
-			Slot[i] = new UI_KeyConfig_Slot(-1, "");
+		try {
+			query = "SELECT * FROM KEYCONFIG WHERE NAME = ?";
+			pstat = Maplestory.connection.prepareStatement(query);
+			pstat.setString(1, Maplestory.player.name);
+			resultSet = pstat.executeQuery();
+			
+			String actionMapKey = "";
+			int keyCode = -1, index = -1;
+			while(resultSet.next()) {
+				keyCode = resultSet.getInt("KEYCODE");
+				index = keyCode > -1 ? slotIndex[keyCode] : -keyCode;
+				actionMapKey = resultSet.getString("ACTIONMAPKEY");
+				if(actionMapKey.equals("ItemUse")) {
+					Slot[index] = new UI_KeyConfig_Slot(keyCode, actionMapKey);
+					Slot[index].item = Item.getItem(resultSet.getString("ITEMTYPE"), resultSet.getInt("ITEMCODE"), 0);
+				}
+				else if(actionMapKey.equals("Inventory")) {
+					Slot[index] = new UI_KeyConfig_Slot(keyCode, actionMapKey, Maplestory.images.KeySetting_Inventory);
+					
+				}
+				else if(actionMapKey.equals("KeyConfigAction")) {
+					Slot[index] = new UI_KeyConfig_Slot(keyCode, actionMapKey, Maplestory.images.KeySetting_KeyConfig);
+					
+				}
+				else if(actionMapKey.equals("ShiftPress")) {
+					Slot[index] = new UI_KeyConfig_Slot(keyCode, actionMapKey, Maplestory.images.KeySetting_Skill);
+					
+				}
+				else if(actionMapKey.equals("PickUp")) {
+					Slot[index] = new UI_KeyConfig_Slot(keyCode, actionMapKey, Maplestory.images.KeySetting_PickUp);
+					
+				}
+				else if(actionMapKey.equals("Minimap")) {
+					Slot[index] = new UI_KeyConfig_Slot(keyCode, actionMapKey, Maplestory.images.KeySetting_Minimap);
+					
+				}
+				else if(actionMapKey.equals("CtrlPress")) {
+					Slot[index] = new UI_KeyConfig_Slot(keyCode, actionMapKey, Maplestory.images.KeySetting_Attack);
+					
+				}
+				else if(actionMapKey.equals("NPC")) {
+					Slot[index] = new UI_KeyConfig_Slot(keyCode, actionMapKey, Maplestory.images.KeySetting_NPC);
+					
+				}
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
 		
 		for(int i=0;i<121;i++) {
 			Slot[i].setIndex(i);
 			Slot[i].setKeyImage();
+			
 			if(i >= 0 && i < 4) {
 				Slot[i].setLocation(79 + 34 * (i - 0), 28);
 			}
@@ -339,7 +331,7 @@ public class UI_KeyConfig extends JLabel {
 												Maplestory.ui_keySetting.move_index = moveSlotToBottom(Slot[index]);
 											}
 										}
-										Slot[index].setItem(update);
+										Slot[index].item = Item.getItem("Consume", update.getItemCode(), 0);
 										Slot[index].actionMapKey = "ItemUse";
 										Slot[index].actionImage = null;
 									}
@@ -375,25 +367,35 @@ public class UI_KeyConfig extends JLabel {
 										Maplestory.ui_keySetting.move_index = move_index;
 									}
 									else if(srcItem != null && dstItem == null) {
-										Item temp = srcItem;
-										
-										Slot[move_index].item = null;
-										Slot[move_index].actionMapKey = dstKey;
-										Slot[move_index].actionImage = dstImage;
-										
-										Slot[index].item = temp;
-										Slot[index].actionMapKey = "ItemUse";
-										Slot[index].actionImage= null;
-										
-										if(Slot[move_index].actionMapKey.equals("")) {
+										if(index >= 67) {
+											Slot[move_index].item = null;
+											Slot[move_index].actionMapKey = "";
+											Slot[move_index].actionImage = null;
+											
 											Maplestory.ui_quick_slot.move_index = -1;
 											Maplestory.ui_keySetting.move_index = -1;
 										}
 										else {
-											Map.move = Slot[move_index].actionImage;
-											Maplestory.player.inventory.move_index = -1;
-											Maplestory.ui_quick_slot.move_index = Slot[move_index].quickslotindex;;
-											Maplestory.ui_keySetting.move_index = move_index; 
+											Item temp = srcItem;
+											
+											Slot[move_index].item = null;
+											Slot[move_index].actionMapKey = dstKey;
+											Slot[move_index].actionImage = dstImage;
+											
+											Slot[index].item = temp;
+											Slot[index].actionMapKey = "ItemUse";
+											Slot[index].actionImage= null;
+											
+											if(Slot[move_index].actionMapKey.equals("")) {
+												Maplestory.ui_quick_slot.move_index = -1;
+												Maplestory.ui_keySetting.move_index = -1;
+											}
+											else {
+												Map.move = Slot[move_index].actionImage;
+												Maplestory.player.inventory.move_index = -1;
+												Maplestory.ui_quick_slot.move_index = Slot[move_index].quickslotindex;;
+												Maplestory.ui_keySetting.move_index = move_index; 
+											}
 										}
 									}
 									else if(srcItem == null && dstItem != null) {
@@ -620,6 +622,27 @@ public class UI_KeyConfig extends JLabel {
 									Maplestory.ui_quick_slot.setLocation(648, 455);
 									Maplestory.ui_notice.tempQuickSlot = null;
 									Maplestory.current_stage.add(Maplestory.ui_quick_slot, 6);
+									
+									String query = "";
+									PreparedStatement pstat = null;
+									
+									try {
+										query = "UPDATE QUICKSLOT SET IDX0 = ?, IDX1 = ?, IDX2 = ?, IDX3 = ?"
+												+ ", IDX4 = ?, IDX5 = ?, IDX6 = ?, IDX7 = ?";
+										pstat = Maplestory.connection.prepareStatement(query);
+										pstat.setInt(1, Maplestory.ui_quick_slot.quickSlot[0].keyCode);
+										pstat.setInt(2, Maplestory.ui_quick_slot.quickSlot[1].keyCode);
+										pstat.setInt(3, Maplestory.ui_quick_slot.quickSlot[2].keyCode);
+										pstat.setInt(4, Maplestory.ui_quick_slot.quickSlot[3].keyCode);
+										pstat.setInt(5, Maplestory.ui_quick_slot.quickSlot[4].keyCode);
+										pstat.setInt(6, Maplestory.ui_quick_slot.quickSlot[5].keyCode);
+										pstat.setInt(7, Maplestory.ui_quick_slot.quickSlot[6].keyCode);
+										pstat.setInt(8, Maplestory.ui_quick_slot.quickSlot[7].keyCode);
+										
+										pstat.executeUpdate();
+									} catch (SQLException e) {
+										e.printStackTrace();
+									}
 								}
 							}
 						}
@@ -829,24 +852,70 @@ public class UI_KeyConfig extends JLabel {
 	}
 	
 	public void save() {
-		for(int i=0;i<121;i++) {
-			int keyCode = Slot[i].keyCode;
-			if(keyCode != -1) {
+		String deleteQuery1 = "DELETE FROM KEYCONFIG WHERE NAME = ? AND KEYCODE = ?";
+		String deleteQuery2 = "DELETE FROM KEYCONFIG WHERE NAME = ? AND KEYCODE != ?"
+				+ "AND ((ACTIONMAPKEY != ? AND ACTIONMAPKEY = ?) OR "
+				+ "(ACTIONMAPKEY = ? AND ACTIONMAPKEY = ? AND ITEMTYPE = ? AND ITEMCODE = ?))";
+		String insertQuery = "INSERT INTO KEYCONFIG VALUES (?, ?, ?, ?, ?)";
+		PreparedStatement deletePstat1 = null, deletePstat2 = null, insertPstat = null;
+		
+		try {
+			deletePstat1 = Maplestory.connection.prepareStatement(deleteQuery1);
+			deletePstat1.setString(1, Maplestory.player.name);
+			deletePstat2 = Maplestory.connection.prepareStatement(deleteQuery2);
+			deletePstat2.setString(1, Maplestory.player.name);
+			deletePstat2.setString(3, "ItemUse");
+			deletePstat2.setString(5, "ItemUse");
+			insertPstat = Maplestory.connection.prepareStatement(insertQuery);
+			insertPstat.setString(1, Maplestory.player.name);
+			for(int i=0;i<121;i++) {
+				int keyCode = Slot[i].keyCode;
 				String actionMapKey = Slot[i].actionMapKey;
-				Maplestory.keyConfig.actionMapKeyArray[keyCode] = actionMapKey;
-				if(actionMapKey.equals("ItemUse")) {
-					Maplestory.keyConfig.actionMapKeyArray[keyCode] = "ItemUse" + keyCode;
-					Maplestory.keyConfig.itemUse[keyCode].setValues(Slot[i].getItem().getItemCode(), Slot[i].getItem().getType());
+			
+				deletePstat1.setInt(2, keyCode);
+				deletePstat2.setInt(2, keyCode);
+				deletePstat2.setString(4, actionMapKey);
+				deletePstat2.setString(6, actionMapKey);
+				deletePstat2.setString(7, "");
+				deletePstat2.setInt(8, -1);
+				insertPstat.setInt(2, keyCode);
+				insertPstat.setString(3, actionMapKey);
+				insertPstat.setString(4, "");
+				insertPstat.setInt(5, -1);
+			
+				if(keyCode > -1) {
+					Maplestory.keyConfig.actionMapKeyArray[keyCode] = actionMapKey;
+					if(actionMapKey.equals("ItemUse")) {
+						Maplestory.keyConfig.actionMapKeyArray[keyCode] = "ItemUse" + keyCode;
+						Maplestory.keyConfig.itemUse[keyCode].setValues(Slot[i].getItem().getItemCode(), Slot[i].getItem().getType());
+						deletePstat2.setString(7, Slot[i].getItem().getType());
+						deletePstat2.setInt(8, Slot[i].getItem().getItemCode());
+						insertPstat.setString(4, Slot[i].getItem().getType());
+						insertPstat.setInt(5, Slot[i].getItem().getItemCode());
+					}
 				}
-	
+			
+				if(!actionMapKey.equals("")) {
+					deletePstat1.executeUpdate();
+					deletePstat2.executeUpdate();
+					insertPstat.executeUpdate();
+				}
+				else {
+					if(Slot[i].tempKey != null) {
+						deletePstat1.executeUpdate();
+					}
+				}
+			
 				Slot[i].tempItem = null;
 				Slot[i].tempKey = "";
 				Slot[i].tempImage = null;
 			}
-		}
 		
-		Maplestory.keyConfig.setKeyBoard();
-		isChanged = false;
+			Maplestory.keyConfig.setKeyBoard();
+			isChanged = false;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void notsave() {

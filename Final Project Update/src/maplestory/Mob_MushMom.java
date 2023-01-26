@@ -438,10 +438,16 @@ public class Mob_MushMom extends Mob {
 	
 	@Override
 	public void trackPlayer() {
-		if(X + width / 2 >= Maplestory.player.CharacterX + Character.CharacterWidth / 2) {
-			if(X + width / 2 <= Maplestory.player.CharacterX + Character.CharacterWidth / 2 + 200) {
-				if(Math.abs(Y - Maplestory.player.CharacterY) < 150) {
-					attack1();
+		if(alive) {
+			if(X + width / 2 >= Maplestory.player.PlayerX + Player.PlayerWidth / 2) {
+				if(X + width / 2 <= Maplestory.player.PlayerX + Player.PlayerWidth / 2 + 200) {
+					if(Math.abs(Y - Maplestory.player.PlayerY) < 150) {
+						attack1();
+					}
+					else {
+						Direction = -1;
+						move();
+					}
 				}
 				else {
 					Direction = -1;
@@ -449,23 +455,19 @@ public class Mob_MushMom extends Mob {
 				}
 			}
 			else {
-				Direction = -1;
-				move();
-			}
-		}
-		else {
-			if(X + width / 2 >= Maplestory.player.CharacterX + Character.CharacterWidth / 2 - 200) {
-				if(Math.abs(Y - Maplestory.player.CharacterY) < 150) {
-					attack1();
+				if(X + width / 2 >= Maplestory.player.PlayerX + Player.PlayerWidth / 2 - 200) {
+					if(Math.abs(Y - Maplestory.player.PlayerY) < 150) {
+						attack1();
+					}
+					else {
+						Direction = 1;
+						move();
+					}
 				}
 				else {
 					Direction = 1;
 					move();
 				}
-			}
-			else {
-				Direction = 1;
-				move();
 			}
 		}
 	}
@@ -484,7 +486,7 @@ public class Mob_MushMom extends Mob {
 					Music Damage_Music = new Music(Damage_Music_Name, 1);
 					Damage_Music.play();
 					num = random.nextInt(100) + 1;
-					if (num >= 1 && num <= Maplestory.player.Critical_Rate) {
+					if (num >= 1 && num <= Maplestory.player.CriticalRate) {
 						isCrit = true;
 					} else {
 						isCrit = false;
@@ -573,7 +575,7 @@ public class Mob_MushMom extends Mob {
 			item.Drop(itemXpos + 120, Y - current_Img.getIconHeight() / 2);
 			
 			//Exp
-			Maplestory.player.GainExp(Exp);
+			Maplestory.player.gainExp(Exp);
 			String msg = Make_ExpMsg(Exp);
 			synchronized(Message.combat_messages) {
 				if(Message.combat_messages.size() == Message.max_messages) {
@@ -774,27 +776,27 @@ public class Mob_MushMom extends Mob {
 				int mob_height = current_Img.getIconHeight();
 
 				// character is attacked
-				if ((Maplestory.player.CharacterY >= Y - mob_height + 10)
-						&& (Maplestory.player.CharacterY <= Y + Character.CharacterHeight - 10)) {
-					if ((Maplestory.player.CharacterX >= X - Character.CharacterWidth + 10)
-							&& (Maplestory.player.CharacterX <= X + width - 10)) {
+				if ((Maplestory.player.PlayerY >= Y - mob_height + 10)
+						&& (Maplestory.player.PlayerY <= Y + Player.PlayerHeight - 10)) {
+					if ((Maplestory.player.PlayerX >= X - Player.PlayerWidth + 10)
+							&& (Maplestory.player.PlayerX <= X + width - 10)) {
 						int damage = Hit_Damage_Calculate(Min_ATK, Max_ATK, 1);
 						Maplestory.player.HP_Damage(damage);
 						int num = random.nextInt(100)+1;
 						if (num >= 1 && num <= 100 - Maplestory.player.Stance) {
 							if(damage > 0) {
-								if (Maplestory.player.CharacterX + Character.CharacterWidth / 2 >= X + width / 2) {
+								if (Maplestory.player.PlayerX + Player.PlayerWidth / 2 >= X + width / 2) {
 									Maplestory.player.Character_Attacked2(1);
 								} else {
 									Maplestory.player.Character_Attacked2(-1);
 								}
 							}
 							else {
-								Character.ManageHittable();
+								Player.ManageHittable();
 							}
 						}
 						else {
-							Character.ManageHittable();
+							Player.ManageHittable();
 						}
 					}
 				}
@@ -906,18 +908,18 @@ public class Mob_MushMom extends Mob {
 					int num = random.nextInt(100)+1;
 					if (num >= 1 && num <= 100 - Maplestory.player.Stance) {
 						if(damage > 0) {
-							if (Maplestory.player.CharacterX + Character.CharacterWidth / 2 >= X + width / 2) {
+							if (Maplestory.player.PlayerX + Player.PlayerWidth / 2 >= X + width / 2) {
 								Maplestory.player.Character_Attacked2(1);
 							} else {
 								Maplestory.player.Character_Attacked2(-1);
 							}
 						}
 						else {
-							Character.ManageHittable();
+							Player.ManageHittable();
 						}
 					}
 					else {
-						Character.ManageHittable();
+						Player.ManageHittable();
 					}
 				}
 			}

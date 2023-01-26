@@ -12,6 +12,8 @@ import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -176,6 +178,8 @@ public class Map extends JPanel {
 							UI_KeyConfig_Slot slot = Maplestory.ui_keySetting.Slot[Maplestory.ui_keySetting.move_index];
 							move = null;
 							if(slot.actionMapKey.equals("ItemUse")) {
+								slot.tempKey = "ItemUse";
+								
 								slot.item = null;
 								slot.actionMapKey = "";
 								slot.actionImage = null;
@@ -213,6 +217,7 @@ public class Map extends JPanel {
 		nearestTown = _nearestTown;
 
 		// set contentpane
+		setSize(new Dimension(800, 600));
 		setPreferredSize(new Dimension(800, 600));
 		setBorder(null);
 		setLayout(null);
@@ -341,8 +346,8 @@ public class Map extends JPanel {
 			@Override
 			public void run() {
 				while(Available) {
-					int CX = Maplestory.player.CharacterX;
-					int CY = Maplestory.player.CharacterY - Character.CharacterHeight;
+					int CX = Maplestory.player.PlayerX;
+					int CY = Maplestory.player.PlayerY - Player.PlayerHeight;
 					if ((CameraX >= 0) && (CameraX <= X_Size-800)) {
 						if (CX < CameraX + 300) {
 							if ((CX - 300 >= 0) && (CX - 300 <= X_Size - 800)) {
@@ -389,7 +394,7 @@ public class Map extends JPanel {
 		
 		frame.pack();
 		Graphics2D g2 = (Graphics2D) g;
-		Image image = createImage(800, 600);
+		Image image = createImage(getWidth(), getHeight());
 
 		// Show Frame per second
 		current_time = System.currentTimeMillis();
@@ -424,8 +429,8 @@ public class Map extends JPanel {
 		// CameraY+600, this);
 
 		// Draw BackGround
-		g2.drawImage(BackGroundImg.getImage(), 0, 0, 800, 600, CameraX / CameraX_offset, CameraY / CameraY_offset
-				, CameraX / CameraX_offset + 800, CameraY / CameraY_offset + 600, this);
+		g2.drawImage(BackGroundImg.getImage(), 0, 0, getWidth(), getHeight(), CameraX / CameraX_offset, CameraY / CameraY_offset
+				, CameraX / CameraX_offset + getWidth(), CameraY / CameraY_offset + getHeight(), this);
 		
 		// Draw Effect
 		if(StageNum == 1) {
@@ -590,14 +595,14 @@ public class Map extends JPanel {
 		
 		// Draw Player
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Maplestory.player.alpha));
-		if (Maplestory.player.CharDirection == -1) {
+		if (Maplestory.player.PlayerDirection == -1) {
 			g2.drawImage(
-					Maplestory.player.current_Img.getImage(), Maplestory.player.CharacterX - CameraX
-							- Maplestory.player.current_Img.getIconWidth() + Character.CharacterWidth,
-					Maplestory.player.CharacterY - Character.CharacterHeight - CameraY, this);
-		} else if (Maplestory.player.CharDirection == 1) {
-			g2.drawImage(Maplestory.player.current_Img.getImage(), Maplestory.player.CharacterX - CameraX,
-					Maplestory.player.CharacterY - Character.CharacterHeight - CameraY, this);
+					Maplestory.player.current_Img.getImage(), Maplestory.player.PlayerX - CameraX
+							- Maplestory.player.current_Img.getIconWidth() + Player.PlayerWidth,
+					Maplestory.player.PlayerY - Player.PlayerHeight - CameraY, this);
+		} else if (Maplestory.player.PlayerDirection == 1) {
+			g2.drawImage(Maplestory.player.current_Img.getImage(), Maplestory.player.PlayerX - CameraX,
+					Maplestory.player.PlayerY - Player.PlayerHeight - CameraY, this);
 		}
 		g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
 		
@@ -614,9 +619,9 @@ public class Map extends JPanel {
 				}
 				else {
 					lvup_img = data.current_Img;
-					g2.drawImage(lvup_img.getImage(), Maplestory.player.CharacterX + Character.CharacterWidth/2 
+					g2.drawImage(lvup_img.getImage(), Maplestory.player.PlayerX + Player.PlayerWidth/2 
 							- Maplestory.images.LevelUp_Effect[0].getIconWidth() / 2 + data.current_x_offset - CameraX
-							, Maplestory.player.CharacterY - Character.CharacterHeight + data.current_y_offset - CameraY, this);
+							, Maplestory.player.PlayerY - Player.PlayerHeight + data.current_y_offset - CameraY, this);
 				}
 			}
 		}
@@ -900,9 +905,9 @@ public class Map extends JPanel {
 					//character can't be attacked twice or more, which means character can be attacked again after landing to the ground
 					if(!Map.attacked && Map.Hittable) {
 						//character is attacked
-						if((Maplestory.player.CharacterY - Character.CharacterHeight >= ypos-60)
-								&& (Maplestory.player.CharacterY - Character.CharacterHeight <= ypos+meteor.getHeight()-10)) {
-							if((Maplestory.player.CharacterX >= xpos-40) && (Maplestory.player.CharacterX <= xpos+meteor.getWidth()-10)){
+						if((Maplestory.player.PlayerY - Player.PlayerHeight >= ypos-60)
+								&& (Maplestory.player.PlayerY - Player.PlayerHeight <= ypos+meteor.getHeight()-10)) {
+							if((Maplestory.player.PlayerX >= xpos-40) && (Maplestory.player.PlayerX <= xpos+meteor.getWidth()-10)){
 								Maplestory.player.HP_Damage(1);
 								if(StageNum == 2) {
 									Maplestory.player.Character_Attacked1(1);
@@ -967,7 +972,7 @@ public class Map extends JPanel {
 		frame.setContentPane(this);
 
 		if(Maplestory.isFullScreen) {
-			Maplestory.device.setDisplayMode(new DisplayMode(800, 600, 32, 60));
+			Maplestory.device.setDisplayMode(new DisplayMode(getWidth(), getHeight(), 32, 60));
 		}
 		
 		frame.pack();
@@ -1009,13 +1014,13 @@ public class Map extends JPanel {
 				Tomb_Y = 0;
 				
 				if(portal == null) {
-					Maplestory.player.CharDirection = CharFirstDirection;
-					Maplestory.player.CharacterX = CharacterFirstX;
-					Maplestory.player.CharacterY = CharacterFirstY;
+					Maplestory.player.PlayerDirection = CharFirstDirection;
+					Maplestory.player.PlayerX = CharacterFirstX;
+					Maplestory.player.PlayerY = CharacterFirstY;
 				}
 				else {
-					Maplestory.player.CharacterX = portal.xcenter - Character.CharacterWidth / 2;
-					Maplestory.player.CharacterY = portal.y - 10;
+					Maplestory.player.PlayerX = portal.xcenter - Player.PlayerWidth / 2;
+					Maplestory.player.PlayerY = portal.y - 10;
 				}
 				Maplestory.player.IsLandable();
 				
@@ -1027,7 +1032,7 @@ public class Map extends JPanel {
 					CameraY = CameraFirstY;
 				}
 				else {
-					SetCamera(Maplestory.player.CharacterX, Maplestory.player.CharacterY);
+					SetCamera(Maplestory.player.PlayerX, Maplestory.player.PlayerY);
 				}
 				
 				if (start_time == 0) {
@@ -1080,6 +1085,16 @@ public class Map extends JPanel {
 			
 		};
 		Maplestory.thread_pool.submit(runnable);
+		
+		try {
+			String query = "UPDATE PLAYER SET MAP = ? WHERE NAME = ?";
+			PreparedStatement pstat = Maplestory.connection.prepareStatement(query);
+			pstat.setInt(1, StageNum);
+			pstat.setString(2, Maplestory.player.name);
+			pstat.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void reopen() {
@@ -1118,9 +1133,9 @@ public class Map extends JPanel {
 				Tomb_Alpha = 0f;
 				Tomb_Y = 0;
 
-				Maplestory.player.CharDirection = CharFirstDirection;
-				Maplestory.player.CharacterX = CharacterFirstX;
-				Maplestory.player.CharacterY = CharacterFirstY;
+				Maplestory.player.PlayerDirection = CharFirstDirection;
+				Maplestory.player.PlayerX = CharacterFirstX;
+				Maplestory.player.PlayerY = CharacterFirstY;
 				
 				Maplestory.player.IsLandable();
 				Maplestory.player.current_Img = CharacterFirstImg;

@@ -13,6 +13,12 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -34,6 +40,10 @@ public class Maplestory extends JFrame {
 	private ImageIcon Icon = new ImageIcon(getClass().getClassLoader().getResource("Icon.png"));
 	protected static Images images = new Images();
 
+	//DB
+	protected static Connection connection = null;
+	protected static Statement statement = null;
+	
 	//Keyboard Setting
 	protected static KeyBoardConfig keyConfig;
 	
@@ -69,7 +79,7 @@ public class Maplestory extends JFrame {
 	protected static boolean IsStage4Locked = true;
 	
 	//player
-	protected static Character player = new Character();
+	protected static Player player = null;
 	
 	//Background Musics
 	protected static Music Start_Music = new Music("Start.wav", -1);
@@ -117,7 +127,8 @@ public class Maplestory extends JFrame {
 		//setUndecorated(true);
 		//device.setFullScreenWindow(this);
 		
-		keyConfig = new KeyBoardConfig(this);
+		dbSetup();
+		
 		setCursor(Toolkit.getDefaultToolkit().createCustomCursor(images.Default_CursorImg.getImage(), new Point(0, 0), " "));
 		
 /*		if(!Directory.exists()) {
@@ -136,10 +147,13 @@ public class Maplestory extends JFrame {
 		make_BackButton();
 		make_Stage_Button();
 		
-		make_UIs();
-		makeShops();
 		make_StageSelect();
 		
+		player = new Player("slllldka");
+		keyConfig = new KeyBoardConfig(this);
+		
+		make_UIs();
+		makeShops();
 		makeMaps();
 		set_Portals();
 		
@@ -147,12 +161,29 @@ public class Maplestory extends JFrame {
 		start_Start();
 		Start_Music.play();
 	}
+	
+	
 
 	public void make_Threads() {
 		thread_pool = Executors.newFixedThreadPool(1000);
 	}
 	
-//below: Method Name explains what it does
+	public void dbSetup() {
+		try { 
+			Class.forName("oracle.jdbc.driver.OracleDriver");
+		} catch (ClassNotFoundException e) {
+			 System.out.println("Driver Loading Failed");
+			e.printStackTrace();
+		}
+		
+		try {
+			connection = DriverManager.getConnection("jdbc:oracle:thin:@localhost:1521:xe", "slllldka", "slllldka");
+			System.out.println("DB Connection Success");
+		} catch (SQLException e) {
+			 System.out.println("DB Connection Failed");
+				e.printStackTrace();
+		}
+	}
 	
 	//Set IsStage2Locked
 	public void setLock2() {
@@ -174,7 +205,6 @@ public class Maplestory extends JFrame {
 				BW.flush();
 				BW.close();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
@@ -199,7 +229,6 @@ public class Maplestory extends JFrame {
 				BW.flush();
 				BW.close();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
@@ -223,7 +252,6 @@ public class Maplestory extends JFrame {
 				BW.flush();
 				BW.close();
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 		}
@@ -498,6 +526,9 @@ public class Maplestory extends JFrame {
 						else if(StageNow == 11) {
 							map1_1.close(null);
 						}
+						else if(StageNow == 12) {
+							map1_2.close(null);
+						}
 						else if(StageNow == 2) {
 							map2.close(null);
 						}
@@ -522,7 +553,38 @@ public class Maplestory extends JFrame {
 				
 				//stage 1 button
 				if((JButton)e.getSource() == Stage1_Button) {
-					map1.open(null);
+					try {
+						String query = "SELECT * FROM PLAYER WHERE NAME = ?";
+						PreparedStatement pstat = connection.prepareStatement(query);
+						ResultSet resultSet = null;
+						int StageNum = -1;
+						pstat.setString(1, Maplestory.player.name);
+						resultSet = pstat.executeQuery();
+						resultSet.next();
+						StageNum = resultSet.getInt("MAP");
+						
+						if(StageNum == 1) {
+							map1.open(null);
+						}
+						if(StageNum == 1_1) {
+							map1_1.open(null);
+						}
+						if(StageNum == 1_2) {
+							map1_2.open(null);
+						}
+						if(StageNum == 2) {
+							map2.open(null);
+						}
+						if(StageNum == 3) {
+							map3.open(null);
+						}
+						if(StageNum == 4) {
+							map4.open(null);
+						}
+						
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					}
 				}
 				//stage 2 button
 				else if((JButton)e.getSource() == Stage2_Button) {

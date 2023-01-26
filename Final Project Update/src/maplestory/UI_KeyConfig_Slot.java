@@ -50,7 +50,7 @@ public class UI_KeyConfig_Slot extends UI_Quick_Slot_Icon {
 		if(Maplestory.ui_keySetting.move_index != getIndex()) {
 			if(isQuickSlot) {
 				actionImage = Maplestory.ui_keySetting.Slot[index].actionImage;
-				item = Maplestory.ui_keySetting.Slot[index].getItem();
+				item = Maplestory.ui_keySetting.Slot[index].item;
 				
 				if(getParent() == Maplestory.ui_notice.tempQuickSlot) {
 					if(Maplestory.ui_notice.tempQuickSlot.selectedIndex == quickslotindex) {
@@ -61,8 +61,10 @@ public class UI_KeyConfig_Slot extends UI_Quick_Slot_Icon {
 				if(actionImage != null) {
 					g.drawImage(actionImage.getImage(), 0, 0, this);
 				}
-				else if(getItem() != null) {
-					g.drawImage(getItem().getRawIcon().getImage(), 0, 0, this);
+				else if(item != null) {
+					g.drawImage(item.getRawIcon().getImage()
+							, 15 - item.getRawIcon().getIconWidth() / 2
+							, 15 - item.getRawIcon().getIconHeight() / 2, this);
 					showNumber(g);
 				}
 			}
@@ -71,8 +73,8 @@ public class UI_KeyConfig_Slot extends UI_Quick_Slot_Icon {
 				g.drawImage(actionImage.getImage(), 0, 0, this);
 				drawKey(g);
 				}
-				else if(getItem() != null) {
-					g.drawImage(getItem().getRawIcon().getImage(), 0, 0, this);
+				else if(item != null) {
+					g.drawImage(item.getRawIcon().getImage(), 0, 0, this);
 					showNumber(g);
 					drawKey(g);
 				}
@@ -85,7 +87,7 @@ public class UI_KeyConfig_Slot extends UI_Quick_Slot_Icon {
 	}
 	
 	public void drawKey(Graphics g) {
-		if(keyCode != -1) {
+		if(keyCode > -1) {
 			if(keyCode == KeyEvent.VK_SPACE) {
 				if(isQuickSlot) {
 					g.drawImage(quickslotKeyImage.getImage(), 0, 2, this);
@@ -121,7 +123,7 @@ public class UI_KeyConfig_Slot extends UI_Quick_Slot_Icon {
 	}
 	
 	public void setKeyImage() {
-		if(keyCode != -1) {
+		if(keyCode > -1) {
 			keyImage = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.key." + index + ".png"));
 			quickslotKeyImage = new ImageIcon(getClass().getClassLoader().getResource("KeyConfig.quickslotConfig.key." + index + ".png"));
 		}

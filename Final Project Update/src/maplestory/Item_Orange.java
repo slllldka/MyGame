@@ -70,12 +70,13 @@ public class Item_Orange extends Item{
 					Music Potion_Use_Music = new Music("Potion_Use.wav", 1);
 					Potion_Use_Music.play();
 					Maplestory.player.MP_Heal(50);
-					Maplestory.player.inventory.Reduce_Item(index, 1);
+					Maplestory.player.inventory.Reduce_Item(
+							Maplestory.player.inventory.Consume_inventory_list.get(index), 1);
+
 					Maplestory.player.Item_usable = false;
 					try {
 						Thread.sleep(500);
 					} catch (InterruptedException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					Maplestory.player.Item_usable = true;
