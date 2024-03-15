@@ -15,7 +15,7 @@ JAVA의 Swing 라이브러리만을 사용하여 개발<br>
 ### 2. ERD
 <img src="https://github.com/slllldka/MyGame/assets/121309640/d121d234-975c-4707-a972-d90643ee46b3"/>
 
-### 3. 클래스 다이어그램(Simple)
+### 3. 클래스 다이어그램
 <img src="https://github.com/slllldka/MyGame/assets/121309640/fdfa1a35-0196-4718-bbd2-74242a01de2d"/>
 
 # 3. 프로젝트 설명
