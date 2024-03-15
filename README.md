@@ -7,8 +7,13 @@ JAVA의 Swing 라이브러리만을 사용하여 개발<br>
 
 개발 기간 : 21/11 ~ 23/01<br>
 
-# 2. 프로젝트 구조도
+# 2. 프로젝트 구조
+
+### 1. 구조도
 <img src="https://github.com/slllldka/MyGame/assets/121309640/21073ed4-28a5-4f87-9865-afda3d03bd57" width="400" height="200"/>
+
+### 2. ERD
+<img src="https://github.com/slllldka/MyGame/assets/121309640/6c5ff9f5-954a-4567-81fd-65534d0166f2"/>
 
 # 3. 프로젝트 설명
 
