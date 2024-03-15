@@ -13,7 +13,7 @@ JAVA의 Swing 라이브러리만을 사용하여 개발<br>
 <img src="https://github.com/slllldka/MyGame/assets/121309640/21073ed4-28a5-4f87-9865-afda3d03bd57" width="400" height="200"/>
 
 ### 2. ERD
-<img src="https://github.com/slllldka/MyGame/assets/121309640/c6822982-7b3a-433e-af0d-094c00dbf7fc"/>
+<img src="https://github.com/slllldka/MyGame/assets/121309640/d121d234-975c-4707-a972-d90643ee46b3"/>
 
 # 3. 프로젝트 설명
 
