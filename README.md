@@ -20,7 +20,15 @@ JAVA의 Swing 라이브러리만을 사용하여 개발<br>
 
 # 3. 프로젝트 설명
 
-### 1. 몬스터 사냥, 자원 소모, 재화 획득
+### 1. 인내의 숲, 끈기의 숲 컨텐츠
+<img src="https://github.com/user-attachments/assets/974427e0-fd82-4154-9133-c4c5c472809a" width="400" height="300"/>
+<img src="https://github.com/user-attachments/assets/ddeee819-e64d-45e4-90f6-bfa2ef41dd2c" width="400" height="300"/>
+<img src="https://github.com/user-attachments/assets/ea9fdfc1-7d67-4e5c-bfd4-953252ac158d" width="400" height="300"/>
+<img src="https://github.com/user-attachments/assets/602b8219-139a-4fd2-a5e8-f1ef564afe46" width="400" height="300"/>
+
+인내의 숲, 끈기의 숲을 간단하게 구현
+
+### 2. 몬스터 사냥, 자원 소모, 재화 획득
 <img src="https://github.com/slllldka/MyGame/assets/121309640/a369ab52-e6b7-4722-935e-4e0827cc7d62" width="400" height="300"/>
 <img src="https://github.com/slllldka/MyGame/assets/121309640/884cefa2-3c5c-4bf9-8cb5-66f29932074e" width="400" height="300"/>
 <img src="https://github.com/slllldka/MyGame/assets/121309640/4f7d2d1c-98aa-45cb-b503-088994e510b4" width="400" height="300"/>
@@ -38,25 +46,16 @@ JAVA의 Swing 라이브러리만을 사용하여 개발<br>
 유저의 HP, MP, 경험치가 변화될 때 마다 DB에 업데이트<br>
 유저가 아이템을 획득, 소모할 때 마다 DB에 업데이트<br>
 
-
-### 2. 상점
+### 3. 상점
 <img src="https://github.com/slllldka/MyGame/assets/121309640/91596cf1-0ff5-43eb-8570-bdb49a6778fb" width="400" height="300"/>
 <img src="https://github.com/slllldka/MyGame/assets/121309640/bc2371b1-1538-4ae9-ae77-625f5ea7894c" width="400" height="300"/>
 
 아이템 구매, 판매 기능<br>
 유저가 아이템을 구매 또는 판매할 때 마다 DB에 업데이트<br>
     
-### 3. 커스텀 키세팅 및 퀵슬롯
+### 4. 커스텀 키세팅 및 퀵슬롯
 <img src="https://github.com/slllldka/MyGame/assets/121309640/14c72c5d-c720-4a62-8f76-d1e3a0e1a556" width="400" height="300"/>
 <img src="https://github.com/slllldka/MyGame/assets/121309640/a4ab4273-71be-4659-896d-f766b4d9206b" width="400" height="300"/>
 
 기본 키 위치 변경, 소비 아이템 등록 , 퀵슬롯 변경 기능<br>
 변경 후 확인 버튼을 누르면 DB에 변경사항 업데이트<br>
-
-### 4. 인내의 숲, 끈기의 숲 컨텐츠
-<img src="https://github.com/user-attachments/assets/974427e0-fd82-4154-9133-c4c5c472809a" width="400" height="300"/>
-<img src="https://github.com/user-attachments/assets/ddeee819-e64d-45e4-90f6-bfa2ef41dd2c" width="400" height="300"/>
-<img src="https://github.com/user-attachments/assets/ea9fdfc1-7d67-4e5c-bfd4-953252ac158d" width="400" height="300"/>
-<img src="https://github.com/user-attachments/assets/602b8219-139a-4fd2-a5e8-f1ef564afe46" width="400" height="300"/>
-
-인내의 숲, 끈기의 숲을 간단하게 구현
