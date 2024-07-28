@@ -52,5 +52,11 @@ JAVA의 Swing 라이브러리만을 사용하여 개발<br>
 
 기본 키 위치 변경, 소비 아이템 등록 , 퀵슬롯 변경 기능<br>
 변경 후 확인 버튼을 누르면 DB에 변경사항 업데이트<br>
-    
-    
+
+### 4. 인내의 숲, 끈기의 숲 컨텐츠
+<img src="https://github.com/user-attachments/assets/974427e0-fd82-4154-9133-c4c5c472809a" width="400" height="300"/>
+<img src="https://github.com/user-attachments/assets/ddeee819-e64d-45e4-90f6-bfa2ef41dd2c" width="400" height="300"/>
+<img src="https://github.com/user-attachments/assets/ea9fdfc1-7d67-4e5c-bfd4-953252ac158d" width="400" height="300"/>
+<img src="https://github.com/user-attachments/assets/602b8219-139a-4fd2-a5e8-f1ef564afe46" width="400" height="300"/>
+
+인내의 숲, 끈기의 숲을 간단하게 구현
